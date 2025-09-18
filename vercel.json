@@ -2,18 +2,12 @@
   "version": 2,
   "name": "sim-vein",
   "public": true,
-
-  // Site 100% estático
   "builds": [
     { "src": "index.html", "use": "@vercel/static" }
   ],
-
-  // Roteamento direto para arquivos (sem SPA rewrite)
   "routes": [
     { "src": "/(.*)", "dest": "/$1" }
   ],
-
-  // Cabeçalhos úteis: manifest, SW e cache de estáticos
   "headers": [
     {
       "source": "/manifest.webmanifest",
@@ -35,8 +29,6 @@
       ]
     }
   ],
-
-  // URLs limpas (opcional)
   "cleanUrls": true,
-  "trailingSlash": false
+  "trailingSlash": false"
 }
