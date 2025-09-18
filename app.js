@@ -1,7 +1,6 @@
 import { SimEngine } from './sim/engine.js';
 import { Tutor } from './ia/tutor.js';
 
-// pega os elementos do DOM
 const els = {
   canvas: document.getElementById('simCanvas'),
   skinSel: document.getElementById('skinSel'),
@@ -12,15 +11,20 @@ const els = {
   antisepsisBtn: document.getElementById('antisepsisBtn'),
   resetBtn: document.getElementById('resetBtn'),
   report: document.getElementById('report'),
-  tutor: document.getElementById('tutor')
+  tutor: document.getElementById('tutor'),
+  chatFab: document.getElementById('chatFab'),
+  chatPanel: document.getElementById('chatPanel'),
+  chatClose: document.getElementById('chatClose'),
+  chatMessages: document.getElementById('chatMessages'),
+  chatForm: document.getElementById('chatForm'),
+  chatInput: document.getElementById('chatInput'),
+  installBtn: document.getElementById('installBtn')
 };
 
-// inicializa simulador e tutor
 const sim = new SimEngine(els.canvas);
 const tutor = new Tutor();
 
-// atualiza relatório
-function refreshReport() {
+function refreshReport(){
   const r = sim.getReport();
   els.report.innerHTML = `
     <div><b>Garrote:</b> ${r.tourniquet ? '<span class="badge good">ok</span>' : '<span class="badge warn">faltando</span>'}</div>
@@ -35,7 +39,7 @@ function refreshReport() {
   els.tutor.innerHTML = tutor.advise(r);
 }
 
-// eventos dos botões e inputs
+// Controles
 els.tourniquetBtn.onclick = () => { sim.applyTourniquet(); refreshReport(); };
 els.antisepsisBtn.onclick = () => { sim.doAntisepsis(); refreshReport(); };
 els.resetBtn.onclick = () => { sim.reset(); refreshReport(); };
@@ -44,7 +48,7 @@ els.gaugeSel.onchange = (e) => { sim.setGauge(parseInt(e.target.value,10)); refr
 els.skinSel.onchange = (e) => { sim.setSkin(parseFloat(e.target.value)); refreshReport(); };
 els.toneSel.onchange = (e) => { sim.setTone(parseFloat(e.target.value)); refreshReport(); };
 
-// clique no canvas tenta a punção
+// Canvas → tentativa
 els.canvas.addEventListener('click', (ev)=>{
   const rect = els.canvas.getBoundingClientRect();
   const x = (ev.clientX - rect.left) * (els.canvas.width/rect.width);
@@ -53,6 +57,41 @@ els.canvas.addEventListener('click', (ev)=>{
   refreshReport();
 });
 
-// inicia
+// ===== Chat Tutor (100% offline) =====
+function pushMsg(text, from='bot'){
+  const el = document.createElement('div');
+  el.className = `chat-msg ${from}`;
+  el.innerText = text;
+  els.chatMessages.appendChild(el);
+  els.chatMessages.scrollTop = els.chatMessages.scrollHeight;
+}
+
+function openChat(){
+  els.chatPanel.classList.add('open');
+  if (!els.chatMessages.dataset.greeted){
+    pushMsg('Olá! Sou o Tutor do Sim-Vein. Posso ajudar com técnica, assepsia, ângulo, seleção de cateter e intercorrências. Faça sua pergunta.', 'bot');
+    els.chatMessages.dataset.greeted = '1';
+  }
+  els.chatInput.focus();
+}
+function closeChat(){ els.chatPanel.classList.remove('open'); }
+
+els.chatFab.onclick = openChat;
+els.chatClose.onclick = closeChat;
+
+els.chatForm.addEventListener('submit', (e)=>{
+  e.preventDefault();
+  const text = (els.chatInput.value || '').trim();
+  if (!text) return;
+  pushMsg(text, 'user');
+  els.chatInput.value = '';
+
+  // resposta baseada no relatório atual + intenção por palavras-chave
+  const r = sim.getReport();
+  const reply = tutor.chatReply(text, r);
+  pushMsg(reply, 'bot');
+});
+
+// Init
 sim.reset();
 refreshReport();
