@@ -18,9 +18,8 @@
     <button id="installBtn" hidden>Instalar</button>
   </header>
 
-  <!-- CONTEÚDO -->
   <main class="layout">
-    <!-- Configuração -->
+    <!-- ESQUERDA: CONTROLES -->
     <section class="panel" aria-label="Configuração do caso">
       <h2>Caso</h2>
       <div class="grid">
@@ -73,26 +72,33 @@
             <option value="glicose">Glicose</option>
             <option value="hemograma">Hemograma</option>
             <option value="coagulacao">Coagulação (TP/TTPa)</option>
-            <option value="bioquimica">Bioquímica</option>
+            <option value="bioquimica">Bioquímica (soro)</option>
+            <option value="eletrólitos">Eletrólitos</option>
+            <option value="sorologia">Sorologia</option>
+            <option value="hormonios">Hormônios</option>
+            <option value="lactato">Lactato</option>
+            <option value="hba1c">HbA1c</option>
             <option value="hemocultura">Hemocultura</option>
           </select>
         </label>
         <label>Tubo selecionado
           <select id="tubeSel">
             <option value="">Selecione o tubo…</option>
-            <option value="cinza">Cinza — Fluoreto + EDTA</option>
-            <option value="roxo">Roxo — EDTA</option>
+            <option value="hemocultura">Frasco de hemocultura</option>
             <option value="azul">Azul claro — Citrato</option>
+            <option value="vermelho">Vermelho — Ativador (± gel)</option>
+            <option value="amarelo">Amarelo — Ativador + gel</option>
             <option value="verde">Verde — Heparina</option>
-            <option value="vermelho">Vermelho — Ativador de coágulo</option>
-            <option value="amarelo">Amarelo — Soro + gel</option>
+            <option value="roxo">Roxo/Lilás — EDTA</option>
+            <option value="cinza">Cinza — Fluoreto + EDTA</option>
+            <option value="vermelho/amarelo">Vermelho/Amarelo (Soro)</option>
           </select>
         </label>
       </div>
       <div id="tubeInfo" class="tube-info"></div>
 
       <div class="order">
-        <b>Ordem de coleta (recomendada):</b>
+        <b>Ordem de coleta (CLSI):</b>
         <ol id="orderList"></ol>
       </div>
 
@@ -103,17 +109,26 @@
       </div>
     </section>
 
-    <!-- Canvas -->
+    <!-- CENTRO: SIMULAÇÃO -->
     <section class="canvasWrap" aria-label="Simulação">
       <canvas id="simCanvas" width="880" height="420" aria-label="Braço virtual"></canvas>
       <div class="hint">Clique em uma veia para tentar a punção →</div>
     </section>
 
-    <!-- Relatório -->
+    <!-- DIREITA: RELATÓRIO / TUTOR / REFERÊNCIAS -->
     <section class="panel" aria-label="Relatório e IA">
       <h2>Relatório & IA Tutor</h2>
       <div id="report" class="report"></div>
       <div id="tutor" class="tutor"></div>
+
+      <div class="divider"></div>
+
+      <h3>Normas & Referências</h3>
+      <div class="refbox">
+        <p><b>Ângulo venoso:</b> 10°–25° (0° paralelo; 90° perpendicular). Bisel voltado para cima. <i>Gasometria arterial não faz parte desta simulação.</i></p>
+        <p><b>Valores de referência (adultos, podem variar por laboratório):</b></p>
+        <table class="ref-table" id="refTable"></table>
+      </div>
     </section>
   </main>
 
@@ -130,7 +145,6 @@
     </div>
   </footer>
 
-  <!-- JS -->
   <script type="module" src="app.js"></script>
   <script>
     if ('serviceWorker' in navigator) {
