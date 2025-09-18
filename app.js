@@ -18,40 +18,167 @@ const els = {
   tubeSel: document.getElementById('tubeSel'),
   tubeInfo: document.getElementById('tubeInfo'),
   orderList: document.getElementById('orderList'),
+  refTable: document.getElementById('refTable')
 };
 
-// ===== Dados dos tubos e exames =====
-const ORDER = ['hemocultura','azul','vermelho/amarelo','verde','roxo','cinza'];
+// =======================
+// Tubos e Exames (CORRETOS)
+// =======================
+
+// Ordem CLSI
+const ORDER = [
+  'hemocultura',
+  'azul',
+  'vermelho/amarelo',
+  'verde',
+  'roxo',
+  'cinza'
+];
+
 const TUBES = {
-  'hemocultura': { nome:'Hemocultura', cor:'sem cor/tampa própria', aditivo:'Meio de cultura', usos:'Análise microbiológica', obs:'Sempre primeiro', key:'hemocultura' },
-  'azul': { nome:'Azul claro', cor:'Azul claro', aditivo:'Citrato de sódio', usos:'TP, TTPa (coagulação)', key:'azul' },
-  'vermelho': { nome:'Vermelho', cor:'Vermelho', aditivo:'Ativador de coágulo', usos:'Soro: bioquímica/sorologia', key:'vermelho' },
-  'amarelo': { nome:'Amarelo', cor:'Amarelo', aditivo:'Ativador + gel separador', usos:'Soro: bioquímica/sorologia', key:'amarelo' },
-  'verde': { nome:'Verde', cor:'Verde', aditivo:'Heparina', usos:'Bioquímica específica (plasma)', key:'verde' },
-  'roxo': { nome:'Roxo', cor:'Roxo', aditivo:'EDTA', usos:'Hemograma, HbA1c', key:'roxo' },
-  'cinza': { nome:'Cinza', cor:'Cinza', aditivo:'Fluoreto + EDTA', usos:'Glicose, lactato', key:'cinza' }
-};
-const EXAMS = {
-  glicose:       { nome:'Glicose', recomendado:'cinza' },
-  hemograma:     { nome:'Hemograma', recomendado:'roxo' },
-  coagulacao:    { nome:'Coagulação (TP/TTPa)', recomendado:'azul' },
-  bioquimica:    { nome:'Bioquímica', recomendado:'vermelho/amarelo' },
-  hemocultura:   { nome:'Hemocultura', recomendado:'hemocultura' }
+  hemocultura: {
+    nome: 'Frasco de Hemocultura',
+    cor: 'Frasco específico',
+    aditivo: 'Meio de cultura',
+    usos: 'Análise microbiológica (hemocultura)',
+    key: 'hemocultura'
+  },
+  azul: {
+    nome: 'Azul claro',
+    cor: 'Azul claro',
+    aditivo: 'Citrato de sódio',
+    usos: 'Coagulação (TP, TTPa, INR)',
+    key: 'azul'
+  },
+  vermelho: {
+    nome: 'Vermelho',
+    cor: 'Vermelho',
+    aditivo: 'Ativador de coágulo (± gel)',
+    usos: 'Soro: bioquímica, sorologia, hormônios',
+    key: 'vermelho'
+  },
+  amarelo: {
+    nome: 'Amarelo',
+    cor: 'Amarelo',
+    aditivo: 'Ativador + gel separador',
+    usos: 'Soro: bioquímica/sorologia (melhor separação)',
+    key: 'amarelo'
+  },
+  verde: {
+    nome: 'Verde',
+    cor: 'Verde',
+    aditivo: 'Heparina',
+    usos: 'Bioquímica em plasma (eletrólitos, etc.)',
+    key: 'verde'
+  },
+  roxo: {
+    nome: 'Roxo/Lilás',
+    cor: 'Roxo/Lilás',
+    aditivo: 'EDTA',
+    usos: 'Hematologia (hemograma, morfologia celular)',
+    key: 'roxo'
+  },
+  cinza: {
+    nome: 'Cinza',
+    cor: 'Cinza',
+    aditivo: 'Fluoreto de sódio + EDTA',
+    usos: 'Glicose e lactato (inibe glicólise)',
+    key: 'cinza'
+  }
 };
 
-// Montar lista de ordem de coleta
+// Exames → tubo recomendado
+const EXAMS = {
+  glicose:       { nome: 'Glicose',                 recomendado: 'cinza' },
+  hemograma:     { nome: 'Hemograma',               recomendado: 'roxo' },
+  coagulacao:    { nome: 'Coagulação (TP/TTPa)',    recomendado: 'azul' },
+  bioquimica:    { nome: 'Bioquímica (soro)',       recomendado: 'vermelho/amarelo' },
+  eletrólitos:   { nome: 'Eletrólitos',             recomendado: 'verde' },
+  sorologia:     { nome: 'Sorologia',               recomendado: 'vermelho/amarelo' },
+  hormonios:     { nome: 'Hormônios',               recomendado: 'vermelho/amarelo' },
+  lactato:       { nome: 'Lactato',                 recomendado: 'cinza' },
+  hba1c:         { nome: 'HbA1c',                   recomendado: 'roxo' },
+  hemocultura:   { nome: 'Hemocultura',             recomendado: 'hemocultura' }
+};
+
+// Valores de referência (sintéticos, podem variar por laboratório)
+const REF_RANGES = [
+  { parametro: 'Glicemia (jejum)', valor: '70–99 mg/dL', tubo: 'Cinza (Fluoreto + EDTA)' },
+  { parametro: 'Sódio (Na⁺)', valor: '135–145 mEq/L', tubo: 'Verde (Heparina) — plasma' },
+  { parametro: 'Potássio (K⁺)', valor: '3,5–5,0 mEq/L', tubo: 'Verde (Heparina) — plasma' },
+  { parametro: 'Hemoglobina (H):', valor: '13,5 – 18,0 g/dL', tubo: 'Roxo (EDTA)' },
+  { parametro: 'Hemoglobina (M):', valor: '11,5 – 14,9 g/dL', tubo: 'Roxo (EDTA)' },
+  { parametro: 'Hematócrito (H):', valor: '40 – 54 %', tubo: 'Roxo (EDTA)' },
+  { parametro: 'Hematócrito (M):', valor: '35,3 – 46,1 %', tubo: 'Roxo (EDTA)' }
+];
+
+// =======================
+// UI helpers
+// =======================
 function renderOrder() {
   els.orderList.innerHTML = '';
   ORDER.forEach(k => {
     const li = document.createElement('li');
-    li.textContent = k === 'vermelho/amarelo'
-      ? 'Vermelho/Amarelo (ativador ± gel) — soro'
-      : (TUBES[k]?.nome || 'Hemocultura');
+    if (k === 'vermelho/amarelo') {
+      li.textContent = 'Tubo de soro — Vermelho/Amarelo (ativador ± gel)';
+    } else {
+      li.textContent = TUBES[k].nome;
+    }
     els.orderList.appendChild(li);
   });
 }
 
-// ===== Simulador / Tutor =====
+function renderRefTable() {
+  els.refTable.innerHTML = `
+    <tr><th>Parâmetro</th><th>Valores de referência*</th><th>Tubo</th></tr>
+    ${REF_RANGES.map(r=>`<tr><td>${r.parametro}</td><td>${r.valor}</td><td>${r.tubo}</td></tr>`).join('')}
+  `;
+}
+
+function tubeAdvice(){
+  const exam = els.examSel.value;
+  const tube = els.tubeSel.value;
+  let html = '';
+
+  if (exam) {
+    const rec = EXAMS[exam].recomendado;
+    const recTxt = (rec === 'vermelho/amarelo')
+      ? 'Vermelho/Amarelo (soro)'
+      : TUBES[rec].nome;
+    html += `<div><b>Exame:</b> ${EXAMS[exam].nome} — <span class="pill">tubo recomendado: ${recTxt}</span></div>`;
+  }
+
+  if (tube) {
+    let nome = ''; let aditivo = ''; let usos = '';
+    if (tube === 'vermelho/amarelo') {
+      nome = 'Vermelho/Amarelo (soro)';
+      aditivo = 'Ativador de coágulo ± gel separador';
+      usos = 'Bioquímica/Sorologia (soro)';
+    } else {
+      const info = TUBES[tube];
+      nome = info.nome; aditivo = info.aditivo; usos = info.usos;
+    }
+    html += `<div><b>Tubo selecionado:</b> ${nome} — <span class="pill">${aditivo}</span> <span class="pill">${usos}</span></div>`;
+  }
+
+  if (!html) html = 'Selecione o exame e o tubo para ver as recomendações.';
+  els.tubeInfo.innerHTML = html;
+}
+
+function correctnessBadge() {
+  const exam = els.examSel.value;
+  const tube = els.tubeSel.value;
+  if (!exam || !tube) return '';
+  const rec = EXAMS[exam].recomendado;
+  const ok = (rec === tube) || (rec === 'vermelho/amarelo' && (tube === 'vermelho' || tube === 'amarelo' || tube === 'vermelho/amarelo'));
+  return ok
+    ? '<span class="badge good">tubo adequado</span>'
+    : '<span class="badge warn">tubo não recomendado</span>';
+}
+
+// =======================
+// Simulador / Tutor
+// =======================
 const sim = new SimEngine(els.canvas);
 const tutor = new Tutor();
 const RECO_MIN = 10, RECO_MAX = 25;
@@ -59,38 +186,11 @@ const RECO_MIN = 10, RECO_MAX = 25;
 function refreshAngleOut(v){
   els.angleOut.textContent = `${v}° — 0° = paralelo à pele, 90° = perpendicular. Recomendado: ${RECO_MIN}°–${RECO_MAX}°.`;
 }
-function tubeAdvice(){
-  const exam = els.examSel.value;
-  const tube = els.tubeSel.value;
-  let html = '';
-  if (exam) {
-    const rec = EXAMS[exam].recomendado;
-    const recTxt = (rec==='vermelho/amarelo') ? 'Vermelho/Amarelo' : (TUBES[rec]?.nome || 'Hemocultura');
-    html += `<div><b>Exame:</b> ${EXAMS[exam].nome} — <span class="pill">tubo recomendado: ${recTxt}</span></div>`;
-  }
-  if (tube) {
-    const info = (tube==='vermelho' || tube==='amarelo') ? TUBES[tube] : TUBES[tube];
-    const nome = tube==='vermelho/amarelo' ? 'Vermelho/Amarelo' : info?.nome || '';
-    const aditivo = tube==='vermelho/amarelo' ? 'Ativador ± gel separador' : info?.aditivo || '';
-    const usos = tube==='vermelho/amarelo' ? 'Soro: bioquímica/sorologia' : info?.usos || '';
-    html += `<div><b>Tubo selecionado:</b> ${nome} — <span class="pill">${aditivo}</span> <span class="pill">${usos}</span></div>`;
-  }
-  if (!html) html = 'Selecione o exame e o tubo para ver as recomendações.';
-  els.tubeInfo.innerHTML = html;
-}
-function correctnessBadge() {
-  const exam = els.examSel.value;
-  const tube = els.tubeSel.value;
-  if (!exam || !tube) return '';
-  const rec = EXAMS[exam].recomendado;
-  const ok = (rec === tube) || (rec==='vermelho/amarelo' && (tube==='vermelho' || tube==='amarelo'));
-  return ok ? '<span class="badge good">tubo adequado</span>' : '<span class="badge warn">tubo não recomendado</span>';
-}
 
 function refreshReport(){
   const r = sim.getReport();
   els.report.innerHTML = `
-    <div><b>Perfil:</b> ${sim.state.profileLabel}</div>
+    <div><b>Perfil:</b> ${sim.state.profileLabel || '—'}</div>
     <div><b>Garrote:</b> ${r.tourniquet ? '<span class="badge good">ok</span>' : '<span class="badge warn">faltando</span>'}</div>
     <div><b>Antissepsia:</b> ${r.antisepsis ? '<span class="badge good">ok</span>' : '<span class="badge warn">faltando</span>'}</div>
     <div><b>Ângulo:</b> ${r.angle}°</div>
@@ -105,34 +205,41 @@ function refreshReport(){
   els.tutor.innerHTML = tutor.advise(r);
 }
 
-// ===== Eventos =====
-els.profileSel.onchange = () => {
+// =======================
+// Eventos
+// =======================
+els.profileSel.addEventListener('change', () => {
   sim.applyProfile(els.profileSel.value);
-  // Ajusta pele/tônus sugeridos pelo perfil selecio­nado
   els.skinSel.value = String(sim.state.skin);
   els.toneSel.value = String(sim.state.tone);
   refreshReport();
-};
+});
+
 els.tourniquetBtn.onclick = () => { sim.applyTourniquet(); refreshReport(); };
 els.antisepsisBtn.onclick = () => { sim.doAntisepsis(); refreshReport(); };
 els.resetBtn.onclick = () => { sim.reset(); refreshReport(); refreshAngleOut(sim.state.angle); };
-els.angleRange.oninput = (e) => { const v = parseInt(e.target.value,10); sim.setAngle(v); refreshAngleOut(v); refreshReport(); };
-els.gaugeSel.onchange = (e) => { sim.setGauge(parseInt(e.target.value,10)); refreshReport(); };
-els.skinSel.onchange = (e) => { sim.setSkin(parseFloat(e.target.value)); refreshReport(); };
-els.toneSel.onchange = (e) => { sim.setTone(parseFloat(e.target.value)); refreshReport(); };
 
-els.examSel.onchange = () => { // auto-sugerir tubo
+els.angleRange.oninput = (e) => {
+  const v = parseInt(e.target.value,10);
+  sim.setAngle(v);
+  refreshAngleOut(v);
+  refreshReport();
+};
+
+els.gaugeSel.onchange = (e) => { sim.setGauge(parseInt(e.target.value,10)); refreshReport(); };
+els.skinSel.onchange  = (e) => { sim.setSkin(parseFloat(e.target.value));   refreshReport(); };
+els.toneSel.onchange  = (e) => { sim.setTone(parseFloat(e.target.value));   refreshReport(); };
+
+els.examSel.onchange = () => {
   const v = els.examSel.value;
   if (!v) { tubeAdvice(); refreshReport(); return; }
   const rec = EXAMS[v].recomendado;
-  if (rec === 'vermelho/amarelo') {
-    // não força escolha entre vermelho/amarelo, só informa
-  } else {
-    els.tubeSel.value = rec;
-  }
+  // Para soro (vermelho/amarelo), não forçamos entre vermelho ou amarelo.
+  if (rec !== 'vermelho/amarelo') els.tubeSel.value = rec;
   tubeAdvice();
   refreshReport();
 };
+
 els.tubeSel.onchange = () => { tubeAdvice(); refreshReport(); };
 
 // Canvas → tentativa
@@ -144,10 +251,15 @@ els.canvas.addEventListener('click', (ev)=>{
   refreshReport();
 });
 
-// Init
+// =======================
+// Inicialização
+// =======================
 renderOrder();
+renderRefTable();
 sim.applyProfile('adulto');
 sim.reset();
 refreshReport();
 refreshAngleOut(sim.state.angle);
 tubeAdvice();
+
+ 
