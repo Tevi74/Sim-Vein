@@ -1,47 +1,84 @@
 export class SimEngine {
   constructor(canvas){
     this.cv = canvas; this.ct = canvas.getContext('2d');
-    this.state = { skin:1.0, tone:1.0, gauge:20, angle:15,
-      tourniquet:false, antisepsis:false, attempts:0, status:'aguardando', score:0 };
+    this.state = {
+      profile: 'adulto',
+      profileLabel: 'Adulto',
+      skin: 1.0, tone: 1.0, gauge: 20, angle: 15,
+      tourniquet:false, antisepsis:false, attempts:0, status:'aguardando', score:0
+    };
     this.veins = this._makeVeins();
     this._draw();
   }
+
+  // Perfis do paciente: ajusta pele/tônus/profundidade/diâmetro
+  applyProfile(p){
+    const map = {
+      adulto:      { skin:1.0, tone:1.0, depthMul:1.0, diamMul:1.0, label:'Adulto' },
+      idoso:       { skin:0.9, tone:0.9, depthMul:0.95, diamMul:0.95, label:'Idoso' },
+      pediatrico:  { skin:0.85, tone:1.1, depthMul:0.8,  diamMul:0.8,  label:'Pediátrico' },
+      obeso:       { skin:1.25, tone:0.9, depthMul:1.25, diamMul:1.0,  label:'Obeso' },
+      desidratado: { skin:1.1, tone:0.8, depthMul:1.1,  diamMul:0.95, label:'Desidratado' }
+    };
+    const cfg = map[p] || map.adulto;
+    this.state.profile = p;
+    this.state.profileLabel = cfg.label;
+    this.state.skin = cfg.skin;
+    this.state.tone = cfg.tone;
+    this.profileDepthMul = cfg.depthMul;
+    this.profileDiamMul  = cfg.diamMul;
+    this._draw();
+  }
+
   _makeVeins(){
     const v = [];
     for(let i=0;i<4;i++){
       v.push({
-        x: 160 + i*180, y: 220 + Math.sin(i*0.9)*20,
-        d: 6 + (i%2?2:0), depth: 6 + i*2,
+        x: 160 + i*180,
+        y: 220 + Math.sin(i*0.9)*20,
+        d: 6 + (i%2?2:0),   // diâmetro base
+        depth: 6 + i*2,     // profundidade base
         name: ['Metacarpal','Cefálica','Basílica','Mediana'][i]
       });
     }
     return v;
   }
+
   setSkin(v){ this.state.skin = v; this._draw(); }
   setTone(v){ this.state.tone = v; this._draw(); }
   setGauge(g){ this.state.gauge = g; }
   setAngle(a){ this.state.angle = a; this._draw(); }
   applyTourniquet(){ this.state.tourniquet = true; this._draw(); }
   doAntisepsis(){ this.state.antisepsis = true; this._draw(); }
+
   reset(){
-    this.state.tourniquet=false; this.state.antisepsis=false; this.state.attempts=0;
-    this.state.status='aguardando'; this.state.score=0; this.veins = this._makeVeins(); this._draw();
+    this.state.tourniquet=false; this.state.antisepsis=false;
+    this.state.attempts=0; this.state.status='aguardando'; this.state.score=0;
+    this.veins = this._makeVeins(); this._draw();
   }
+
   tryPuncture(pt){
     this.state.attempts++;
+    // veia mais próxima
     const hit = this.veins.map(v=>({v,dist:Math.hypot(pt.x-v.x, pt.y-v.y)})).sort((a,b)=>a.dist-b.dist)[0];
     const t = hit.v;
+
+    // Ajustes por perfil
+    const depth = t.depth * (this.profileDepthMul || 1) * this.state.skin;
+    const diam  = t.d * (this.profileDiamMul || 1) * this.state.tone;
+
     const angleOK = this.state.angle>=10 && this.state.angle<=25;
-    const depthOK = (t.depth * this.state.skin) <= 12;
+    const depthOK = depth <= 12;
     const toneBoost = this.state.tourniquet ? 1.2 : 1.0;
     const calib = this.state.gauge;
 
+    // prob. de sucesso
     const base = Math.max(0, 1 - (hit.dist/90));
     let p = base * toneBoost;
     if (!this.state.antisepsis) p *= 0.7;
     if (!angleOK) p *= 0.65;
     if (!depthOK) p *= 0.6;
-    if (calib<=18 && t.d < 7) p *= 0.7;
+    if (calib<=18 && diam < 7) p *= 0.7;
 
     const success = Math.random() < p;
     if (success){
@@ -51,7 +88,7 @@ export class SimEngine {
       if (!this.state.tourniquet) score -= 10;
       if (!angleOK) score -= 15;
       if (!depthOK) score -= 10;
-      if (calib<=18 && t.d < 7) score -= 10;
+      if (calib<=18 && diam < 7) score -= 10;
       score -= Math.max(0, (this.state.attempts-1)*10);
       this.state.score = Math.max(0, score);
     } else {
@@ -64,44 +101,65 @@ export class SimEngine {
     }
     this._draw();
   }
-  getReport(){ const s=this.state; return { tourniquet:s.tourniquet, antisepsis:s.antisepsis, attempts:s.attempts, status:s.status, angle:s.angle, gauge:s.gauge, score:s.score }; }
+
+  getReport(){
+    const s = this.state;
+    return {
+      tourniquet:s.tourniquet, antisepsis:s.antisepsis, attempts:s.attempts,
+      status:s.status, angle:s.angle, gauge:s.gauge, score:s.score
+    };
+  }
 
   _draw(){
     const ct = this.ct; const w=this.cv.width, h=this.cv.height;
     ct.clearRect(0,0,w,h);
-    ct.fillStyle = '#f0f4f8'; ct.fillRect(0,0,w,h); // fundo
+
+    // fundo
+    ct.fillStyle = '#f0f4f8'; ct.fillRect(0,0,w,h);
 
     // braço
-    ct.fillStyle = '#ffd7b3'; ct.strokeStyle = '#d39b76'; ct.lineWidth = 2;
-    ct.beginPath(); (ct.roundRect? ct.roundRect(60,120,760,180,30): ct.rect(60,120,760,180)); ct.fill(); ct.stroke();
+    ct.fillStyle = '#ffd7b3';
+    ct.strokeStyle = '#d39b76'; ct.lineWidth = 2;
+    ct.beginPath();
+    if (ct.roundRect) ct.roundRect(60,120,760,180,30); else ct.rect(60,120,760,180);
+    ct.fill(); ct.stroke();
 
     // garrote
     if(this.state.tourniquet){ ct.fillStyle = '#0d3b66'; ct.fillRect(70,180,22,60); }
 
-    // halo antisséptico
+    // área antisséptica
     if(this.state.antisepsis){
       ct.fillStyle = 'rgba(27,153,139,0.14)';
-      ct.beginPath(); (ct.roundRect? ct.roundRect(120,150,720,120,20): ct.rect(120,150,720,120)); ct.fill();
+      ct.beginPath();
+      if (ct.roundRect) ct.roundRect(120,150,720,120,20); else ct.rect(120,150,720,120);
+      ct.fill();
     }
 
-    // veias
+    // veias (com ajustes de perfil/tono)
     for(const v of this.veins){
-      const d = v.d * this.state.tone;
+      const diam = (v.d * (this.profileDiamMul || 1) * this.state.tone);
       ct.fillStyle = '#2b72ff';
-      ct.beginPath(); ct.ellipse(v.x, v.y, 46, 14, 0, 0, Math.PI*2); ct.fill();
-      ct.fillStyle = '#08203a'; ct.font = '12px system-ui'; ct.fillText(`${v.name} (Ø ${d.toFixed(1)}mm)`, v.x-54, v.y-18);
+      ct.beginPath();
+      ct.ellipse(v.x, v.y, 46, 14, 0, 0, Math.PI*2);
+      ct.fill();
+
+      ct.fillStyle = '#08203a';
+      ct.font = '12px system-ui';
+      ct.fillText(`${v.name} (Ø ${diam.toFixed(1)}mm)`, v.x-54, v.y-18);
     }
 
-    // mostrador de ângulo + faixa recomendada
+    // mostrador de ângulo + faixa recomendada 10–25°
     ct.save(); ct.translate(760, 90);
     ct.strokeStyle = '#0d1b2a'; ct.lineWidth = 2;
     ct.beginPath(); ct.arc(0,0,34,0,Math.PI*2); ct.stroke();
-    // faixa 10-25° em verde
+
+    // arco verde recomendado
     ct.strokeStyle = '#12b886'; ct.lineWidth = 4;
     ct.beginPath();
     const a1 = (10-90)*Math.PI/180, a2 = (25-90)*Math.PI/180;
     ct.arc(0,0,34,a1,a2); ct.stroke();
-    // ponteiro do ângulo
+
+    // ponteiro
     ct.strokeStyle = '#0d1b2a'; ct.lineWidth = 2;
     ct.beginPath(); ct.moveTo(0,0);
     const a = (this.state.angle-90) * Math.PI/180;
