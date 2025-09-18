@@ -5,15 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Sim-Vein — Simulador de Punção Venosa</title>
   <meta name="theme-color" content="#0d1b2a" />
-  <link rel="manifest" href="/manifest.webmanifest" />
-  <link rel="icon" href="/public/imagens/logo-sim.png" />
-  <link rel="apple-touch-icon" href="/public/imagens/logo-sim.png" />
-  <link rel="stylesheet" href="/styles.css" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="public/imagens/logo-sim.png" />
+  <link rel="apple-touch-icon" href="public/imagens/logo-sim.png" />
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <!-- HEADER -->
   <header class="topbar">
-    <img src="/public/imagens/logo-sim.png" alt="Logo Sim-Vein" class="logo" />
+    <img src="public/imagens/logo-sim.png" alt="Logo Sim-Vein" class="logo" />
     <h1>Sim-Vein — PWA de Punção Venosa</h1>
     <button id="installBtn" hidden>Instalar</button>
   </header>
@@ -46,9 +46,11 @@
             <option value="24">24G</option>
           </select>
         </label>
-        <label>Ângulo (°)
-          <input type="range" id="angleRange" min="5" max="35" value="15" />
-          <output id="angleOut" for="angleRange" class="out">15° (recomendado 10°–25°)</output>
+        <label>Ângulo de inserção (°)
+          <input type="range" id="angleRange" min="0" max="90" value="15" />
+          <output id="angleOut" for="angleRange" class="out">
+            15° — 0° = paralelo à pele, 90° = perpendicular. Recomendado: 10°–25°.
+          </output>
         </label>
       </div>
       <div class="actions">
@@ -75,43 +77,27 @@
   <!-- FOOTER -->
   <footer class="foot">
     <div class="foot-wrap">
-      <img src="/public/imagens/logo-instituto.png" alt="Logo Instituto" class="foot-logo" />
+      <img src="public/imagens/logo-instituto.png" alt="Logo Instituto" class="foot-logo" />
       <div class="foot-sign">
-        <img src="/public/imagens/logo-harastech.png" alt="HarasTech" class="foot-logo-sm" />
-        <small>
-          Produto criado por HarasTech<br/>
+        <img src="public/imagens/logo-harastech.png" alt="HarasTech" class="foot-logo-sm" />
+        <small>Produto criado por HarasTech<br/>
           contato: <a href="mailto:harastech@outlook.com">harastech@outlook.com</a>
         </small>
       </div>
     </div>
   </footer>
 
-  <!-- FAB do Tutor -->
-  <button id="chatFab" class="chat-fab" title="Abrir Tutor">?</button>
-
-  <!-- Painel do Tutor -->
-  <div id="chatPanel" class="chat-panel" aria-live="polite" aria-label="Chat Tutor">
-    <div class="chat-header">
-      <div class="chat-title">Tutor — Sim-Vein</div>
-      <button id="chatClose" class="chat-close" aria-label="Fechar">×</button>
-    </div>
-    <div id="chatMessages" class="chat-messages"></div>
-    <form id="chatForm" class="chat-form" autocomplete="off">
-      <input id="chatInput" class="chat-input" type="text" placeholder="Pergunte: ângulo, garrote, assépsia, calibre..." />
-      <button class="chat-send" type="submit">Enviar</button>
-    </form>
-  </div>
-
   <!-- JS -->
-  <script type="module" src="/app.js"></script>
+  <script type="module" src="app.js"></script>
   <script>
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js'));
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js');
+      });
     }
     let deferredPrompt;
     window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
+      e.preventDefault(); deferredPrompt = e;
       const btn = document.getElementById('installBtn');
       btn.hidden = false;
       btn.onclick = async () => {
