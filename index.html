@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sim-Vein — Simulador de Punção Venosa</title>
+  <meta name="theme-color" content="#0d1b2a" />
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="icon" href="./assets/icon-192.png" />
+  <link rel="apple-touch-icon" href="./assets/icon-192.png" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <img src="./assets/logo.svg" alt="Sim-Vein" class="logo" />
+    <h1>Sim-Vein — PWA de Punção Venosa</h1>
+    <button id="installBtn" hidden>Instalar</button>
+  </header>
+
+  <main class="layout">
+    <section class="panel" aria-label="Configuração do caso">
+      <h2>Caso</h2>
+      <div class="grid">
+        <label>
+          Pele
+          <select id="skinSel">
+            <option value="1">Normal</option>
+            <option value="1.2">Espessa</option>
+            <option value="0.85">Fina</option>
+          </select>
+        </label>
+        <label>
+          Tônus venoso
+          <select id="toneSel">
+            <option value="1">Normal</option>
+            <option value="0.8">Baixo</option>
+            <option value="1.2">Alto</option>
+          </select>
+        </label>
+        <label>
+          Calibre do cateter
+          <select id="gaugeSel">
+            <option value="20">20G</option>
+            <option value="18">18G</option>
+            <option value="22">22G</option>
+            <option value="24">24G</option>
+          </select>
+        </label>
+        <label>
+          Ângulo (°)
+          <input type="range" id="angleRange" min="5" max="35" value="15" />
+        </label>
+      </div>
+      <div class="actions">
+        <button id="tourniquetBtn" class="btn">Aplicar Garrote</button>
+        <button id="antisepsisBtn" class="btn btn-alt">Antissepsia</button>
+        <button id="resetBtn" class="btn btn-ghost">Reiniciar</button>
+      </div>
+    </section>
+
+    <section class="canvasWrap" aria-label="Simulação">
+      <canvas id="simCanvas" width="880" height="420" aria-label="Braço virtual"></canvas>
+      <div class="hint">Toque em uma veia para tentar a punção →</div>
+    </section>
+
+    <section class="panel" aria-label="Relatório e IA">
+      <h2>Relatório & IA Tutor</h2>
+      <div id="report" class="report"></div>
+      <div id="tutor" class="tutor"></div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <small>Uso educacional. Não substitui treinamento clínico supervisionado.</small>
+  </footer>
+
+  <script type="module" src="./app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js');
+      });
+    }
+
+    // Instalação PWA
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      const btn = document.getElementById('installBtn');
+      btn.hidden = false;
+      btn.onclick = async () => {
+        btn.hidden = true;
+        if (deferredPrompt) {
+          deferredPrompt.prompt();
+          await deferredPrompt.userChoice;
+          deferredPrompt = null;
+        }
+      };
+    });
+  </script>
+</body>
+</html>
