@@ -15,7 +15,11 @@
   <header class="topbar">
     <img src="public/imagens/logo-sim.png" alt="Logo Sim-Vein" class="logo" />
     <h1>Sim-Vein — Simulador de Punção Venosa</h1>
-    <button id="installBtn" hidden>Instalar</button>
+    <div class="top-actions">
+      <button id="patientBtn" class="btn btn-ghost">Ficha do paciente</button>
+      <button id="exportBtn" class="btn">Exportar PDF</button>
+      <button id="installBtn" hidden>Instalar</button>
+    </div>
   </header>
 
   <main class="layout">
@@ -54,8 +58,12 @@
             <option value="24">24G</option>
           </select>
         </label>
+
         <label>Ângulo de inserção (°)
-          <input type="range" id="angleRange" min="0" max="90" value="15" />
+          <div class="angle-row">
+            <input type="range" id="angleRange" min="0" max="90" value="15" />
+            <span class="info" title="0° = paralelo à pele; 90° = perpendicular. Recomendado: 10°–25°.">i</span>
+          </div>
           <output id="angleOut" for="angleRange" class="out">
             15° — 0° = paralelo à pele, 90° = perpendicular. Recomendado: 10°–25°.
           </output>
@@ -82,17 +90,20 @@
           </select>
         </label>
         <label>Tubo selecionado
-          <select id="tubeSel">
-            <option value="">Selecione o tubo…</option>
-            <option value="hemocultura">Frasco de hemocultura</option>
-            <option value="azul">Azul claro — Citrato</option>
-            <option value="vermelho">Vermelho — Ativador (± gel)</option>
-            <option value="amarelo">Amarelo — Ativador + gel</option>
-            <option value="verde">Verde — Heparina</option>
-            <option value="roxo">Roxo/Lilás — EDTA</option>
-            <option value="cinza">Cinza — Fluoreto + EDTA</option>
-            <option value="vermelho/amarelo">Vermelho/Amarelo (Soro)</option>
-          </select>
+          <div class="angle-row">
+            <select id="tubeSel" title="Passe o mouse para ver inversões típicas (verifique o fabricante).">
+              <option value="">Selecione o tubo…</option>
+              <option value="hemocultura" title="Mistura conforme fabricante (não agitar).">Frasco de hemocultura</option>
+              <option value="azul" title="3–4 inversões suaves.">Azul claro — Citrato</option>
+              <option value="vermelho" title="5 inversões (se ativador).">Vermelho — Ativador (± gel)</option>
+              <option value="amarelo" title="5 inversões.">Amarelo — Ativador + gel</option>
+              <option value="verde" title="8–10 inversões.">Verde — Heparina</option>
+              <option value="roxo" title="8–10 inversões.">Roxo/Lilás — EDTA</option>
+              <option value="cinza" title="8–10 inversões.">Cinza — Fluoreto + EDTA</option>
+              <option value="vermelho/amarelo" title="Soro (ativador ± gel).">Vermelho/Amarelo (Soro)</option>
+            </select>
+            <span class="info" title="Ordem CLSI: Hemocultura → Azul → Vermelho/Amarelo → Verde → Roxo → Cinza. Inversões típicas: Azul 3–4; Vermelho/Amarelo 5; Verde 8–10; Roxo 8–10; Cinza 8–10 (confira o fabricante).">i</span>
+          </div>
         </label>
       </div>
       <div id="tubeInfo" class="tube-info"></div>
@@ -125,9 +136,10 @@
 
       <h3>Normas & Referências</h3>
       <div class="refbox">
-        <p><b>Ângulo venoso:</b> 10°–25° (0° paralelo; 90° perpendicular). Bisel voltado para cima. <i>Gasometria arterial não faz parte desta simulação.</i></p>
-        <p><b>Valores de referência (adultos, podem variar por laboratório):</b></p>
+        <p><b>Ângulo venoso:</b> 10°–25° (0° paralelo; 90° perpendicular). Bisel para cima. <i>Gasometria arterial não faz parte desta simulação.</i></p>
+        <p><b>Valores de referência*</b> (podem variar por laboratório):</p>
         <table class="ref-table" id="refTable"></table>
+        <p class="muted">*Use sempre os valores do seu laboratório/local de prática.</p>
       </div>
     </section>
   </main>
@@ -144,6 +156,49 @@
       </div>
     </div>
   </footer>
+
+  <!-- MODAL: FICHA DO PACIENTE -->
+  <div id="patientModal" class="modal" aria-hidden="true" role="dialog" aria-label="Ficha do paciente">
+    <div class="modal-content">
+      <div class="modal-head">
+        <h3>Ficha do paciente</h3>
+        <button id="modalClose" class="modal-close" aria-label="Fechar">×</button>
+      </div>
+      <div class="modal-grid">
+        <label>Nome
+          <input type="text" id="pNome" placeholder="Ex.: João da Silva" />
+        </label>
+        <label>Idade
+          <input type="number" id="pIdade" min="0" max="120" />
+        </label>
+        <label>Sexo
+          <select id="pSexo">
+            <option value="">—</option>
+            <option>M</option>
+            <option>F</option>
+            <option>Outro</option>
+          </select>
+        </label>
+        <label>Braço preferencial
+          <select id="pBraco">
+            <option value="">—</option>
+            <option>Direito</option>
+            <option>Esquerdo</option>
+          </select>
+        </label>
+        <label>Alergias
+          <input type="text" id="pAlergias" placeholder="Ex.: látex, clorexidina…" />
+        </label>
+        <label>Observações
+          <textarea id="pObs" rows="3" placeholder="Notas clínicas relevantes"></textarea>
+        </label>
+      </div>
+      <div class="modal-actions">
+        <button id="modalSave" class="btn">Salvar</button>
+        <button id="modalCancel" class="btn btn-ghost">Cancelar</button>
+      </div>
+    </div>
+  </div>
 
   <script type="module" src="app.js"></script>
   <script>
