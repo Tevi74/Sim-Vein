@@ -1,5 +1,5 @@
-import { SimEngine } from './sim/engine.js';
-import { Tutor } from './ia/tutor.js';
+import { SimEngine } from '/sim/engine.js';
+import { Tutor } from '/ia/tutor.js';
 
 const els = {
   canvas: document.getElementById('simCanvas'),
@@ -7,6 +7,7 @@ const els = {
   toneSel: document.getElementById('toneSel'),
   gaugeSel: document.getElementById('gaugeSel'),
   angleRange: document.getElementById('angleRange'),
+  angleOut: document.getElementById('angleOut'),
   tourniquetBtn: document.getElementById('tourniquetBtn'),
   antisepsisBtn: document.getElementById('antisepsisBtn'),
   resetBtn: document.getElementById('resetBtn'),
@@ -18,12 +19,14 @@ const els = {
   chatMessages: document.getElementById('chatMessages'),
   chatForm: document.getElementById('chatForm'),
   chatInput: document.getElementById('chatInput'),
-  installBtn: document.getElementById('installBtn')
 };
 
 const sim = new SimEngine(els.canvas);
 const tutor = new Tutor();
 
+function refreshAngleOut(v){
+  els.angleOut.textContent = `${v}° (recomendado 10°–25°)`;
+}
 function refreshReport(){
   const r = sim.getReport();
   els.report.innerHTML = `
@@ -42,8 +45,8 @@ function refreshReport(){
 // Controles
 els.tourniquetBtn.onclick = () => { sim.applyTourniquet(); refreshReport(); };
 els.antisepsisBtn.onclick = () => { sim.doAntisepsis(); refreshReport(); };
-els.resetBtn.onclick = () => { sim.reset(); refreshReport(); };
-els.angleRange.oninput = (e) => { sim.setAngle(parseInt(e.target.value,10)); refreshReport(); };
+els.resetBtn.onclick = () => { sim.reset(); refreshReport(); refreshAngleOut(sim.state.angle); };
+els.angleRange.oninput = (e) => { const v = parseInt(e.target.value,10); sim.setAngle(v); refreshAngleOut(v); refreshReport(); };
 els.gaugeSel.onchange = (e) => { sim.setGauge(parseInt(e.target.value,10)); refreshReport(); };
 els.skinSel.onchange = (e) => { sim.setSkin(parseFloat(e.target.value)); refreshReport(); };
 els.toneSel.onchange = (e) => { sim.setTone(parseFloat(e.target.value)); refreshReport(); };
@@ -57,7 +60,7 @@ els.canvas.addEventListener('click', (ev)=>{
   refreshReport();
 });
 
-// ===== Chat Tutor (100% offline) =====
+// Chat Tutor
 function pushMsg(text, from='bot'){
   const el = document.createElement('div');
   el.className = `chat-msg ${from}`;
@@ -65,28 +68,23 @@ function pushMsg(text, from='bot'){
   els.chatMessages.appendChild(el);
   els.chatMessages.scrollTop = els.chatMessages.scrollHeight;
 }
-
 function openChat(){
   els.chatPanel.classList.add('open');
   if (!els.chatMessages.dataset.greeted){
-    pushMsg('Olá! Sou o Tutor do Sim-Vein. Posso ajudar com técnica, assepsia, ângulo, seleção de cateter e intercorrências. Faça sua pergunta.', 'bot');
+    pushMsg('Olá! Posso ajudar com técnica, ângulo (10°–25°), garrote, assépsia e calibre. Faça sua pergunta.', 'bot');
     els.chatMessages.dataset.greeted = '1';
   }
   els.chatInput.focus();
 }
 function closeChat(){ els.chatPanel.classList.remove('open'); }
-
 els.chatFab.onclick = openChat;
 els.chatClose.onclick = closeChat;
-
 els.chatForm.addEventListener('submit', (e)=>{
   e.preventDefault();
   const text = (els.chatInput.value || '').trim();
   if (!text) return;
   pushMsg(text, 'user');
   els.chatInput.value = '';
-
-  // resposta baseada no relatório atual + intenção por palavras-chave
   const r = sim.getReport();
   const reply = tutor.chatReply(text, r);
   pushMsg(reply, 'bot');
@@ -95,3 +93,4 @@ els.chatForm.addEventListener('submit', (e)=>{
 // Init
 sim.reset();
 refreshReport();
+refreshAngleOut(sim.state.angle);
