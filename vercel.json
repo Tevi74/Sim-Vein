@@ -1,0 +1,42 @@
+{
+  "version": 2,
+  "name": "sim-vein",
+  "public": true,
+
+  // Site 100% estático
+  "builds": [
+    { "src": "index.html", "use": "@vercel/static" }
+  ],
+
+  // Roteamento direto para arquivos (sem SPA rewrite)
+  "routes": [
+    { "src": "/(.*)", "dest": "/$1" }
+  ],
+
+  // Cabeçalhos úteis: manifest, SW e cache de estáticos
+  "headers": [
+    {
+      "source": "/manifest.webmanifest",
+      "headers": [
+        { "key": "Content-Type", "value": "application/manifest+json" }
+      ]
+    },
+    {
+      "source": "/sw.js",
+      "headers": [
+        { "key": "Service-Worker-Allowed", "value": "/" },
+        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
+      ]
+    },
+    {
+      "source": "/(.*)\\.(js|css|png|svg|jpg|jpeg|gif|webp|ico)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    }
+  ],
+
+  // URLs limpas (opcional)
+  "cleanUrls": true,
+  "trailingSlash": false
+}
