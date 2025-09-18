@@ -1,5 +1,5 @@
-import { SimEngine } from '/sim/engine.js';
-import { Tutor } from '/ia/tutor.js';
+import { SimEngine } from './sim/engine.js';
+import { Tutor } from './ia/tutor.js';
 
 const els = {
   canvas: document.getElementById('simCanvas'),
@@ -12,20 +12,16 @@ const els = {
   antisepsisBtn: document.getElementById('antisepsisBtn'),
   resetBtn: document.getElementById('resetBtn'),
   report: document.getElementById('report'),
-  tutor: document.getElementById('tutor'),
-  chatFab: document.getElementById('chatFab'),
-  chatPanel: document.getElementById('chatPanel'),
-  chatClose: document.getElementById('chatClose'),
-  chatMessages: document.getElementById('chatMessages'),
-  chatForm: document.getElementById('chatForm'),
-  chatInput: document.getElementById('chatInput'),
+  tutor: document.getElementById('tutor')
 };
 
 const sim = new SimEngine(els.canvas);
 const tutor = new Tutor();
 
+const RECO_MIN = 10, RECO_MAX = 25;
+
 function refreshAngleOut(v){
-  els.angleOut.textContent = `${v}° (recomendado 10°–25°)`;
+  els.angleOut.textContent = `${v}° — 0° = paralelo à pele, 90° = perpendicular. Recomendado: ${RECO_MIN}°–${RECO_MAX}°.`;
 }
 function refreshReport(){
   const r = sim.getReport();
@@ -36,13 +32,12 @@ function refreshReport(){
     <div><b>Cateter:</b> ${r.gauge}G</div>
     <div><b>Tentativas:</b> ${r.attempts}</div>
     <div><b>Status:</b> ${r.status}</div>
-    <hr/>
-    <div><b>Pontuação:</b> ${r.score}/100</div>
+    <hr/><div><b>Pontuação:</b> ${r.score}/100</div>
   `;
   els.tutor.innerHTML = tutor.advise(r);
 }
 
-// Controles
+// UI bindings
 els.tourniquetBtn.onclick = () => { sim.applyTourniquet(); refreshReport(); };
 els.antisepsisBtn.onclick = () => { sim.doAntisepsis(); refreshReport(); };
 els.resetBtn.onclick = () => { sim.reset(); refreshReport(); refreshAngleOut(sim.state.angle); };
@@ -51,7 +46,7 @@ els.gaugeSel.onchange = (e) => { sim.setGauge(parseInt(e.target.value,10)); refr
 els.skinSel.onchange = (e) => { sim.setSkin(parseFloat(e.target.value)); refreshReport(); };
 els.toneSel.onchange = (e) => { sim.setTone(parseFloat(e.target.value)); refreshReport(); };
 
-// Canvas → tentativa
+// canvas click → tentativa
 els.canvas.addEventListener('click', (ev)=>{
   const rect = els.canvas.getBoundingClientRect();
   const x = (ev.clientX - rect.left) * (els.canvas.width/rect.width);
@@ -60,37 +55,9 @@ els.canvas.addEventListener('click', (ev)=>{
   refreshReport();
 });
 
-// Chat Tutor
-function pushMsg(text, from='bot'){
-  const el = document.createElement('div');
-  el.className = `chat-msg ${from}`;
-  el.innerText = text;
-  els.chatMessages.appendChild(el);
-  els.chatMessages.scrollTop = els.chatMessages.scrollHeight;
-}
-function openChat(){
-  els.chatPanel.classList.add('open');
-  if (!els.chatMessages.dataset.greeted){
-    pushMsg('Olá! Posso ajudar com técnica, ângulo (10°–25°), garrote, assépsia e calibre. Faça sua pergunta.', 'bot');
-    els.chatMessages.dataset.greeted = '1';
-  }
-  els.chatInput.focus();
-}
-function closeChat(){ els.chatPanel.classList.remove('open'); }
-els.chatFab.onclick = openChat;
-els.chatClose.onclick = closeChat;
-els.chatForm.addEventListener('submit', (e)=>{
-  e.preventDefault();
-  const text = (els.chatInput.value || '').trim();
-  if (!text) return;
-  pushMsg(text, 'user');
-  els.chatInput.value = '';
-  const r = sim.getReport();
-  const reply = tutor.chatReply(text, r);
-  pushMsg(reply, 'bot');
-});
-
-// Init
+// init
 sim.reset();
 refreshReport();
 refreshAngleOut(sim.state.angle);
+
+  
