@@ -11,20 +11,24 @@ const els = {
   gaugeSel: $('gaugeSel'),
   angleRange: $('angleRange'),
   angleOut: $('angleOut'),
+  // botões (duplos)
   tourniquetBtn: $('tourniquetBtn'),
   antisepsisBtn: $('antisepsisBtn'),
   resetBtn: $('resetBtn'),
-  // nova toolbar
   tTourniquetBtn: $('tTourniquetBtn'),
   tAntisepsisBtn: $('tAntisepsisBtn'),
   tResetBtn: $('tResetBtn'),
+  // painel
   report: $('report'),
   tutor: $('tutor'),
   examSel: $('examSel'),
   tubeSel: $('tubeSel'),
+  tubeRow: $('tubeRow'),
   tubeInfo: $('tubeInfo'),
   orderList: $('orderList'),
+  // referências
   refTable: $('refTable'),
+  refCohort: $('refCohort'),
   // ficha
   patientBtn: $('patientBtn'),
   patientModal: $('patientModal'),
@@ -37,10 +41,12 @@ const els = {
   pBraco: $('pBraco'),
   pAlergias: $('pAlergias'),
   pObs: $('pObs'),
-  exportBtn: $('exportBtn')
+  // export / aula
+  exportBtn: $('exportBtn'),
+  modeBtn: $('modeBtn')
 };
 
-// ===== constantes (mesmas do seu app anterior) =====
+// ===== Tubos / Exames (CLSI) =====
 const ORDER = [ 'hemocultura','azul','vermelho/amarelo','verde','roxo','cinza' ];
 const TUBES = {
   hemocultura:{nome:'Frasco de Hemocultura',cor:'Frasco específico',aditivo:'Meio de cultura',usos:'Análise microbiológica',key:'hemocultura'},
@@ -63,15 +69,7 @@ const EXAMS = {
   hba1c:{nome:'HbA1c',recomendado:'roxo'},
   hemocultura:{nome:'Hemocultura',recomendado:'hemocultura'}
 };
-const REF_RANGES = [
-  { parametro:'Glicemia (jejum)', valor:'70–99 mg/dL', tubo:'Cinza (Fluoreto + EDTA)' },
-  { parametro:'Sódio (Na⁺)', valor:'135–145 mEq/L', tubo:'Verde (Heparina) — plasma' },
-  { parametro:'Potássio (K⁺)', valor:'3,5–5,0 mEq/L', tubo:'Verde (Heparina) — plasma' },
-  { parametro:'Hemoglobina (H)', valor:'13,5–18,0 g/dL', tubo:'Roxo (EDTA)' },
-  { parametro:'Hemoglobina (M)', valor:'11,5–14,9 g/dL', tubo:'Roxo (EDTA)' },
-  { parametro:'Hematócrito (H)', valor:'40–54 %', tubo:'Roxo (EDTA)' },
-  { parametro:'Hematócrito (M)', valor:'35,3–46,1 %', tubo:'Roxo (EDTA)' },
-];
+// inversões típicas
 const INVERT = {
   hemocultura:'Conforme fabricante (não agitar).',
   azul:'3–4 inversões.',
@@ -82,7 +80,33 @@ const INVERT = {
   cinza:'8–10 inversões.'
 };
 
-// ===== helpers UI =====
+// ===== Valores de referência por população (exemplos) =====
+const REF_RANGES = {
+  adulto: [
+    { parametro:'Glicemia (jejum)', valor:'70–99 mg/dL', tubo:'Cinza (Fluoreto + EDTA)' },
+    { parametro:'Sódio (Na⁺)', valor:'135–145 mEq/L', tubo:'Verde (Heparina) — plasma' },
+    { parametro:'Potássio (K⁺)', valor:'3,5–5,0 mEq/L', tubo:'Verde (Heparina) — plasma' },
+    { parametro:'Hemoglobina (H)', valor:'13,5–18,0 g/dL', tubo:'Roxo (EDTA)' },
+    { parametro:'Hemoglobina (M)', valor:'11,5–14,9 g/dL', tubo:'Roxo (EDTA)' },
+    { parametro:'Hematócrito (H)', valor:'40–54 %', tubo:'Roxo (EDTA)' },
+    { parametro:'Hematócrito (M)', valor:'35,3–46,1 %', tubo:'Roxo (EDTA)' },
+  ],
+  pediatrico: [
+    { parametro:'Glicemia (jejum)', valor:'70–105 mg/dL', tubo:'Cinza (Fluoreto + EDTA)' },
+    { parametro:'Sódio (Na⁺)', valor:'135–145 mEq/L', tubo:'Verde (Heparina) — plasma' },
+    { parametro:'Potássio (K⁺)', valor:'3,6–5,5 mEq/L', tubo:'Verde (Heparina) — plasma' },
+    { parametro:'Hemoglobina (crianças)', valor:'11,0–15,0 g/dL', tubo:'Roxo (EDTA)' },
+  ],
+  idoso: [
+    { parametro:'Glicemia (jejum)', valor:'70–110 mg/dL', tubo:'Cinza (Fluoreto + EDTA)' },
+    { parametro:'Sódio (Na⁺)', valor:'135–145 mEq/L', tubo:'Verde (Heparina) — plasma' },
+    { parametro:'Potássio (K⁺)', valor:'3,5–5,1 mEq/L', tubo:'Verde (Heparina) — plasma' },
+    { parametro:'Hemoglobina (H)', valor:'13,0–17,0 g/dL', tubo:'Roxo (EDTA)' },
+    { parametro:'Hemoglobina (M)', valor:'11,0–14,5 g/dL', tubo:'Roxo (EDTA)' },
+  ]
+};
+
+// ===== UI helpers =====
 function renderOrder(){
   els.orderList.innerHTML = '';
   ORDER.forEach(k=>{
@@ -92,9 +116,11 @@ function renderOrder(){
   });
 }
 function renderRefTable(){
+  const group = els.refCohort?.value || 'adulto';
+  const data = REF_RANGES[group] || [];
   els.refTable.innerHTML = `
     <tr><th>Parâmetro</th><th>Valores de referência*</th><th>Tubo</th></tr>
-    ${REF_RANGES.map(r=>`<tr><td>${r.parametro}</td><td>${r.valor}</td><td>${r.tubo}</td></tr>`).join('')}
+    ${data.map(r=>`<tr><td>${r.parametro}</td><td>${r.valor}</td><td>${r.tubo}</td></tr>`).join('')}
   `;
 }
 function tubeAdvice(){
@@ -153,7 +179,7 @@ function refreshReport(){
   els.tutor.innerHTML = tutor.advise(r);
 }
 
-// ===== Ficha do paciente / PDF (igual versão anterior) =====
+// ===== Ficha do paciente =====
 function openModal(){ els.patientModal.classList.add('open'); els.patientModal.setAttribute('aria-hidden','false'); }
 function closeModal(){ els.patientModal.classList.remove('open'); els.patientModal.setAttribute('aria-hidden','true'); }
 els.patientBtn.onclick = openModal; els.modalClose.onclick = closeModal; els.modalCancel.onclick = closeModal;
@@ -168,6 +194,8 @@ els.modalSave.onclick = () => {
   };
   closeModal(); refreshReport();
 };
+
+// ===== Exportar PDF =====
 els.exportBtn.onclick = () => {
   const r = sim.getReport(); const p = sim.state.patient || {};
   const html = `
@@ -184,22 +212,57 @@ els.exportBtn.onclick = () => {
   const w = window.open('', '_blank'); w.document.write(html); w.document.close();
 };
 
+// ===== Modo Aula =====
+els.modeBtn.onclick = () => {
+  const on = document.body.classList.toggle('classroom');
+  els.modeBtn.textContent = on ? 'Modo Normal' : 'Modo Aula';
+};
+
 // ===== Eventos principais =====
+const wire = (id, fn) => { const el = $(id); if (el) el.onclick = fn; };
+['tourniquetBtn','tTourniquetBtn'].forEach(id => wire(id, () => { sim.applyTourniquet(); refreshReport(); }));
+['antisepsisBtn','tAntisepsisBtn'].forEach(id => wire(id, () => { sim.doAntisepsis(); refreshReport(); }));
+['resetBtn','tResetBtn'].forEach(id => wire(id, () => { sim.reset(); refreshReport(); refreshAngleOut(sim.state.angle); }));
+
 els.profileSel.addEventListener('change', () => { sim.applyProfile(els.profileSel.value); els.skinSel.value=String(sim.state.skin); els.toneSel.value=String(sim.state.tone); refreshReport(); });
-['tourniquetBtn','tTourniquetBtn'].forEach(id => $(id).onclick = () => { sim.applyTourniquet(); refreshReport(); });
-['antisepsisBtn','tAntisepsisBtn'].forEach(id => $(id).onclick = () => { sim.doAntisepsis(); refreshReport(); });
-['resetBtn','tResetBtn'].forEach(id => $(id).onclick = () => { sim.reset(); refreshReport(); refreshAngleOut(sim.state.angle); });
 els.angleRange.oninput = (e) => { const v=parseInt(e.target.value,10); sim.setAngle(v); refreshAngleOut(v); refreshReport(); };
 els.gaugeSel.onchange = (e) => { sim.setGauge(parseInt(e.target.value,10)); refreshReport(); };
 els.skinSel.onchange  = (e) => { sim.setSkin(parseFloat(e.target.value)); refreshReport(); };
 els.toneSel.onchange  = (e) => { sim.setTone(parseFloat(e.target.value)); refreshReport(); };
-els.examSel.onchange = () => { const v=els.examSel.value; if(!v){tubeAdvice();refreshReport();return;} const rec=EXAMS[v].recomendado; if(rec!=='vermelho/amarelo') els.tubeSel.value=rec; tubeAdvice(); refreshReport(); };
+
+els.examSel.onchange = () => {
+  const v = els.examSel.value;
+  if (!v) { tubeAdvice(); refreshReport(); return; }
+  const rec = EXAMS[v].recomendado;
+  if (rec !== 'vermelho/amarelo') els.tubeSel.value = rec;
+  tubeAdvice(); refreshReport();
+};
 els.tubeSel.onchange = () => { tubeAdvice(); refreshReport(); };
-els.canvas.addEventListener('click', (ev)=>{ const r=els.canvas.getBoundingClientRect(); const x=(ev.clientX-r.left)*(els.canvas.width/r.width); const y=(ev.clientY-r.top)*(els.canvas.height/r.height); sim.tryPuncture({x,y}); refreshReport(); });
+
+// caps clicáveis
+els.tubeRow.addEventListener('click', (e) => {
+  const btn = e.target.closest('.cap-btn');
+  if (!btn) return;
+  const t = btn.getAttribute('data-tube');
+  if (!t) return;
+  els.tubeSel.value = t;
+  tubeAdvice(); refreshReport();
+});
+
+// canvas
+els.canvas.addEventListener('click', (ev)=>{
+  const r=els.canvas.getBoundingClientRect();
+  const x=(ev.clientX-r.left)*(els.canvas.width/r.width);
+  const y=(ev.clientY-r.top)*(els.canvas.height/r.height);
+  sim.tryPuncture({x,y}); refreshReport();
+});
 
 // ===== Init =====
-function renderOrder(){ els.orderList.innerHTML=''; ORDER.forEach(k=>{ const li=document.createElement('li'); li.textContent=(k==='vermelho/amarelo')?'Tubo de soro — Vermelho/Amarelo (ativador ± gel)':TUBES[k].nome; els.orderList.appendChild(li); }); }
-renderOrder();
-function renderRefTable(){ els.refTable.innerHTML=`<tr><th>Parâmetro</th><th>Valores de referência*</th><th>Tubo</th></tr>${REF_RANGES.map(r=>`<tr><td>${r.parametro}</td><td>${r.valor}</td><td>${r.tubo}</td></tr>`).join('')}`; }
-renderRefTable();
-sim.applyProfile('adulto'); sim.reset(); refreshReport(); refreshAngleOut(sim.state.angle); tubeAdvice();
+function init(){
+  renderOrder();
+  renderRefTable();
+  els.refCohort?.addEventListener('change', renderRefTable);
+  sim.applyProfile('adulto');
+  sim.reset(); refreshReport(); refreshAngleOut(sim.state.angle); tubeAdvice();
+}
+init();
