@@ -9,13 +9,13 @@ html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font:16px/1.5
 /* HEADER */
 .topbar{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:8px 16px;background:var(--surface);box-shadow:var(--shadow);position:sticky;top:0;z-index:10}
 .brand{display:flex;gap:12px;align-items:center}
-.logo{width:64px;height:64px;object-fit:contain} /* ← logo MAIOR */
-.topbar h1{margin:0;font-weight:600;font-size:18px;line-height:1.1} /* ← título MENOR */
+.logo{width:84px;height:84px;object-fit:contain}      /* logo maior */
+.topbar h1{margin:0;font-weight:600;font-size:18px;line-height:1.1}
 .topbar h1 span{font-weight:600;color:#16324c}
 .top-actions{display:flex;gap:8px;align-items:center}
 
-/* LAYOUT */
-.layout{display:grid;grid-template-columns:380px 1fr 420px;gap:16px;padding:16px;align-items:start}
+/* LAYOUT (reduzi gaps e ampliei o centro) */
+.layout{display:grid;grid-template-columns:360px 1.3fr 400px;gap:12px;padding:12px;align-items:start}
 .panel{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);padding:16px}
 .panel h2{margin:0 0 10px}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
@@ -34,14 +34,30 @@ select,input[type=range],input[type=text],input[type=number],textarea{width:100%
 .order ol{margin:6px 0 0 18px}
 .pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;background:#eef4ff;border:1px solid #dbe6ff;color:#08203a;margin-right:6px}
 
+/* Galeria de tubos (caps coloridas) */
+.tube-row{display:grid;grid-template-columns:repeat(7, max-content);gap:10px 14px;align-items:center;margin:10px 0 6px}
+.tube-row span{font-size:12px;color:#344}
+.cap{width:18px;height:18px;border-radius:4px;border:2px solid #182;display:inline-block}
+.cap-hc{background:#c0c7d1;border-color:#8a94a3}
+.cap-azul{background:#3b82f6;border-color:#1e40af}
+.cap-vermelho{background:#ef4444;border-color:#991b1b}
+.cap-amarelo{background:#facc15;border-color:#b45309}
+.cap-verde{background:#22c55e;border-color:#166534}
+.cap-roxo{background:#8b5cf6;border-color:#4c1d95}
+.cap-cinza{background:#94a3b8;border-color:#334155}
+
 /* SIMULAÇÃO */
-.canvasWrap{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);padding:8px;display:grid;gap:8px;justify-items:center}
+.canvasWrap{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);padding:10px;display:grid;gap:8px;justify-items:center}
+.sim-toolbar{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
 #simCanvas{width:100%;height:auto;border-radius:12px;background:#fff}
 .hint{font-size:13px;color:var(--muted)}
+
+/* RELATÓRIO / TUTOR */
 .report,.tutor{background:#fff;border:1px solid #e6edf4;border-radius:12px;padding:12px;min-height:80px}
 .badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px}
 .badge.good{background:rgba(18,184,134,.12);color:var(--good)}
 .badge.warn{background:rgba(245,144,0,.12);color:var(--warn)}
+.sticky{position:sticky; top:92px;} /* painel da direita sempre visível */
 
 /* REFERÊNCIAS */
 .refbox{background:#fbfcfe;border:1px solid #e5ebf6;border-radius:12px;padding:10px}
@@ -68,11 +84,9 @@ select,input[type=range],input[type=text],input[type=number],textarea{width:100%
 /* RESPONSIVO */
 @media (max-width:1100px){
   .layout{grid-template-columns:1fr}
-  .topbar h1{font-size:16px}
-  .logo{width:56px;height:56px}
+  .logo{width:72px;height:72px}
 }
 @media (max-width:640px){
   .grid,.modal-grid{grid-template-columns:1fr}
-  .topbar h1{font-size:15px}
-  .logo{width:48px;height:48px}
+  .logo{width:60px;height:60px}
 }
