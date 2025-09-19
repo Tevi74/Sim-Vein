@@ -95,7 +95,7 @@
           <div class="angle-row">
             <select id="tubeSel" title="Passe o mouse para ver inversões típicas (verifique o fabricante).">
               <option value="">Selecione o tubo…</option>
-              <option value="hemocultura" title="Mistura conforme fabricante (não agitar).">Frasco de hemocultura</option>
+              <option value="hemocultura" title="Misturar conforme fabricante (não agitar).">Frasco de hemocultura</option>
               <option value="azul" title="3–4 inversões suaves.">Azul claro — Citrato</option>
               <option value="vermelho" title="5 inversões (se ativador).">Vermelho — Ativador (± gel)</option>
               <option value="amarelo" title="5 inversões.">Amarelo — Ativador + gel</option>
@@ -104,32 +104,44 @@
               <option value="cinza" title="8–10 inversões.">Cinza — Fluoreto + EDTA</option>
               <option value="vermelho/amarelo" title="Soro (ativador ± gel).">Vermelho/Amarelo (Soro)</option>
             </select>
-            <span class="info" title="Ordem CLSI: Hemocultura → Azul → Vermelho/Amarelo → Verde → Roxo → Cinza. Inversões típicas: Azul 3–4; Vermelho/Amarelo 5; Verde 8–10; Roxo 8–10; Cinza 8–10 (confira o fabricante).">i</span>
+            <span class="info" title="Ordem CLSI: Hemocultura → Azul → Vermelho/Amarelo → Verde → Roxo → Cinza.">i</span>
           </div>
         </label>
       </div>
       <div id="tubeInfo" class="tube-info"></div>
 
+      <!-- Galeria visual de tubos -->
+      <div class="tube-row" aria-label="Galeria de tubos por cor">
+        <div class="cap cap-hc" title="Hemocultura"></div><span>Hemocultura</span>
+        <div class="cap cap-azul" title="Azul (citrato)"></div><span>Azul</span>
+        <div class="cap cap-vermelho" title="Vermelho (soro)"></div><span>Vermelho</span>
+        <div class="cap cap-amarelo" title="Amarelo (soro + gel)"></div><span>Amarelo</span>
+        <div class="cap cap-verde" title="Verde (heparina)"></div><span>Verde</span>
+        <div class="cap cap-roxo" title="Roxo (EDTA)"></div><span>Roxo</span>
+        <div class="cap cap-cinza" title="Cinza (fluoreto + EDTA)"></div><span>Cinza</span>
+      </div>
+
       <div class="order">
         <b>Ordem de coleta (CLSI):</b>
         <ol id="orderList"></ol>
-      </div>
-
-      <div class="actions">
-        <button id="tourniquetBtn" class="btn">Aplicar Garrote</button>
-        <button id="antisepsisBtn" class="btn btn-alt">Antissepsia</button>
-        <button id="resetBtn" class="btn btn-ghost">Reiniciar</button>
       </div>
     </section>
 
     <!-- CENTRO: SIMULAÇÃO -->
     <section class="canvasWrap" aria-label="Simulação">
-      <canvas id="simCanvas" width="880" height="420" aria-label="Braço virtual"></canvas>
+      <!-- Barra de ações visível -->
+      <div class="sim-toolbar">
+        <button id="tAntisepsisBtn" class="btn btn-alt">Antissepsia</button>
+        <button id="tTourniquetBtn" class="btn">Aplicar Garrote</button>
+        <button id="tResetBtn" class="btn btn-ghost">Reiniciar</button>
+      </div>
+
+      <canvas id="simCanvas" width="920" height="440" aria-label="Braço virtual"></canvas>
       <div class="hint">Clique em uma veia para tentar a punção →</div>
     </section>
 
     <!-- DIREITA: RELATÓRIO / TUTOR / REFERÊNCIAS -->
-    <section class="panel" aria-label="Relatório e IA">
+    <section class="panel sticky" aria-label="Relatório e IA">
       <h2>Relatório & IA Tutor</h2>
       <div id="report" class="report"></div>
       <div id="tutor" class="tutor"></div>
