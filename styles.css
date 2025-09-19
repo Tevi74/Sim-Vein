@@ -1,7 +1,7 @@
 :root{
   --bg:#f5f7f6; --surface:#ffffff; --ink:#0d1b2a; --muted:#5a6b7a;
   --accent:#1b998b; --accent2:#0d3b66; --good:#12b886; --warn:#f59f00; --danger:#e03131;
-  --shadow:0 10px 28px rgba(0,0,0,.08); --r:16px;
+  --line:#e6edf4; --shadow:0 10px 28px rgba(0,0,0,.08); --r:16px;
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu}
@@ -9,18 +9,20 @@ html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font:16px/1.5
 /* HEADER */
 .topbar{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:8px 16px;background:var(--surface);box-shadow:var(--shadow);position:sticky;top:0;z-index:10}
 .brand{display:flex;gap:12px;align-items:center}
-.logo{width:84px;height:84px;object-fit:contain}      /* logo maior */
+.logo{width:84px;height:84px;object-fit:contain}
 .topbar h1{margin:0;font-weight:600;font-size:18px;line-height:1.1}
 .topbar h1 span{font-weight:600;color:#16324c}
 .top-actions{display:flex;gap:8px;align-items:center}
 
-/* LAYOUT (reduzi gaps e ampliei o centro) */
+/* LAYOUT */
 .layout{display:grid;grid-template-columns:360px 1.3fr 400px;gap:12px;padding:12px;align-items:start}
 .panel{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);padding:16px}
 .panel h2{margin:0 0 10px}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 select,input[type=range],input[type=text],input[type=number],textarea{width:100%;padding:8px;border:1px solid #d9e0e8;border-radius:10px;background:#fff}
 .out{display:block;margin-top:6px;font-size:12px;color:var(--muted)}
+.muted{color:var(--muted)}
+.divider{height:1px;background:var(--line);margin:14px 0}
 .actions{display:flex;gap:8px;margin-top:10px}
 .btn{padding:10px 14px;border-radius:12px;border:0;background:var(--accent);color:#fff;cursor:pointer}
 .btn-alt{background:var(--accent2)} .btn-ghost{background:#e9eff4;color:#233}
@@ -28,23 +30,19 @@ select,input[type=range],input[type=text],input[type=number],textarea{width:100%
 .angle-row{display:flex;gap:8px;align-items:center}
 .info{width:18px;height:18px;border-radius:50%;display:inline-grid;place-items:center;background:#edf2ff;border:1px solid #cfd9ff;color:#0d1b2a;font-size:12px;cursor:help}
 
-.divider{height:1px;background:#e6edf4;margin:14px 0}
-.tube-info{margin-top:8px;font-size:13px;color:#0d1b2a;background:#f0f6f5;border:1px solid #d6eee9;border-radius:10px;padding:10px}
-.order{margin-top:10px}
-.order ol{margin:6px 0 0 18px}
-.pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;background:#eef4ff;border:1px solid #dbe6ff;color:#08203a;margin-right:6px}
-
-/* Galeria de tubos (caps coloridas) */
-.tube-row{display:grid;grid-template-columns:repeat(7, max-content);gap:10px 14px;align-items:center;margin:10px 0 6px}
-.tube-row span{font-size:12px;color:#344}
-.cap{width:18px;height:18px;border-radius:4px;border:2px solid #182;display:inline-block}
-.cap-hc{background:#c0c7d1;border-color:#8a94a3}
-.cap-azul{background:#3b82f6;border-color:#1e40af}
-.cap-vermelho{background:#ef4444;border-color:#991b1b}
-.cap-amarelo{background:#facc15;border-color:#b45309}
-.cap-verde{background:#22c55e;border-color:#166534}
-.cap-roxo{background:#8b5cf6;border-color:#4c1d95}
-.cap-cinza{background:#94a3b8;border-color:#334155}
+/* Galeria de tubos (caps) – clicável */
+.tube-row{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;margin:10px 0 6px;padding:8px;border:1px solid var(--line);border-radius:10px;background:#f8fbff}
+.cap-btn{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:#fff;padding:6px 8px;border-radius:10px;cursor:pointer}
+.cap-btn:hover{transform:translateY(-1px);box-shadow:0 4px 10px rgba(0,0,0,.06)}
+.cap-btn em{font-style:normal;font-size:12px;color:#344}
+.cap{width:18px;height:18px;border-radius:4px;border:2px solid #475569;display:inline-block;box-shadow:inset 0 0 0 1px rgba(255,255,255,.45)}
+.cap-hc{background:#c0c7d1}
+.cap-azul{background:#3b82f6}
+.cap-vermelho{background:#ef4444}
+.cap-amarelo{background:#facc15}
+.cap-verde{background:#22c55e}
+.cap-roxo{background:#8b5cf6}
+.cap-cinza{background:#94a3b8}
 
 /* SIMULAÇÃO */
 .canvasWrap{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);padding:10px;display:grid;gap:8px;justify-items:center}
@@ -53,17 +51,18 @@ select,input[type=range],input[type=text],input[type=number],textarea{width:100%
 .hint{font-size:13px;color:var(--muted)}
 
 /* RELATÓRIO / TUTOR */
-.report,.tutor{background:#fff;border:1px solid #e6edf4;border-radius:12px;padding:12px;min-height:80px}
+.report,.tutor{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;min-height:80px}
 .badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px}
 .badge.good{background:rgba(18,184,134,.12);color:var(--good)}
 .badge.warn{background:rgba(245,144,0,.12);color:var(--warn)}
-.sticky{position:sticky; top:92px;} /* painel da direita sempre visível */
+.sticky{position:sticky; top:92px;}
 
 /* REFERÊNCIAS */
 .refbox{background:#fbfcfe;border:1px solid #e5ebf6;border-radius:12px;padding:10px}
 .ref-table{width:100%;border-collapse:separate;border-spacing:0 6px;font-size:14px}
-.ref-table th{text-align:left;color:#314252}
-.ref-table td, .ref-table th{padding:6px 8px;background:#fff;border:1px solid #e6edf4}
+.ref-table th{text-align:left;color:#314252;background:#f1f5fb;border:1px solid var(--line)}
+.ref-table td, .ref-table th{padding:6px 8px}
+.ref-table td{background:#fff;border:1px solid var(--line)}
 .ref-table td:first-child,.ref-table th:first-child{border-radius:8px 0 0 8px}
 .ref-table td:last-child,.ref-table th:last-child{border-radius:0 8px 8px 0}
 
@@ -81,12 +80,13 @@ select,input[type=range],input[type=text],input[type=number],textarea{width:100%
 .modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:14px}
 .modal-actions{display:flex;gap:8px;justify-content:flex-end;padding:12px 14px}
 
+/* MODO AULA */
+body.classroom{font-size:18px}
+body.classroom .layout{grid-template-columns:420px 1.6fr 460px}
+body.classroom .logo{width:96px;height:96px}
+body.classroom #simCanvas{max-width:1100px}
+body.classroom .ref-table{font-size:16px}
+
 /* RESPONSIVO */
-@media (max-width:1100px){
-  .layout{grid-template-columns:1fr}
-  .logo{width:72px;height:72px}
-}
-@media (max-width:640px){
-  .grid,.modal-grid{grid-template-columns:1fr}
-  .logo{width:60px;height:60px}
-}
+@media (max-width:1100px){ .layout{grid-template-columns:1fr} .logo{width:72px;height:72px} }
+@media (max-width:640px){ .grid,.modal-grid{grid-template-columns:1fr} .logo{width:60px;height:60px} }
