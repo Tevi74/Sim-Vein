@@ -18,6 +18,7 @@
       <h1>Sim-Vein — <span>Simulador de Punção Venosa</span></h1>
     </div>
     <div class="top-actions">
+      <button id="modeBtn" class="btn btn-ghost" title="Aumenta fontes e foca em simulação/tutor">Modo Aula</button>
       <button id="patientBtn" class="btn btn-ghost">Ficha do paciente</button>
       <button id="exportBtn" class="btn">Exportar PDF</button>
       <button id="installBtn" hidden>Instalar</button>
@@ -110,15 +111,15 @@
       </div>
       <div id="tubeInfo" class="tube-info"></div>
 
-      <!-- Galeria visual de tubos -->
-      <div class="tube-row" aria-label="Galeria de tubos por cor">
-        <div class="cap cap-hc" title="Hemocultura"></div><span>Hemocultura</span>
-        <div class="cap cap-azul" title="Azul (citrato)"></div><span>Azul</span>
-        <div class="cap cap-vermelho" title="Vermelho (soro)"></div><span>Vermelho</span>
-        <div class="cap cap-amarelo" title="Amarelo (soro + gel)"></div><span>Amarelo</span>
-        <div class="cap cap-verde" title="Verde (heparina)"></div><span>Verde</span>
-        <div class="cap cap-roxo" title="Roxo (EDTA)"></div><span>Roxo</span>
-        <div class="cap cap-cinza" title="Cinza (fluoreto + EDTA)"></div><span>Cinza</span>
+      <!-- Galeria de tubos (CLICÁVEL) -->
+      <div class="tube-row" id="tubeRow" aria-label="Galeria de tubos por cor">
+        <button class="cap-btn" data-tube="hemocultura"><span class="cap cap-hc"></span><em>Hemocultura</em></button>
+        <button class="cap-btn" data-tube="azul"><span class="cap cap-azul"></span><em>Azul</em></button>
+        <button class="cap-btn" data-tube="vermelho"><span class="cap cap-vermelho"></span><em>Vermelho</em></button>
+        <button class="cap-btn" data-tube="amarelo"><span class="cap cap-amarelo"></span><em>Amarelo</em></button>
+        <button class="cap-btn" data-tube="verde"><span class="cap cap-verde"></span><em>Verde</em></button>
+        <button class="cap-btn" data-tube="roxo"><span class="cap cap-roxo"></span><em>Roxo</em></button>
+        <button class="cap-btn" data-tube="cinza"><span class="cap cap-cinza"></span><em>Cinza</em></button>
       </div>
 
       <div class="order">
@@ -129,7 +130,6 @@
 
     <!-- CENTRO: SIMULAÇÃO -->
     <section class="canvasWrap" aria-label="Simulação">
-      <!-- Barra de ações visível -->
       <div class="sim-toolbar">
         <button id="tAntisepsisBtn" class="btn btn-alt">Antissepsia</button>
         <button id="tTourniquetBtn" class="btn">Aplicar Garrote</button>
@@ -150,7 +150,19 @@
 
       <h3>Normas & Referências</h3>
       <div class="refbox">
-        <p><b>Ângulo venoso:</b> 10°–25° (0° paralelo; 90° perpendicular). Bisel para cima. <i>Gasometria arterial não faz parte desta simulação.</i></p>
+        <p><b>Ângulo venoso:</b> 10°–25° (0° paralelo; 90° perpendicular). Bisel para cima.
+          <i>Gasometria arterial não faz parte desta simulação.</i></p>
+
+        <div class="grid">
+          <label>Faixa etária / população
+            <select id="refCohort">
+              <option value="adulto" selected>Adulto</option>
+              <option value="pediatrico">Pediátrico</option>
+              <option value="idoso">Idoso</option>
+            </select>
+          </label>
+        </div>
+
         <p><b>Valores de referência*</b> (podem variar por laboratório):</p>
         <table class="ref-table" id="refTable"></table>
         <p class="muted">*Use sempre os valores do seu laboratório/local de prática.</p>
