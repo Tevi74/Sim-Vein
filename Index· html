@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SimVein — AR Didática para Coleta de Sangue</title>
+  <meta name="description" content="Página didática com AR para alunos de Análises Clínicas: ordem dos tubos, aditivos, exames, mapa corporal com veias e tabela de valores de referência." />
+  <link rel="icon" href="/public/images/logo-sim.png" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <meta name="theme-color" content="#0d1b2a" />
+  
+  <!-- Fonts (opcional) -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="/styles/style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <div class="brand">
+        <img src="/public/images/logo-sim.png" alt="SimVein" class="logo main" />
+        <div class="titles">
+          <h1>SimVein</h1>
+          <p class="subtitle">AR Didática — Coleta de Sangue para Análises Clínicas</p>
+        </div>
+      </div>
+      <nav class="nav">
+        <a href="#ordem" class="navlink">Ordem de Tubos</a>
+        <a href="#mapa" class="navlink">Mapa de Veias</a>
+        <a href="#tabela" class="navlink">Valores de Referência</a>
+        <a href="#quiz" class="navlink">Quiz</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Aviso didático -->
+    <section class="notice" aria-label="Aviso didático">
+      <div class="wrap">
+        <strong>⚠️ Uso educacional:</strong> Siga sempre o POP/POE da instituição e os intervalos do laboratório local. Valores de referência variam por método e população.
+      </div>
+    </section>
+
+    <!-- Ordem Correta de Coleta -->
+    <section id="ordem" class="section">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Sequência Correta dos Tubos</h2>
+          <button id="btn-ar" class="btn primary" aria-label="Abrir modo AR">Ver em AR</button>
+        </div>
+        <p class="muted">Seguir esta sequência evita contaminação por aditivos e garante a confiabilidade dos resultados.</p>
+
+        <ol class="tube-sequence" id="tubeSequence" aria-label="Sequência correta de coleta">
+          <li class="tube card" data-tube="hemocultura">
+            <div class="tube-left">
+              <img src="/public/images/tubes/hemocultura.png" alt="Frasco de Hemocultura" class="tube-img" />
+            </div>
+            <div class="tube-body">
+              <h3>Frasco de Hemocultura</h3>
+              <p><strong>Parâmetro:</strong> microbiologia (bactérias/fungos). <strong>Função:</strong> coleta estéril para cultura antes de qualquer aditivo.</p>
+              <div class="tags">
+                <span class="tag">Microbiologia</span>
+                <span class="tag">Cultura</span>
+              </div>
+            </div>
+          </li>
+          <li class="tube card" data-tube="azul">
+            <div class="tube-left">
+              <img src="/public/images/tubes/azul.png" alt="Tubo Azul (Citrato de Sódio)" class="tube-img" />
+            </div>
+            <div class="tube-body">
+              <h3>Tubo Azul — Citrato de Sódio</h3>
+              <p><strong>Aditivo:</strong> citrato (anticoagulante). <strong>Exames:</strong> TP, TTPa. <strong>Nota:</strong> manter relação 9:1 (sangue:aditivo).</p>
+              <div class="tags">
+                <span class="tag">Coagulação</span>
+                <span class="tag">TP</span>
+                <span class="tag">TTPa</span>
+              </div>
+            </div>
+          </li>
+          <li class="tube card" data-tube="amarelo">
+            <div class="tube-left">
+              <img src="/public/images/tubes/amarelo.png" alt="Tubo Amarelo/Vermelho (Ativador de Coágulo ± Gel)" class="tube-img" />
+            </div>
+            <div class="tube-body">
+              <h3>Tubo Amarelo/Vermelho — Ativador de Coágulo ± Gel</h3>
+              <p><strong>Aditivo:</strong> ativador (± gel). <strong>Exames:</strong> bioquímica, sorologia, hormônios.</p>
+              <div class="tags">
+                <span class="tag">Bioquímica</span>
+                <span class="tag">Sorologia</span>
+                <span class="tag">Hormônios</span>
+              </div>
+            </div>
+          </li>
+          <li class="tube card" data-tube="verde">
+            <div class="tube-left">
+              <img src="/public/images/tubes/verde.png" alt="Tubo Verde (Heparina)" class="tube-img" />
+            </div>
+            <div class="tube-body">
+              <h3>Tubo Verde — Heparina</h3>
+              <p><strong>Aditivo:</strong> heparina (anticoagulante). <strong>Exames:</strong> eletrólitos, bioquímica especializada e gasometria (plasma heparinizado, quando aplicável).</p>
+              <div class="tags">
+                <span class="tag">Eletrólitos</span>
+                <span class="tag">Plasma</span>
+              </div>
+            </div>
+          </li>
+          <li class="tube card" data-tube="roxo">
+            <div class="tube-left">
+              <img src="/public/images/tubes/roxo.png" alt="Tubo Roxo/Lilás (EDTA)" class="tube-img" />
+            </div>
+            <div class="tube-body">
+              <h3>Tubo Roxo/Lilás — EDTA</h3>
+              <p><strong>Aditivo:</strong> EDTA. <strong>Exames:</strong> hematologia (ex.: hemograma). <strong>Função:</strong> preserva morfologia celular.</p>
+              <div class="tags">
+                <span class="tag">Hematologia</span>
+                <span class="tag">Hemograma</span>
+              </div>
+            </div>
+          </li>
+          <li class="tube card" data-tube="cinza">
+            <div class="tube-left">
+              <img src="/public/images/tubes/cinza.png" alt="Tubo Cinza (Fluoreto + EDTA)" class="tube-img" />
+            </div>
+            <div class="tube-body">
+              <h3>Tubo Cinza — Fluoreto + EDTA</h3>
+              <p><strong>Aditivo:</strong> fluoreto (inibe glicólise) + EDTA. <strong>Exames:</strong> glicose, lactato.</p>
+              <div class="tags">
+                <span class="tag">Glicemia</span>
+                <span class="tag">Lactato</span>
+              </div>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- Mapa corporal com hotspots de veias -->
+    <section id="mapa" class="section">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Mapa Corporal — Veias para Venopunção</h2>
+          <div class="section-actions">
+            <button id="btnHotspotsInfo" class="btn">Como usar</button>
+          </div>
+        </div>
+        <div class="vein-map">
+          <img src="/public/images/body-veins.svg" alt="Mapa corporal com veias" class="vein-map-img" id="veinMapImg" />
+          <div class="hotspots" id="hotspots"></div>
+        </div>
+        <p class="muted">Clique nos pontos para ver detalhes (ex.: fossa cubital, veias cefálica/basílica, cuidados, contraindicações e dicas de fixação).</p>
+      </div>
+    </section>
+
+    <!-- Tabela de valores de referência -->
+    <section id="tabela" class="section">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Valores de Referência</h2>
+          <div class="filters">
+            <input type="search" id="searchInput" class="input" placeholder="Buscar exame (ex.: TSH, LDL, Ferritina)" aria-label="Buscar exame" />
+            <button id="btnExportCSV" class="btn">Baixar CSV</button>
+          </div>
+        </div>
+        <div class="table-scroll">
+          <table id="refTable" class="table" aria-describedby="tabela-info">
+            <thead>
+              <tr>
+                <th>Exame</th>
+                <th>Unidades convencionais</th>
+                <th>Unidades SI</th>
+              </tr>
+            </thead>
+            <tbody><!-- Populado via JS a partir de /public/data/reference-values.csv --></tbody>
+          </table>
+        </div>
+        <p id="tabela-info" class="muted">Intervalos variam por laboratório, método e população. Consulte sempre o laudo local.</p>
+      </div>
+    </section>
+
+    <!-- Quiz (stub) -->
+    <section id="quiz" class="section">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Quiz Rápido</h2>
+          <button id="btnStartQuiz" class="btn">Iniciar</button>
+        </div>
+        <div id="quizArea" class="quiz-area" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <!-- Tutor IA (stub UI) -->
+    <section id="tutor" class="section">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Tutor IA</h2>
+        </div>
+        <div class="tutor">
+          <img src="/public/images/avatar-tutor.png" class="tutor-avatar" alt="Tutor IA" />
+          <div class="tutor-panel">
+            <label for="tutorInput" class="sr-only">Pergunte ao Tutor</label>
+            <input id="tutorInput" class="input" placeholder="Pergunte algo (ex.: por que o tubo azul vem antes do roxo?)" />
+            <button id="btnTutorAsk" class="btn primary">Perguntar</button>
+            <div id="tutorAnswer" class="tutor-answer muted">(Resposta aparecerá aqui — stub local. Integração com API será feita no backend.)</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-logos">
+      <img src="/public/images/logo-capacita.png" alt="Capacita — Cursos" class="logo small" />
+      <img src="/public/images/logo-haras.png" alt="HarasTech — Desenvolvimento" class="logo small" />
+    </div>
+    <div class="wrap legal">
+      <p>© <span id="year"></span> SimVein. Conteúdo educacional. Não substitui orientação profissional.</p>
+    </div>
+  </footer>
+
+  <!-- Modais / UI auxiliares -->
+  <div id="modal" class="modal" hidden>
+    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button class="modal-close" id="modalClose" aria-label="Fechar">×</button>
+      <h3 id="modalTitle">Detalhes</h3>
+      <div id="modalBody" class="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script>
+    // Registro de Service Worker (PWA) — opcional; arquivo será adicionado futuramente
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+      });
+    }
+    // Ano no footer
+    document.addEventListener('DOMContentLoaded', () => {
+      const y = document.getElementById('year');
+      if (y) y.textContent = new Date().getFullYear();
+    });
+  </script>
+  <script src="/scripts/app.js" type="module"></script>
+</body>
+</html>
