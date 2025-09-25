@@ -5,6 +5,7 @@ Este repositório contém o PWA estático **Sim-Vein**, um simulador educacional
 ---
 
 ## 🚀 Estrutura do Projeto
+
 ├── index.html
 ├── styles.css
 ├── scripts.js
@@ -29,13 +30,3 @@ Se sua pasta estiver como `audios/`, renomeie para `audio/` (singular).
 ---
 
 ## ⚡ Deploy na Vercel
-
-1. Faça login em [Vercel](https://vercel.com) e importe este repositório.
-2. Nas configurações do projeto:
-   - **Framework Preset** → `Other`
-   - **Build Command** → _(deixe vazio)_
-   - **Output Directory** → `.` ou _(deixe vazio)_
-3. Salve e faça o deploy. 🎉
-
-                                   
-                                                                                             
