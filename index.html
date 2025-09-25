@@ -4,17 +4,17 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- Base: força todas as URLs relativas a partirem da raiz -->
-  <base href="/" />
+  <!-- REMOVA a tag base ou ajuste para ./ -->
+  <base href="./" />
 
   <title>PPA SimVein • Simulador de Coleta</title>
   <meta name="theme-color" content="#0d1b2a" />
 
-  <!-- PWA / Manifest -->
-  <link rel="manifest" href="/manifest.webmanifest?v=3" />
+  <!-- PWA / Manifest - CAMINHOS CORRIGIDOS -->
+  <link rel="manifest" href="manifest.webmanifest?v=3" />
 
-  <!-- CSS principal -->
-  <link rel="stylesheet" href="/styles.css?v=3" />
+  <!-- CSS principal - CAMINHO CORRIGIDO -->
+  <link rel="stylesheet" href="styles.css?v=3" />
   
   <!-- A-Frame (cena 360) -->
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
@@ -22,8 +22,9 @@
 <body>
   <header class="app-header">
     <div class="brand">
-      <img src="/public/assets/branding/logo-sim.png" alt="PPA SimVein" onerror="this.style.display='none'"/>
-      <img src="/public/assets/branding/logo-capacita.png" alt="Capacita+" onerror="this.style.display='none'"/>
+      <!-- CAMINHOS CORRIGIDOS - removido /public/ -->
+      <img src="assets/branding/logo-sim.png" alt="PPA SimVein" onerror="this.style.display='none'"/>
+      <img src="assets/branding/logo-capacita.png" alt="Capacita+" onerror="this.style.display='none'"/>
     </div>
     <nav class="nav">
       <button data-tab="paciente" class="btn ghost">Ficha</button>
@@ -39,10 +40,10 @@
     </nav>
   </header>
 
-  <!-- Áudio ambiente (opcional) -->
-  <audio id="audio-ambiente" src="/public/audio/audio-ambiente.mp3?v=3" loop preload="auto"></audio>
+  <!-- Áudio ambiente (opcional) - CAMINHO CORRIGIDO -->
+  <audio id="audio-ambiente" src="audio/audio-ambiente.mp3?v=3" loop preload="auto"></audio>
 
-  <!-- Avisos (ex.: imagem 360 ausente) -->
+  <!-- Restante do conteúdo mantido com correções de caminhos -->
   <div id="banner" class="banner" hidden></div>
 
   <main class="content" style="grid-template-columns: 1fr 340px; gap: 12px;">
@@ -96,7 +97,8 @@
         <button id="btn-deduzir" class="btn">Deduzir tubos necessários</button>
         <div id="deduzidos" class="pill"></div>
         <div class="audio-controls">
-          <button class="btn ghost" data-audio="/public/audio/audio-boas-vindas.mp3?v=3">▶ Boas-vindas</button>
+          <!-- CAMINHO CORRIGIDO -->
+          <button class="btn ghost" data-audio="audio/audio-boas-vindas.mp3?v=3">▶ Boas-vindas</button>
         </div>
       </section>
 
@@ -124,7 +126,8 @@
           </div>
         </div>
         <div class="audio-controls">
-          <button class="btn ghost" data-audio="/public/audio/audio-erros.mp3?v=3">▶ Erros comuns</button>
+          <!-- CAMINHO CORRIGIDO -->
+          <button class="btn ghost" data-audio="audio/audio-erros.mp3?v=3">▶ Erros comuns</button>
         </div>
       </section>
 
@@ -137,7 +140,8 @@
           <label class="card"><input type="radio" name="disp" value="cateter"/><span>Cateter periférico</span></label>
         </div>
         <div class="audio-controls">
-          <button class="btn ghost" data-audio="/public/audio/audio-selecao-de-tubos.mp3?v=3">▶ Seleção de tubos (narração)</button>
+          <!-- CAMINHO CORRIGIDO -->
+          <button class="btn ghost" data-audio="audio/audio-selecao-de-tubos.mp3?v=3">▶ Seleção de tubos (narração)</button>
         </div>
       </section>
 
@@ -166,11 +170,12 @@
 
         <div class="scene-360 box">
           <h3>Seleção de Veia (360°)</h3>
-          <div id="missing360" class="alert" hidden>⚠️ Coloque <code>/public/assets/arm-360.jpg</code> (equiretangular 2:1).</div>
+          <div id="missing360" class="alert" hidden>⚠️ Coloque <code>assets/arm-360.jpg</code> (equiretangular 2:1).</div>
 
           <a-scene embedded vr-mode-ui="enabled:false" renderer="antialias:true">
             <a-assets>
-              <img id="arm360" src="/public/assets/arm-360.jpg?v=3" crossorigin="anonymous" />
+              <!-- CAMINHO CORRIGIDO -->
+              <img id="arm360" src="assets/arm-360.jpg?v=3" crossorigin="anonymous" />
             </a-assets>
             <a-sky id="sky" src="#arm360" rotation="0 -90 0"></a-sky>
 
@@ -217,14 +222,14 @@
         <p>Arraste os tubos para a área em ordem correta e clique em <b>Validar</b>.</p>
         <div class="quiz">
           <div class="bank" id="tube-bank">
-            <img draggable="true" class="tube" data-id="1-hemocultura" src="/public/assets/tubes/hemocultura.png?v=3" alt="Hemocultura">
-            <img draggable="true" class="tube" data-id="2-citrato" src="/public/assets/tubes/citrato-azul.png?v=3" alt="Citrato (Azul)">
-            <!-- VHS só aparece se solicitado (scripts decide) -->
-            <img draggable="true" class="tube tube-vhs" data-id="3-vhs" src="/public/assets/tubes/vhs-preto.png?v=3" alt="VHS (Preto)" style="display:none">
-            <img draggable="true" class="tube" data-id="4-soro" src="/public/assets/tubes/soro-vermelho.png?v=3" alt="Soro (Vermelho/Amarelo)">
-            <img draggable="true" class="tube" data-id="5-heparina" src="/public/assets/tubes/heparina-verde.png?v=3" alt="Heparina (Verde)">
-            <img draggable="true" class="tube" data-id="6-edta" src="/public/assets/tubes/edta-roxo.png?v=3" alt="EDTA (Roxo)">
-            <img draggable="true" class="tube" data-id="7-fluoreto" src="/public/assets/tubes/fluoreto-cinza.png?v=3" alt="Fluoreto (Cinza)">
+            <!-- CAMINHOS CORRIGIDOS -->
+            <img draggable="true" class="tube" data-id="1-hemocultura" src="assets/tubes/hemocultura.png?v=3" alt="Hemocultura">
+            <img draggable="true" class="tube" data-id="2-citrato" src="assets/tubes/citrato-azul.png?v=3" alt="Citrato (Azul)">
+            <img draggable="true" class="tube tube-vhs" data-id="3-vhs" src="assets/tubes/vhs-preto.png?v=3" alt="VHS (Preto)" style="display:none">
+            <img draggable="true" class="tube" data-id="4-soro" src="assets/tubes/soro-vermelho.png?v=3" alt="Soro (Vermelho/Amarelo)">
+            <img draggable="true" class="tube" data-id="5-heparina" src="assets/tubes/heparina-verde.png?v=3" alt="Heparina (Verde)">
+            <img draggable="true" class="tube" data-id="6-edta" src="assets/tubes/edta-roxo.png?v=3" alt="EDTA (Roxo)">
+            <img draggable="true" class="tube" data-id="7-fluoreto" src="assets/tubes/fluoreto-cinza.png?v=3" alt="Fluoreto (Cinza)">
           </div>
           <div class="drop" id="tube-drop" aria-label="Área de Montagem"></div>
         </div>
@@ -235,7 +240,8 @@
         <p id="quiz-feedback" class="feedback"></p>
 
         <div class="audio-controls">
-          <button class="btn ghost" data-audio="/public/audio/audio-sequencia-de-coleta.mp3?v=3">▶ Sequência (narração)</button>
+          <!-- CAMINHO CORRIGIDO -->
+          <button class="btn ghost" data-audio="audio/audio-sequencia-de-coleta.mp3?v=3">▶ Sequência (narração)</button>
         </div>
       </section>
 
@@ -310,7 +316,8 @@
     <!-- COLUNA DIREITA: Painel Tutor (sempre visível) -->
     <aside class="tab box" style="height: fit-content;">
       <div class="row" style="gap:10px; align-items:center;">
-        <img src="/public/assets/branding/avatar-tutor.png?v=3" alt="Tutor" style="width:48px;height:48px;border-radius:50%;object-fit:cover" onerror="this.style.display='none'">
+        <!-- CAMINHO CORRIGIDO -->
+        <img src="assets/branding/avatar-tutor.png?v=3" alt="Tutor" style="width:48px;height:48px;border-radius:50%;object-fit:cover" onerror="this.style.display='none'">
         <h3 style="margin:0">Tutor IA</h3>
       </div>
       <div id="tutor-feed" style="margin-top:8px;max-height:240px;overflow:auto;"></div>
@@ -327,7 +334,8 @@
       <small>© 2025 • Material educacional. Não substitui treinamento supervisionado.</small>
     </div>
     <div class="right">
-      <img src="/public/assets/branding/logo-haras.png?v=3" alt="HarasTech" onerror="this.style.display='none'"/>
+      <!-- CAMINHO CORRIGIDO -->
+      <img src="assets/branding/logo-haras.png?v=3" alt="HarasTech" onerror="this.style.display='none'"/>
       <small>Desenvolvido por HarasTech • <a href="mailto:harastech@outlook.com">harastech@outlook.com</a></small>
     </div>
   </footer>
@@ -351,14 +359,14 @@
     </div>
   </dialog>
 
-  <!-- JS principal -->
-  <script src="/scripts.js?v=3" defer></script>
+  <!-- JS principal - CAMINHO CORRIGIDO -->
+  <script src="scripts.js?v=3" defer></script>
 
-  <!-- Service Worker -->
+  <!-- Service Worker - CAMINHO CORRIGIDO -->
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', ()=> {
-        navigator.serviceWorker.register('/sw.js?v=3').catch(()=>{});
+        navigator.serviceWorker.register('sw.js?v=3').catch(()=>{});
       });
     }
   </script>
