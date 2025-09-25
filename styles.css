@@ -323,3 +323,42 @@ dialog::backdrop{background:rgba(0,0,0,.7); backdrop-filter:blur(4px);}
   .tab:not(.active) {display:none !important;}
   body {background:white; color:black;}
 }
+.app-header .brand{gap:14px}
+.app-header .brand img{
+  height:56px !important;
+  width:auto !important;
+  opacity:1 !important;
+  filter:drop-shadow(0 0 1px rgba(255,255,255,.35));
+}
+@media (max-width:980px){
+  .app-header .brand img{height:48px !important;}
+}
+
+.bio-errors{
+  display:flex;
+  gap:14px;
+  padding:14px;
+  border-radius:14px;
+  background:rgba(255,255,255,.04);
+  overflow-x:auto;
+  scroll-snap-type:x mandatory;
+}
+.bio-errors img{
+  width:260px;
+  height:170px;
+  object-fit:cover;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow:0 10px 26px rgba(0,0,0,.38);
+  flex:0 0 auto;
+  scroll-snap-align:start;
+  cursor:pointer;
+  transition:transform .15s ease, box-shadow .15s ease;
+}
+.bio-errors img:hover{
+  transform:scale(1.04);
+  box-shadow:0 14px 34px rgba(0,0,0,.45);
+}
+@media (max-width:980px){
+  .bio-errors img{width:220px;height:145px;}
+}
