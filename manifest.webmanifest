@@ -1,0 +1,11 @@
+{
+  "name": "PPA SimVein — Simulador de Coleta",
+  "short_name": "SimVein",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#0b1220",
+  "theme_color": "#0d1b2a",
+  "icons": [
+    { "src": "/public/assets/branding/logo-sim.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
