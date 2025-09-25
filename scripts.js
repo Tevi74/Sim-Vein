@@ -2,13 +2,11 @@
   const $ = s => document.querySelector(s);
   const $$ = s => Array.from(document.querySelectorAll(s));
 
-  const tabBtns = $$('.nav .btn');
-  const sections = $$('.tab');
   function showTab(id){
-    sections.forEach(el=>el.classList.toggle('active', el.id==='tab-'+id));
-    tabBtns.forEach(b=>b.classList.toggle('active', b.dataset.tab===id));
+    $$('.tab').forEach(el=>el.classList.toggle('active', el.id==='tab-'+id));
+    $$('.nav .btn').forEach(b=>b.classList.toggle('active', b.dataset.tab===id));
   }
-  tabBtns.forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab)));
+  $$('.nav .btn').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab)));
   $('#welcome-start')?.addEventListener('click',()=>showTab('sequencia'));
 
   const dlg = $('#settings');
@@ -122,16 +120,23 @@
     });
   }
 
+  const dispTip = $('#disp-tip');
+  $$('input[name="disp"]').forEach(r=>{
+    r.addEventListener('change',()=>{
+      const v=r.value;
+      if (!dispTip) return;
+      if (v==='agulha') dispTip.textContent='Agulha: adultos com veias palpáveis e bom fluxo.';
+      if (v==='scalp') dispTip.textContent='Scalp: crianças, idosos, veias frágeis ou dificeis.';
+      if (v==='cateter') dispTip.textContent='Cateter periférico: acesso prolongado/coletas seriadas.';
+    });
+  });
+
   const bank = $('#tube-bank');
   const drop = $('#tube-drop');
   const feedback = $('#quiz-feedback');
   const btnValidate = $('#btn-validate');
   const btnReset = $('#btn-reset');
-  function dragSetup(img){
-    img.addEventListener('dragstart',e=>{
-      e.dataTransfer.setData('text/plain', img.dataset.id);
-    });
-  }
+  function dragSetup(img){ img.addEventListener('dragstart',e=>{ e.dataTransfer.setData('text/plain', img.dataset.id); }); }
   $$('.tube').forEach(d=>dragSetup(d));
   if (drop){
     drop.addEventListener('dragover',e=>{e.preventDefault(); drop.classList.add('empty');});
@@ -153,13 +158,10 @@
       if (el) bank.appendChild(el);
     });
   }
-  function currentOrder(){
-    return Array.from(drop.querySelectorAll('.tube')).map(t=>t.dataset.id);
-  }
+  function currentOrder(){ return Array.from(drop.querySelectorAll('.tube')).map(t=>t.dataset.id); }
   function expectedOrder(){
     const all=['1-hemocultura','2-citrato','3-vhs','4-soro','5-heparina','6-edta','7-fluoreto'];
-    const present = all.filter(id=>document.querySelector('.tube[data-id="'+id+'"]'));
-    return present;
+    return all.filter(id=>document.querySelector('.tube[data-id="'+id+'"]'));
   }
   btnValidate?.addEventListener('click',()=>{
     const now=currentOrder();
@@ -180,9 +182,7 @@
   const right = $('#puzzle-right');
   if (left && right){
     left.querySelectorAll('.piece').forEach(p=>{
-      p.addEventListener('dragstart',e=>{
-        e.dataTransfer.setData('text/plain', p.dataset.key);
-      });
+      p.addEventListener('dragstart',e=>{ e.dataTransfer.setData('text/plain', p.dataset.key); });
     });
     right.querySelectorAll('.slot').forEach(s=>{
       s.addEventListener('dragover',e=>e.preventDefault());
@@ -207,7 +207,7 @@
     const bios = Array.from(document.querySelectorAll('.check input[type="checkbox"][data-score]')).filter(i=>i.checked).length;
     const biosTotal = document.querySelectorAll('.check input[type="checkbox"][data-score]').length;
     const seqOk = $('#quiz-feedback')?.classList.contains('ok') ? 'Correta' : 'Não validada/corrigida';
-    const html = [
+    relato.innerHTML = [
       '<div class="box">',
       '<h3>Resumo do Caso</h3>',
       '<p><b>Paciente:</b> '+g('nome')+' • <b>Nasc.:</b> '+g('nasc')+' • <b>Sexo:</b> '+g('sexo')+'</p>',
@@ -219,7 +219,6 @@
       '<p><b>Sequência de tubos:</b> '+seqOk+'</p>',
       '</div>'
     ].join('');
-    relato.innerHTML = html;
   });
 
   const tutorFeed = $('#tutor-feed');
@@ -235,28 +234,25 @@
     tutorFeed.scrollTop = tutorFeed.scrollHeight;
   }
   const quiz = [
-    {q:'Ordem correta dos tubos:', a:'hemocultura>citrato>soro>heparina>edta>fluoreto'},
-    {q:'Ângulo de punção recomendado:', a:'30-45'},
-    {q:'Tempo máximo de garrote:', a:'60'}
+    {q:'Ordem correta dos tubos?', a:'hemocultura>citrato>soro>heparina>edta>fluoreto'},
+    {q:'Ângulo de punção recomendado (°)?', a:'30-45'},
+    {q:'Tempo máximo de garrote (s)?', a:'60'}
   ];
-  let qi=0;
-  pushTutor('Tutor','Digite "quiz" para iniciar perguntas rápidas.');
+  let qi=-1;
+  pushTutor('Tutor','Digite "quiz" para iniciar perguntas rápidas ou peça "Corrigir sequência".');
   tutorAsk?.addEventListener('click',()=>{
     const text=tutorInput.value.trim();
     if(!text) return;
     pushTutor('Você', text);
-    if (text.toLowerCase()==='quiz'){
-      qi=0;
-      pushTutor('Tutor', quiz[qi].q);
-    } else if (qi<quiz.length){
+    if (text.toLowerCase()==='quiz'){ qi=0; pushTutor('Tutor', quiz[qi].q); }
+    else if (qi>=0 && qi<quiz.length){
       const ans=text.toLowerCase().replace(/\s+/g,'');
       const ok=ans.includes(quiz[qi].a.replace(/\s+/g,''));
       pushTutor('Tutor', ok ? 'Certo!' : 'Revise esse ponto.');
       qi++;
-      if (qi<quiz.length) pushTutor('Tutor', quiz[qi].q);
-      else pushTutor('Tutor','Fim do quiz.');
+      if (qi<quiz.length) pushTutor('Tutor', quiz[qi].q); else { pushTutor('Tutor','Fim do quiz.'); qi=-1; }
     } else {
-      pushTutor('Tutor','Ok, registrado.');
+      pushTutor('Tutor','Ok.');
     }
     tutorInput.value='';
   });
@@ -272,7 +268,3 @@
     else pushTutor('Tutor', dicas.join(' '));
   });
 })();
-
-  
-     
- 
