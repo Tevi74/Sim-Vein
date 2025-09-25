@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SimVein - Offline</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .offline-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .offline-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            color: #ff6b6b;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 28px;
+        }
+
+        p {
+            color: #666;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .connection-status {
+            display: inline-flex;
+            align-items: center;
+            background: #fff3cd;
+            padding: 10px 20px;
+            border-radius: 50px;
+            margin: 20px 0;
+            border: 2px solid #ffeaa7;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            background: #ff6b6b;
+            border-radius: 50%;
+            margin-right: 10px;
+            animation: pulse 2s infinite;
+        }
+
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .tips {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+            text-align: left;
+        }
+
+        .tips h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .tips ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .tips li {
+            padding: 5px 0;
+            color: #666;
+        }
+
+        .tips li:before {
+            content: "💡";
+            margin-right: 10px;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .loading {
+            display: none;
+        }
+
+        .loading.active {
+            display: block;
+            margin-top: 20px;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="offline-container">
+        <div class="offline-icon">📶</div>
+        
+        <h1>Você está offline</h1>
+        
+        <div class="connection-status">
+            <div class="status-dot"></div>
+            <span>Sem conexão com a internet</span>
+        </div>
+        
+        <p>Não foi possível carregar a página. Verifique sua conexão com a internet e tente novamente.</p>
+        
+        <button class="btn" onclick="tryReconnect()">Tentar Reconectar</button>
+        <a href="/" class="btn btn-secondary">Voltar para o Início</a>
+        
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>Verificando conexão...</p>
+        </div>
+        
+        <div class="tips">
+            <h3>O que você pode fazer:</h3>
+            <ul>
+                <li>Verificar se o Wi-Fi ou dados móveis estão ativos</li>
+                <li>Conectar-se a uma rede Wi-Fi disponível</li>
+                <li>Verificar o modo avião no seu dispositivo</li>
+                <li>Algumas funcionalidades podem estar disponíveis offline</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function tryReconnect() {
+            const loading = document.getElementById('loading');
+            loading.classList.add('active');
+            
+            fetch('/')
+                .then(response => {
+                    if (response.ok) {
+                        window.location.reload();
+                    } else {
+                        throw new Error('Network response was not ok');
+                    }
+                })
+                .catch(error => {
+                    loading.classList.remove('active');
+                    alert('Ainda offline. Verifique sua conexão e tente novamente.');
+                });
+        }
+
+        window.addEventListener('online', () => {
+            setTimeout(() => {
+                window.location.reload();
+            }, 3000);
+        });
+
+        setInterval(() => {
+            fetch('/').then(response => {
+                if (response.ok) {
+                    window.location.reload();
+                }
+            }).catch(() => {});
+        }, 30000);
+    </script>
+</body>
+</html>
