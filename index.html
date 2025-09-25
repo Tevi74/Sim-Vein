@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>PPA SimVein • Simulador de Coleta</title>
   <meta name="theme-color" content="#0d1b2a" />
-  <link rel="manifest" href="/manifest.webmanifest?v=3" />
-  <link rel="stylesheet" href="/styles.css?v=3" />
+  <link rel="manifest" href="/manifest.webmanifest?v=10" />
+  <link rel="stylesheet" href="/styles.css?v=10" />
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
 </head>
 <body>
@@ -29,13 +29,13 @@
     </nav>
   </header>
 
-  <audio id="audio-ambiente" src="/public/audios/audio-ambiente.mp3?v=3" loop preload="auto"></audio>
+  <audio id="audio-ambiente" src="/public/audios/audio-ambiente.mp3?v=10" loop preload="auto"></audio>
 
   <div id="banner" class="banner" hidden></div>
 
   <main class="content" style="grid-template-columns: 1fr 340px; gap: 12px;">
     <div>
-      <section id="tab-paciente" class="tab active">
+      <section id="tab-paciente" class="tab">
         <h2>Ficha do Paciente</h2>
         <form id="form-paciente" class="form">
           <div class="grid-2">
@@ -50,10 +50,39 @@
                 <option>F</option><option>M</option><option>Outro</option>
               </select>
             </label>
+            <label>Nome da mãe
+              <input name="mae" placeholder="Nome da mãe"/>
+            </label>
+            <label>Documento de identificação
+              <input name="doc" placeholder="RG/CPF/Outro"/>
+            </label>
+            <label>Unidade de saúde (origem)
+              <input name="unidade" placeholder="UBS/UPA/Hospital"/>
+            </label>
+          </div>
+
+          <h3>Coleta</h3>
+          <div class="grid-2">
+            <label>Exames solicitados (descrição)
+              <input name="exames-desc" placeholder="Ex.: Hemograma, Glicose, TSH"/>
+            </label>
+            <label>Data e hora da coleta
+              <input name="datahora" type="datetime-local"/>
+            </label>
+            <label>Tipo de amostra
+              <select name="amostra">
+                <option>Sangue venoso</option>
+                <option>Sangue capilar</option>
+                <option>Soro</option>
+                <option>Plasma</option>
+                <option>Outros</option>
+              </select>
+            </label>
             <label>Alergias
               <input name="alergias" placeholder="Sem alergias"/>
             </label>
           </div>
+
           <label>Braço preferencial
             <select name="braco"><option>Direito</option><option>Esquerdo</option></select>
           </label>
@@ -63,6 +92,10 @@
             <label class="check"><input type="checkbox" name="consent"/> Consentimento informado</label>
           </div>
           <button type="button" id="btn-salvar-paciente" class="btn">Salvar ficha</button>
+
+          <div class="audio-controls" style="margin-top:8px">
+            <button class="btn ghost" data-audio="/public/audios/audio-boas-vindas.mp3">▶ Boas-vindas</button>
+          </div>
         </form>
       </section>
 
@@ -81,7 +114,7 @@
         <button id="btn-deduzir" class="btn">Deduzir tubos necessários</button>
         <div id="deduzidos" class="pill"></div>
         <div class="audio-controls">
-          <button class="btn ghost" data-audio="/public/audios/audio-boas-vindas.mp3?v=3">▶ Boas-vindas</button>
+          <button class="btn ghost" data-audio="/public/audios/audio-solicitacao.mp3">▶ Solicitação (narração)</button>
         </div>
       </section>
 
@@ -107,9 +140,6 @@
             <label class="check"><input type="checkbox" data-score="descarte"/> Descarte adequado</label>
           </div>
         </div>
-        <div class="audio-controls">
-          <button class="btn ghost" data-audio="/public/audios/audio-erros.mp3?v=3">▶ Erros comuns</button>
-        </div>
       </section>
 
       <section id="tab-dispositivo" class="tab">
@@ -120,7 +150,7 @@
           <label class="card"><input type="radio" name="disp" value="cateter"/><span>Cateter periférico</span></label>
         </div>
         <div class="audio-controls">
-          <button class="btn ghost" data-audio="/public/audios/audio-selecao-de-tubos.mp3?v=3">▶ Seleção de tubos (narração)</button>
+          <button class="btn ghost" data-audio="/public/audios/audio-selecao.mp3">▶ Seleção de tubos (narração)</button>
         </div>
       </section>
 
@@ -148,11 +178,11 @@
 
         <div class="scene-360 box">
           <h3>Seleção de Veia (360°)</h3>
-          <div id="missing360" class="alert" hidden>⚠️ Coloque <code>public/assets/arm-360.jpg</code> (equiretangular 2:1).</div>
+          <div id="missing360" class="alert" hidden>⚠️ Coloque <code>public/assets/arm-360.jpg</code> (2:1).</div>
 
           <a-scene embedded vr-mode-ui="enabled:false" renderer="antialias:true">
             <a-assets>
-              <img id="arm360" src="/public/assets/arm-360.jpg?v=3" crossorigin="anonymous" />
+              <img id="arm360" src="/public/assets/arm-360.jpg?v=10" crossorigin="anonymous" />
             </a-assets>
             <a-sky id="sky" src="#arm360" rotation="0 -90 0"></a-sky>
 
@@ -192,18 +222,18 @@
         </div>
       </section>
 
-      <section id="tab-sequencia" class="tab">
+      <section id="tab-sequencia" class="tab active">
         <h2>Sequência de Coleta</h2>
         <p>Arraste os tubos para a área em ordem correta e clique em <b>Validar</b>.</p>
         <div class="quiz">
           <div class="bank" id="tube-bank">
-            <img draggable="true" class="tube" data-id="1-hemocultura" src="/public/assets/tubes/hemocultura.png?v=3" alt="Hemocultura">
-            <img draggable="true" class="tube" data-id="2-citrato" src="/public/assets/tubes/citrato-azul.png?v=3" alt="Citrato (Azul)">
-            <img draggable="true" class="tube tube-vhs" data-id="3-vhs" src="/public/assets/tubes/vhs-preto.png?v=3" alt="VHS (Preto)" style="display:none">
-            <img draggable="true" class="tube" data-id="4-soro" src="/public/assets/tubes/soro-vermelho.png?v=3" alt="Soro (Vermelho/Amarelo)">
-            <img draggable="true" class="tube" data-id="5-heparina" src="/public/assets/tubes/heparina-verde.png?v=3" alt="Heparina (Verde)">
-            <img draggable="true" class="tube" data-id="6-edta" src="/public/assets/tubes/edta-roxo.png?v=3" alt="EDTA (Roxo)">
-            <img draggable="true" class="tube" data-id="7-fluoreto" src="/public/assets/tubes/fluoreto-cinza.png?v=3" alt="Fluoreto (Cinza)">
+            <img draggable="true" class="tube" data-id="1-hemocultura" src="/public/assets/tubes/hemocultura.png?v=10" alt="Hemocultura">
+            <img draggable="true" class="tube" data-id="2-citrato" src="/public/assets/tubes/citrato-azul.png?v=10" alt="Citrato (Azul)">
+            <img draggable="true" class="tube tube-vhs" data-id="3-vhs" src="/public/assets/tubes/vhs-preto.png?v=10" alt="VHS (Preto)" style="display:none">
+            <img draggable="true" class="tube" data-id="4-soro" src="/public/assets/tubes/soro-vermelho.png?v=10" alt="Soro (Vermelho/Amarelo)">
+            <img draggable="true" class="tube" data-id="5-heparina" src="/public/assets/tubes/heparina-verde.png?v=10" alt="Heparina (Verde)">
+            <img draggable="true" class="tube" data-id="6-edta" src="/public/assets/tubes/edta-roxo.png?v=10" alt="EDTA (Roxo)">
+            <img draggable="true" class="tube" data-id="7-fluoreto" src="/public/assets/tubes/fluoreto-cinza.png?v=10" alt="Fluoreto (Cinza)">
           </div>
           <div class="drop" id="tube-drop" aria-label="Área de Montagem"></div>
         </div>
@@ -212,10 +242,6 @@
           <button id="btn-validate" class="btn">Validar</button>
         </div>
         <p id="quiz-feedback" class="feedback"></p>
-
-        <div class="audio-controls">
-          <button class="btn ghost" data-audio="/public/audios/audio-sequencia-de-coleta.mp3?v=3">▶ Sequência (narração)</button>
-        </div>
       </section>
 
       <section id="tab-aplicacoes" class="tab">
@@ -241,39 +267,102 @@
             <div class="slot" data-accept="vhs">Velocidade de Hemossedimentação (VHS)</div>
           </div>
         </div>
+        <div class="audio-controls" style="margin-top:8px">
+          <button class="btn ghost" data-audio="/public/audios/audio-selecao.mp3">▶ Seleção de tubos (narração)</button>
+        </div>
       </section>
 
       <section id="tab-tabelas" class="tab">
         <h2>Tabelas de Referência (Informativas)</h2>
         <div class="tables">
           <details open>
-            <summary>Hematologia</summary>
+            <summary>Valores de Referência</summary>
             <ul>
-              <li>Hemoglobina (Hb): 12–16 g/dL (mulher), 13–18 g/dL (homem)</li>
-              <li>Hematócrito (Ht), Leucócitos, Plaquetas, VCM, HCM, CHCM …</li>
-            </ul>
-          </details>
-          <details>
-            <summary>Bioquímica & Eletrólitos</summary>
-            <ul>
-              <li>Glicose, Ureia, Creatinina, TGO/TGP, GGT, FA, Bilirrubinas</li>
-              <li>Na⁺, K⁺, Cl⁻, Ca²⁺, Mg²⁺, Fosfato …</li>
-            </ul>
-          </details>
-          <details>
-            <summary>Coagulação</summary>
-            <ul>
-              <li>TP/INR, TTPa, Fibrinogênio …</li>
-            </ul>
-          </details>
-          <details>
-            <summary>Sorologia / Hormônios</summary>
-            <ul>
-              <li>TSH/T4L, Beta-hCG, PSA, marcadores virais/hepáticos (varia por método)</li>
+              <li>Ácido fólico: 1,8 a 9 ng/mL | 4,1 a 20,4 nmol/L</li>
+              <li>Ácido úrico: 3 a 7 mg/dL | 178,5 a 416,5 µmol/L</li>
+              <li>ACTH: 10 a 60 pg/mL | 2,2 a 13,2 pmol/L</li>
+              <li>Albumina: 3,5 a 5,5 g/dL | 35 a 55 g/L</li>
+              <li>Aldosterona: Em pé 7–20 ng/dL | 194–554 pmol/L; Deitado 2–5 ng/dL | 55–138 pmol/L</li>
+              <li>Alfa-1 antitripsina: 150 a 350 mg/dL | 27,6 a 64,5 µmol/L</li>
+              <li>Alfafetoproteína: 0 a 10 ng/dL | 0 a 10 pg/L</li>
+              <li>Amilase: 25 a 125 U/L | 0,42 a 2,1 µKat/L</li>
+              <li>ALT/TGP: 10 a 40 U/L | 0,17 a 0,68 µKat/L</li>
+              <li>AST/TGO: 10 a 40 U/L | 0,17 a 0,68 µKat/L</li>
+              <li>Amônia: 40 a 70 µg/dL | 23,5 a 41,1 µmol/L</li>
+              <li>Anti-TPO: &lt; 35 UI/mL | &lt; 35 kUI/L</li>
+              <li>Bilirrubina Total: 0,1 a 1,2 mg/dL | 1,7 a 20,5 µmol/L</li>
+              <li>CA 19-9: &lt; 37 U/mL | &lt; 220 kU/L</li>
+              <li>CA 125: &lt; 35 U/mL | &lt; 120 kU/L</li>
+              <li>Cálcio: 8,6 a 10,2 mg/dL | 2,2 a 2,6 mmol/L</li>
+              <li>Cálcio ionizado: 4,5 a 4,9 mg/dL | 1,12 a 1,23 mmol/L</li>
+              <li>CTLF (TIBC): 250 a 310 µg/dL | 44,8 a 55,5 µmol/L</li>
+              <li>CEA: &lt; 5 ng/mL | &lt; 16,5 nmol/L</li>
+              <li>Cloreto: 98 a 106 mEq/L | 98 a 106 mmol/L</li>
+              <li>Colesterol HDL: Mulheres &lt; 50 mg/dL | &lt; 1,3 mmol/L; Homens &lt; 40 mg/dL | &lt; 1 mmol/L</li>
+              <li>Colesterol LDL: Ótimo &lt; 100 mg/dL | &lt; 2,6 mmol/L; 100–129 quase ideal; 130–159 moderado alto; 160–189 alto; &gt;189 muito alto</li>
+              <li>Colesterol Total: Desejável &lt; 200 mg/dL | &lt; 5,2 mmol/L; 200–239 moderado alto; &gt;239 alto</li>
+              <li>Complemento: C3 100–233 mg/dL | 1–2,3 g/L; C4 14–48 mg/dL | 0,1–0,5 g/L; CH50 110–190 U/mL</li>
+              <li>Cortisol: 6 a 23 µg/dL | 138 a 690 nmol/L</li>
+              <li>CK: H 55–170 U/L | 0,92–2,83 µkat/L; M 30–135 U/L | 0,5–2,25 µkat/L</li>
+              <li>Creatinina: 0,7 a 1,3 mg/dL | 61,9 a 115 µmol/L</li>
+              <li>D-dímero: &lt; 0,5 µg/mL | &lt; 3 nmol/L</li>
+              <li>DHEA-S: M 35–430 µg/dL | 1,21–14,9 µmol/L; H 80–560 µg/dL | 2,76–19,3 µmol/L</li>
+              <li>ECA (enzima conversora): 8 a 53 U/L</li>
+              <li>Estradiol: Fase folicular 30–120 pg/mL | 110–441 pmol/L</li>
+              <li>Ferritina: M 24–307 ng/mL | 54–690 pmol/L; H 24–336 ng/mL | 54–755 pmol/L</li>
+              <li>Ferro: 50 a 150 µg/dL | 9 a 27 µmol/L</li>
+              <li>Fosfatase alcalina: 30 a 120 U/L</li>
+              <li>Fósforo: 3 a 4,5 mg/dL | 0,97 a 1,45 mmol/L</li>
+              <li>Glicemia em jejum: 70 a 99 mg/dL | 3,9 a 5,5 mmol/L</li>
+              <li>Hematócrito: M 37–47% | —; H 42–50% | —</li>
+              <li>Hemoglobina: M 12–16 g/dL | 120–160 g/L; H 14–18 g/dL | 140–180 g/L</li>
+              <li>HbA1c: 4 a 5,6% | 20,2 a 37,7 mmol/mol</li>
+              <li>Homocisteína: &lt; 15 µmol/L</li>
+              <li>GH: 0 a 3 ng/mL | 0 a 9 mU/L</li>
+              <li>FSH: H 1–12 mIU/mL; M fase folicular 2–10 mIU/mL</li>
+              <li>LH: H 1,5–9,3 mIU/mL; M fase folicular 1,9–12,5 mIU/mL</li>
+              <li>PTH: 10 a 65 pg/mL | 1 a 6,5 pmol/L</li>
+              <li>Imunoglobulinas: IgA 90–325 mg/dL | 0,9–3,3 g/L; IgE &lt; 380 UI/mL | &lt; 0,9 g/L; IgG 800–1500 mg/dL | 8–15 g/L; IgM 45–150 mg/dL | 0,5–1,5 g/L</li>
+              <li>Cadeias leves livres: Kappa 3,3–19,4 mg/L; Lambda 5,7–26,3 mg/L; Relação 0,26–1,65</li>
+              <li>Lactato: Art &lt; 12 mg/dL | &lt; 1,3 mmol/L; Ven 6–16 mg/dL | 0,7–1,8 mmol/L</li>
+              <li>LDH: 80 a 225 U/L | 1,3 a 3,8 µkat/L</li>
+              <li>Lipase: 10 a 140 U/L | 0,2 a 2,3 µkat/L</li>
+              <li>Lipoproteína(a): &lt; 30 mg/dL | &lt; 0,8 mmol</li>
+              <li>Lítio: Terapêutico 0,6–1,2 mEq/L | 0,6–1,2 mmol/L; tóxico &gt; 2</li>
+              <li>Magnésio: 1,6 a 2,6 mEq/L | 0,66 a 1,07 mmol/L</li>
+              <li>NT-proBNP: &lt;50a &lt;125 pg/mL; 50–75a &lt;300; &gt;75a até 450–900 | em pmol/L ver faixas</li>
+              <li>Plaquetas: 150.000 a 450.000/µL | 150 a 450 ×10⁹/L</li>
+              <li>Potássio: 3,5 a 5,0 mEq/L | 3,5 a 5,0 mmol/L</li>
+              <li>Progesterona: Fase lútea 5–20 ng/mL | 15,9–63,6 nmol/L</li>
+              <li>Prolactina: &lt; 20 ng/mL | &lt; 20 µg/L</li>
+              <li>PCR: &lt; 0,9 mg/dL (9 mg/L) | &lt; 76,3 nmol/L</li>
+              <li>PCR-us: &lt; 1,0 mg/L | &lt; 9,5 nmol/L</li>
+              <li>PSA total: &lt; 4,0 ng/mL | &lt; 105 kU/L</li>
+              <li>PTHi: 10 a 65 pg/mL | 10 a 65 ng/L</li>
+              <li>Renina plasmática: 0,2 a 1,6 ng/mL/h | 0,056 a 0,444 nmol/L/h</li>
+              <li>Sat. O₂ arterial: ≥ 95%</li>
+              <li>Sat. transferrina: 20 a 50%</li>
+              <li>Sódio: 136 a 145 mEq/L | 136 a 145 mmol/L</li>
+              <li>T3: Total 80–180 ng/dL | 1,2–2,8 nmol/L; Livre 2,3–4,2 pg/mL | 3,5–6,5 pmol/L</li>
+              <li>T4: Livre 0,8–1,8 ng/dL | 10,3–23,2 pmol/L; Total 5–12 µg/dL | 64,4–154,4 nmol/L</li>
+              <li>TTPa: 25 a 35 s</li>
+              <li>Testosterona: M 18–54 ng/dL | 0,6–1,9 nmol/L; H 291–1100 ng/dL | 10,1–38,2 nmol/L</li>
+              <li>TRAb: &lt; 1,75 U/L</li>
+              <li>Transferrina: 200 a 400 mg/dL | 26 a 50 µmol/L</li>
+              <li>Troponina I: ≤ 0,04 ng/mL | ≤ 0,04 µg/L</li>
+              <li>Troponina T: ≤ 0,01 ng/mL | ≤ 0,01 µg/L</li>
+              <li>TSH: 0,5 a 4 mU/L</li>
+              <li>Ureia: 8 a 20 mg/dL | 2,9 a 7,1 mmol/L</li>
+              <li>Vitamina A: 32,5 a 78 µg/dL | 1,1 a 2,7 µmol/L</li>
+              <li>Vitamina B12: 200 a 800 pg/mL | 147,5 a 590 pmol/L</li>
+              <li>Vitamina D: 1,25-diOH 15–60 pg/mL | 39–156 pmol/L; 25-OH 30–60 ng/mL | 75–150 nmol/L</li>
+              <li>Vitamina E: 5,5 a 17 mg/L | 12,8 a 39,5 µmol/L</li>
+              <li>VHS: M 0–20 mm/h; H 0–15 mm/h</li>
+              <li>Zinco: 75 a 140 µg/dL | 11,5 a 21,4 µmol/L</li>
             </ul>
           </details>
         </div>
-        <div class="tip">*Valores variam por método/kit/laboratório. Uso apenas didático.*</div>
+        <div class="tip">*Valores variam por método/kit/laboratório. Uso didático.</div>
       </section>
 
       <section id="tab-relatorio" class="tab">
@@ -285,12 +374,12 @@
 
     <aside class="tab box" style="height: fit-content;">
       <div class="row" style="gap:10px; align-items:center;">
-        <img src="/public/assets/branding/avatar-tutor.png?v=3" alt="Tutor" style="width:48px;height:48px;border-radius:50%;object-fit:cover" onerror="this.style.display='none'">
+        <img src="/public/assets/branding/avatar-tutor.png?v=10" alt="Tutor" style="width:56px;height:56px;border-radius:50%;object-fit:cover" onerror="this.style.display='none'">
         <h3 style="margin:0">Tutor IA</h3>
       </div>
       <div id="tutor-feed" style="margin-top:8px;max-height:240px;overflow:auto;"></div>
       <div class="row" style="margin-top:8px">
-        <input id="tutor-input" placeholder="Peça um caso fictício ou tire uma dúvida…" style="flex:1;padding:8px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:#0c182b;color:#e6f0ff"/>
+        <input id="tutor-input" placeholder="Pergunte ou peça correção da sequência…" style="flex:1;padding:8px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:#0c182b;color:#e6f0ff"/>
         <button id="tutor-ask" class="btn">Perguntar</button>
       </div>
       <button id="tutor-corrigir" class="btn ghost" style="margin-top:8px">Corrigir agora</button>
@@ -302,7 +391,7 @@
       <small>© 2025 • Material educacional. Não substitui treinamento supervisionado.</small>
     </div>
     <div class="right">
-      <img src="/public/assets/branding/logo-haras.png?v=3" alt="HarasTech" onerror="this.style.display='none'"/>
+      <img src="/public/assets/branding/logo-haras.png?v=10" alt="HarasTech" onerror="this.style.display='none'"/>
       <small>Desenvolvido por HarasTech • <a href="mailto:harastech@outlook.com">harastech@outlook.com</a></small>
     </div>
   </footer>
@@ -313,25 +402,21 @@
       <span>Áudio ambiente</span>
       <input type="checkbox" id="toggle-ambiente"/>
     </label>
-    <label>OpenAI API Key (opcional – armazena localmente)
-      <input type="password" id="openai-key" placeholder="sk-..." />
-    </label>
-    <label>Assistant ID (opcional)
-      <input type="text" id="assistant-id" placeholder="asst_..." />
-    </label>
     <div class="row end">
       <button id="save-settings" class="btn">Salvar</button>
       <button id="close-settings" class="btn ghost">Fechar</button>
     </div>
   </dialog>
 
-  <script src="/scripts.js?v=3" defer></script>
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', ()=> {
-        navigator.serviceWorker.register('/sw.js?v=3').catch(()=>{});
-      });
-    }
-  </script>
+  <dialog id="welcome">
+    <h3>Bem-vindo(a) ao SimVein</h3>
+    <p style="margin:8px 0 12px">Pressione Play para ouvir a introdução.</p>
+    <div class="row">
+      <button class="btn" data-audio="/public/audios/audio-boas-vindas.mp3">▶ Boas-vindas</button>
+      <button id="close-welcome" class="btn ghost">Começar</button>
+    </div>
+  </dialog>
+
+  <script src="/scripts.js?v=10" defer></script>
 </body>
 </html>
