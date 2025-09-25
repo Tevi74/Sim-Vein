@@ -1,0 +1,80 @@
+:root{
+  --bg:#0b1220; --surface:#0f1a2b; --ink:#e6f0ff; --muted:#9db3cc;
+  --accent:#2ec4b6; --accent2:#6c63ff; --warn:#f59f00; --ok:#12b886; --bad:#e03131;
+  --shadow:0 10px 28px rgba(0,0,0,.25); --r:16px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,Segoe UI,Roboto,Arial}
+a{color:#8ecae6}
+img{max-width:100%;display:block}
+h2{margin:12px 0 6px}
+h3{margin:8px 0}
+
+.app-header,.app-footer{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 14px;background:rgba(255,255,255,.04);backdrop-filter:blur(6px)
+}
+.brand{display:flex;gap:10px;align-items:center}
+.brand img{height:28px}
+.nav{display:flex;gap:8px}
+.btn{background:var(--accent2);border:0;color:white;padding:9px 13px;border-radius:12px;box-shadow:var(--shadow);cursor:pointer}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid rgba(255,255,255,.15)}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+
+.banner{background:#332600;color:#ffd666;padding:8px 12px;text-align:center}
+.content{padding:12px;display:grid;gap:12px}
+.tab{display:none;background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);padding:12px}
+.tab.active{display:block}
+
+.form label{display:block;margin:6px 0}
+.form input,.form select{width:100%;padding:8px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:#0c182b;color:var(--ink)}
+.check{display:flex;gap:8px;align-items:center;margin:6px 0}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.row{display:flex;gap:10px;align-items:center}
+.row.end{justify-content:flex-end}
+.gap{gap:16px}
+.cards{gap:10px}
+.card{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.04);padding:10px;border-radius:12px}
+.card input{accent-color:var(--accent2)}
+.tip{opacity:.8;font-size:14px;margin-top:6px}
+
+.box{background:#0e1c31;border-radius:12px;padding:10px;border:1px solid rgba(255,255,255,.08)}
+.timer{font-weight:700;font-size:22px;padding:6px 10px;border-radius:10px;background:#041121}
+.alert{background:#40311a;color:#ffd8a8;padding:8px 10px;border-radius:10px;margin-top:8px}
+.badge{margin-top:6px;padding:4px 8px;border-radius:999px;border:1px solid rgba(255,255,255,.2);display:inline-block}
+.scene-360 a-scene{width:100%;height:360px;border-radius:12px;overflow:hidden}
+.legend{margin-top:8px;display:flex;gap:12px;align-items:center;font-size:12px;opacity:.9}
+.dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+.dot.teal{background:#2ec4b6}.dot.purple{background:#6c63ff}.dot.amber{background:#f59f00}
+
+.quiz{display:grid;gap:12px;margin-top:8px}
+.bank,.drop{display:flex;gap:8px;flex-wrap:wrap;min-height:84px;padding:8px;border:1px dashed rgba(255,255,255,.2);border-radius:12px}
+.tube{width:82px;height:auto;padding:6px;background:rgba(255,255,255,.04);border-radius:10px;box-shadow:var(--shadow);cursor:grab}
+.tube:active{cursor:grabbing}
+.quiz-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}
+.feedback{min-height:22px;font-weight:600}
+.feedback.ok{color:var(--ok)}
+.feedback.bad{color:var(--bad)}
+
+.puzzle{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px}
+.left .piece,.right .slot{padding:10px;border-radius:10px;background:rgba(255,255,255,.04);border:1px dashed rgba(255,255,255,.15)}
+.right .slot{min-height:44px;display:flex;align-items:center}
+.pill{margin-top:8px;padding:6px 10px;border-radius:999px;background:rgba(46,196,182,.12);border:1px solid rgba(46,196,182,.4)}
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chips label{background:rgba(255,255,255,.04);padding:6px 8px;border-radius:999px}
+.audio-controls{margin-top:8px}
+
+.app-footer{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:rgba(255,255,255,.04)}
+.app-footer .right{display:flex;gap:8px;align-items:center}
+.app-footer .right img{height:20px}
+
+dialog{background:#0f1a2b;color:var(--ink);border:1px solid rgba(255,255,255,.2);border-radius:12px;padding:12px;width:min(520px, 96vw)}
+dialog::backdrop{background:rgba(0,0,0,.5)}
+
+@media (max-width: 980px){
+  .grid-2{grid-template-columns:1fr}
+  .grid-3{grid-template-columns:1fr}
+  .puzzle{grid-template-columns:1fr}
+  .scene-360 a-scene{height:300px}
+}
