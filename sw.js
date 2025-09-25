@@ -1,14 +1,14 @@
 const CACHE_NAME = 'simvein-v2';
-const OFFLINE_URL = '/offline.html';
+const OFFLINE_URL = '/public/offline.html';
 
-// Assets críticos para funcionamento offline
+// Assets críticos - CAMINHOS CORRETOS para sua estrutura
 const CRITICAL_ASSETS = [
   '/',
   '/index.html',
-  '/styles.css',
+  '/styles.css', 
   '/scripts.js',
   '/manifest.webmanifest',
-  '/offline.html', // Adicione esta página
+  '/public/offline.html',
   '/public/assets/branding/logo-sim.png',
   '/public/assets/branding/logo-capacita.png',
   '/public/assets/branding/logo-haras.png'
@@ -50,7 +50,6 @@ class SWManager {
     try {
       const cached = await caches.match(request);
       if (cached) {
-        // Verifica se o cache não expirou (opcional)
         return cached;
       }
 
@@ -236,7 +235,6 @@ self.addEventListener('message', event => {
 self.addEventListener('sync', event => {
   if (event.tag === 'background-sync') {
     console.log('Background sync triggered');
-    // Aqui pode implementar sincronização em background
   }
 });
 
