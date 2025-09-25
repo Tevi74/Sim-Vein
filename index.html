@@ -5,15 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>PPA SimVein • Simulador de Coleta</title>
   <meta name="theme-color" content="#0d1b2a" />
-  <link rel="manifest" href="/manifest.webmanifest?v=6" />
-  <link rel="stylesheet" href="/styles.css?v=6" />
+  <link rel="manifest" href="/manifest.webmanifest?v=3" />
+  <link rel="stylesheet" href="/styles.css?v=3" />
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
 </head>
 <body>
   <header class="app-header">
     <div class="brand">
-      <img src="/assets/branding/logo-sim.png" alt="PPA SimVein" onerror="this.style.display='none'"/>
-      <img src="/assets/branding/logo-capacita.png" alt="Capacita+" onerror="this.style.display='none'"/>
+      <img src="/public/assets/branding/logo-sim.png" alt="PPA SimVein" onerror="this.style.display='none'"/>
+      <img src="/public/assets/branding/logo-capacita.png" alt="Capacita+" onerror="this.style.display='none'"/>
     </div>
     <nav class="nav">
       <button data-tab="paciente" class="btn ghost">Ficha</button>
@@ -29,7 +29,7 @@
     </nav>
   </header>
 
-  <audio id="audio-ambiente" src="/audio/audio-ambiente.mp3?v=6" loop preload="auto"></audio>
+  <audio id="audio-ambiente" src="/public/audios/audio-ambiente.mp3?v=3" loop preload="auto"></audio>
 
   <div id="banner" class="banner" hidden></div>
 
@@ -81,7 +81,7 @@
         <button id="btn-deduzir" class="btn">Deduzir tubos necessários</button>
         <div id="deduzidos" class="pill"></div>
         <div class="audio-controls">
-          <button class="btn ghost" data-audio="/audio/audio-boas-vindas.mp3?v=6">▶ Boas-vindas</button>
+          <button class="btn ghost" data-audio="/public/audios/audio-boas-vindas.mp3?v=3">▶ Boas-vindas</button>
         </div>
       </section>
 
@@ -108,7 +108,7 @@
           </div>
         </div>
         <div class="audio-controls">
-          <button class="btn ghost" data-audio="/audio/audio-erros.mp3?v=6">▶ Erros comuns</button>
+          <button class="btn ghost" data-audio="/public/audios/audio-erros.mp3?v=3">▶ Erros comuns</button>
         </div>
       </section>
 
@@ -120,7 +120,7 @@
           <label class="card"><input type="radio" name="disp" value="cateter"/><span>Cateter periférico</span></label>
         </div>
         <div class="audio-controls">
-          <button class="btn ghost" data-audio="/audio/audio-selecao-de-tubos.mp3?v=6">▶ Seleção de tubos (narração)</button>
+          <button class="btn ghost" data-audio="/public/audios/audio-selecao-de-tubos.mp3?v=3">▶ Seleção de tubos (narração)</button>
         </div>
       </section>
 
@@ -148,11 +148,11 @@
 
         <div class="scene-360 box">
           <h3>Seleção de Veia (360°)</h3>
-          <div id="missing360" class="alert" hidden>⚠️ Coloque <code>assets/arm-360.jpg</code> (equiretangular 2:1).</div>
+          <div id="missing360" class="alert" hidden>⚠️ Coloque <code>public/assets/arm-360.jpg</code> (equiretangular 2:1).</div>
 
           <a-scene embedded vr-mode-ui="enabled:false" renderer="antialias:true">
             <a-assets>
-              <img id="arm360" src="/assets/arm-360.jpg?v=6" crossorigin="anonymous" />
+              <img id="arm360" src="/public/assets/arm-360.jpg?v=3" crossorigin="anonymous" />
             </a-assets>
             <a-sky id="sky" src="#arm360" rotation="0 -90 0"></a-sky>
 
@@ -197,13 +197,13 @@
         <p>Arraste os tubos para a área em ordem correta e clique em <b>Validar</b>.</p>
         <div class="quiz">
           <div class="bank" id="tube-bank">
-            <img draggable="true" class="tube" data-id="1-hemocultura" src="/assets/tubes/hemocultura.png?v=6" alt="Hemocultura">
-            <img draggable="true" class="tube" data-id="2-citrato" src="/assets/tubes/citrato-azul.png?v=6" alt="Citrato (Azul)">
-            <img draggable="true" class="tube tube-vhs" data-id="3-vhs" src="/assets/tubes/vhs-preto.png?v=6" alt="VHS (Preto)" style="display:none">
-            <img draggable="true" class="tube" data-id="4-soro" src="/assets/tubes/soro-vermelho.png?v=6" alt="Soro (Vermelho/Amarelo)">
-            <img draggable="true" class="tube" data-id="5-heparina" src="/assets/tubes/heparina-verde.png?v=6" alt="Heparina (Verde)">
-            <img draggable="true" class="tube" data-id="6-edta" src="/assets/tubes/edta-roxo.png?v=6" alt="EDTA (Roxo)">
-            <img draggable="true" class="tube" data-id="7-fluoreto" src="/assets/tubes/fluoreto-cinza.png?v=6" alt="Fluoreto (Cinza)">
+            <img draggable="true" class="tube" data-id="1-hemocultura" src="/public/assets/tubes/hemocultura.png?v=3" alt="Hemocultura">
+            <img draggable="true" class="tube" data-id="2-citrato" src="/public/assets/tubes/citrato-azul.png?v=3" alt="Citrato (Azul)">
+            <img draggable="true" class="tube tube-vhs" data-id="3-vhs" src="/public/assets/tubes/vhs-preto.png?v=3" alt="VHS (Preto)" style="display:none">
+            <img draggable="true" class="tube" data-id="4-soro" src="/public/assets/tubes/soro-vermelho.png?v=3" alt="Soro (Vermelho/Amarelo)">
+            <img draggable="true" class="tube" data-id="5-heparina" src="/public/assets/tubes/heparina-verde.png?v=3" alt="Heparina (Verde)">
+            <img draggable="true" class="tube" data-id="6-edta" src="/public/assets/tubes/edta-roxo.png?v=3" alt="EDTA (Roxo)">
+            <img draggable="true" class="tube" data-id="7-fluoreto" src="/public/assets/tubes/fluoreto-cinza.png?v=3" alt="Fluoreto (Cinza)">
           </div>
           <div class="drop" id="tube-drop" aria-label="Área de Montagem"></div>
         </div>
@@ -214,7 +214,7 @@
         <p id="quiz-feedback" class="feedback"></p>
 
         <div class="audio-controls">
-          <button class="btn ghost" data-audio="/audio/audio-sequencia-de-coleta.mp3?v=6">▶ Sequência (narração)</button>
+          <button class="btn ghost" data-audio="/public/audios/audio-sequencia-de-coleta.mp3?v=3">▶ Sequência (narração)</button>
         </div>
       </section>
 
@@ -285,7 +285,7 @@
 
     <aside class="tab box" style="height: fit-content;">
       <div class="row" style="gap:10px; align-items:center;">
-        <img src="/assets/branding/avatar-tutor.png?v=6" alt="Tutor" style="width:48px;height:48px;border-radius:50%;object-fit:cover" onerror="this.style.display='none'">
+        <img src="/public/assets/branding/avatar-tutor.png?v=3" alt="Tutor" style="width:48px;height:48px;border-radius:50%;object-fit:cover" onerror="this.style.display='none'">
         <h3 style="margin:0">Tutor IA</h3>
       </div>
       <div id="tutor-feed" style="margin-top:8px;max-height:240px;overflow:auto;"></div>
@@ -302,7 +302,7 @@
       <small>© 2025 • Material educacional. Não substitui treinamento supervisionado.</small>
     </div>
     <div class="right">
-      <img src="/assets/branding/logo-haras.png?v=6" alt="HarasTech" onerror="this.style.display='none'"/>
+      <img src="/public/assets/branding/logo-haras.png?v=3" alt="HarasTech" onerror="this.style.display='none'"/>
       <small>Desenvolvido por HarasTech • <a href="mailto:harastech@outlook.com">harastech@outlook.com</a></small>
     </div>
   </footer>
@@ -325,11 +325,11 @@
     </div>
   </dialog>
 
-  <script src="/scripts.js?v=6" defer></script>
+  <script src="/scripts.js?v=3" defer></script>
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', ()=> {
-        navigator.serviceWorker.register('/sw.js?v=6').catch(()=>{});
+        navigator.serviceWorker.register('/sw.js?v=3').catch(()=>{});
       });
     }
   </script>
