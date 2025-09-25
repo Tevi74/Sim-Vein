@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>PPA SimVein • Simulador de Coleta</title>
   <meta name="theme-color" content="#0d1b2a" />
-  <link rel="manifest" href="/manifest.webmanifest?v=15" />
-  <link rel="stylesheet" href="/styles.css?v=15" />
+  <link rel="manifest" href="/manifest.webmanifest?v=16" />
+  <link rel="stylesheet" href="/styles.css?v=16" />
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
 </head>
 <body>
@@ -20,17 +20,17 @@
       <button data-tab="paciente" class="btn ghost">Ficha</button>
       <button data-tab="solicitacao" class="btn ghost">Solicitação</button>
       <button data-tab="biosseg" class="btn ghost">Biossegurança</button>
-      <button data-tab="dispositivo" class="btn ghost">Dispositivo</button>
-      <button data-tab="punicao" class="btn ghost">Garrote & Ângulo</button>
+      <button data-tab="gasometria" class="btn ghost">Gasometria</button>
+      <button data-tab="hemato" class="btn ghost">Hemato Químico</button>
       <button data-tab="sequencia" class="btn ghost">Sequência</button>
       <button data-tab="aplicacoes" class="btn ghost">Quebra-cabeça</button>
-      <button data-tab="tabelas" class="btn ghost">Tabelas</button>
+      <button data-tab="indices" class="btn ghost">Índices de Referência</button>
       <button data-tab="relatorio" class="btn ghost">Relatório</button>
       <button id="btn-settings" class="btn ghost" title="Configurações">⚙️</button>
     </nav>
   </header>
 
-  <audio id="audio-ambiente" src="/public/audios/audio-ambiente.mp3?v=15" loop preload="auto"></audio>
+  <audio id="audio-ambiente" src="/public/audios/audio-ambiente.mp3?v=16" loop preload="auto"></audio>
 
   <main class="content" style="grid-template-columns: 1fr 340px; gap: 12px;">
     <div>
@@ -144,11 +144,9 @@
             <label class="check"><input type="checkbox" data-score="descarte"/> Descarte adequado</label>
           </div>
         </div>
-
         <div class="audio-controls" style="margin-top:12px">
           <button class="btn ghost" data-audio="/public/audios/audio-erros.mp3">▶ Erros comuns</button>
         </div>
-
         <div class="row" style="gap:12px;margin-top:12px;flex-wrap:wrap">
           <img src="/public/assets/erro-veia.png" alt="Erro de veia" style="height:90px;border-radius:10px"/>
           <img src="/public/assets/erro-coagulo.png" alt="Coágulo" style="height:90px;border-radius:10px"/>
@@ -158,60 +156,36 @@
         </div>
       </section>
 
-      <section id="tab-dispositivo" class="tab">
-        <h2>Seleção de Dispositivo</h2>
-        <div class="grid-3 cards" id="disp-cards">
-          <label class="card"><input type="radio" name="disp" value="agulha"/><span>Agulha</span></label>
-          <label class="card"><input type="radio" name="disp" value="scalp"/><span>Scalp (borboleta)</span></label>
-          <label class="card"><input type="radio" name="disp" value="cateter"/><span>Cateter periférico</span></label>
+      <section id="tab-gasometria" class="tab">
+        <h2>Gasometria Arterial</h2>
+        <div class="audio-controls" style="margin-bottom:12px">
+          <button class="btn" data-audio="/public/audios/audio-gasometria.mp3">▶ Áudio: Gasometria</button>
         </div>
-        <div id="disp-tip" class="badge" style="margin-top:8px"></div>
+
+        <div class="box" id="gaso-quiz">
+          <h3>Quizzes</h3>
+          <div id="gq-q" class="badge" style="margin-bottom:8px"></div>
+          <div id="gq-options" class="grid-3" style="margin-bottom:8px"></div>
+          <div class="row">
+            <button id="gq-next" class="btn">Próxima</button>
+            <div id="gq-feedback" class="feedback"></div>
+          </div>
+        </div>
+
+        <div class="box" style="margin-top:12px">
+          <h3>Casos Clínicos</h3>
+          <div id="gaso-cases" class="tables"></div>
+        </div>
       </section>
 
-      <section id="tab-punicao" class="tab">
-        <h2>Garrote & Ângulo</h2>
-        <div class="row gap">
-          <div class="box">
-            <h3>Garrote</h3>
-            <div class="row">
-              <button id="garrote-start" class="btn">Iniciar</button>
-              <button id="garrote-stop" class="btn ghost" disabled>Parar</button>
-              <div id="garrote-timer" class="timer">00:00</div>
-            </div>
-            <div id="garrote-alert" class="alert" hidden>⚠️ Garrote excedeu 60s!</div>
-          </div>
-          <div class="box">
-            <h3>Ângulo da Punção</h3>
-            <input type="range" id="angle" min="0" max="90" value="30" />
-            <div>Ângulo: <span id="angle-val">30°</span></div>
-            <div id="angle-feedback" class="badge">Alvo: 30–45°</div>
-          </div>
+      <section id="tab-hemato" class="tab">
+        <h2>Hemato Químico</h2>
+        <div class="audio-controls" style="margin-bottom:12px">
+          <button class="btn ghost" data-audio="/public/audios/audio-hemato-imune.mp3">▶ Hematologia/Imuno</button>
+          <button class="btn ghost" data-audio="/public/audios/audio-bioquimica-clinica.mp3">▶ Bioquímica Clínica</button>
         </div>
-
-        <div class="scene-360 box">
-          <h3>Seleção de Veia (360°)</h3>
-          <div id="missing360" class="alert" hidden>⚠️ Coloque public/assets/arm-360.png (2:1).</div>
-          <a-scene embedded vr-mode-ui="enabled:false" renderer="antialias:true">
-            <a-assets>
-              <img id="arm360" src="/public/assets/arm-360.png?v=15" crossorigin="anonymous" />
-            </a-assets>
-            <a-sky id="sky" src="#arm360" rotation="0 -90 0"></a-sky>
-            <a-entity camera look-controls>
-              <a-entity cursor="rayOrigin: mouse" raycaster="objects: .hotspot"></a-entity>
-            </a-entity>
-            <a-entity class="hotspot" position="0 1.6 -3" geometry="primitive: sphere; radius: 0.06" material="color:#2ec4b6; emissive:#2ec4b6; opacity:.85" data-title="Mediana Cubital" data-text="Geralmente mais estável; bom calibre e localização."></a-entity>
-            <a-entity class="hotspot" position="-0.8 1.5 -2.5" geometry="primitive: sphere; radius: 0.06" material="color:#6c63ff; emissive:#6c63ff; opacity:.85" data-title="Cefálica" data-text="Boa alternativa; atenção à rolagem."></a-entity>
-            <a-entity class="hotspot" position="0.8 1.5 -2.5" geometry="primitive: sphere; radius: 0.06" material="color:#f59f00; emissive:#f59f00; opacity:.85" data-title="Basílica" data-text="Mais medial; opte se as outras não forem viáveis."></a-entity>
-          </a-scenE>
-          <div class="legend">
-            <span class="dot teal"></span> Mediana
-            <span class="dot purple"></span> Cefálica
-            <span class="dot amber"></span> Basílica
-          </div>
-          <div id="hotspot-panel" class="box" hidden>
-            <h4 id="hs-title">Veia</h4>
-            <p id="hs-text"></p>
-          </div>
+        <div class="box">
+          <p>Use os áudios para revisão guiada de hematologia, imunologia e bioquímica clínica.</p>
         </div>
       </section>
 
@@ -220,13 +194,13 @@
         <p>Arraste os tubos para a área em ordem correta e clique em Validar.</p>
         <div class="quiz">
           <div class="bank" id="tube-bank">
-            <img draggable="true" class="tube" data-id="1-hemocultura" src="/public/assets/tubes/hemocultura.png?v=15" alt="Hemocultura">
-            <img draggable="true" class="tube" data-id="2-citrato" src="/public/assets/tubes/citrato-azul.png?v=15" alt="Citrato (Azul)">
-            <img draggable="true" class="tube tube-vhs" data-id="3-vhs" src="/public/assets/tubes/vhs-preto.png?v=15" alt="VHS (Preto)" style="display:none">
-            <img draggable="true" class="tube" data-id="4-soro" src="/public/assets/tubes/soro-vermelho.png?v=15" alt="Soro (Vermelho/Amarelo)">
-            <img draggable="true" class="tube" data-id="5-heparina" src="/public/assets/tubes/heparina-verde.png?v=15" alt="Heparina (Verde)">
-            <img draggable="true" class="tube" data-id="6-edta" src="/public/assets/tubes/edta-roxo.png?v=15" alt="EDTA (Roxo)">
-            <img draggable="true" class="tube" data-id="7-fluoreto" src="/public/assets/tubes/fluoreto-cinza.png?v=15" alt="Fluoreto (Cinza)">
+            <img draggable="true" class="tube" data-id="1-hemocultura" src="/public/assets/tubes/hemocultura.png?v=16" alt="Hemocultura">
+            <img draggable="true" class="tube" data-id="2-citrato" src="/public/assets/tubes/citrato-azul.png?v=16" alt="Citrato (Azul)">
+            <img draggable="true" class="tube tube-vhs" data-id="3-vhs" src="/public/assets/tubes/vhs-preto.png?v=16" alt="VHS (Preto)" style="display:none">
+            <img draggable="true" class="tube" data-id="4-soro" src="/public/assets/tubes/soro-vermelho.png?v=16" alt="Soro (Vermelho/Amarelo)">
+            <img draggable="true" class="tube" data-id="5-heparina" src="/public/assets/tubes/heparina-verde.png?v=16" alt="Heparina (Verde)">
+            <img draggable="true" class="tube" data-id="6-edta" src="/public/assets/tubes/edta-roxo.png?v=16" alt="EDTA (Roxo)">
+            <img draggable="true" class="tube" data-id="7-fluoreto" src="/public/assets/tubes/fluoreto-cinza.png?v=16" alt="Fluoreto (Cinza)">
           </div>
           <div class="drop" id="tube-drop" aria-label="Área de Montagem"></div>
         </div>
@@ -266,8 +240,8 @@
         </div>
       </section>
 
-      <section id="tab-tabelas" class="tab">
-        <h2>Tabelas de Referência</h2>
+      <section id="tab-indices" class="tab">
+        <h2>Índices de Referência</h2>
         <div class="tables">
           <details open>
             <summary>Hemograma — Homens</summary>
@@ -335,7 +309,7 @@
 
     <aside class="tab box" style="height: fit-content;">
       <div class="row" style="gap:10px; align-items:center;">
-        <img src="/public/assets/branding/avatar-tutor.png?v=15" alt="Tutor" style="width:56px;height:56px;border-radius:50%;object-fit:cover">
+        <img src="/public/assets/branding/avatar-tutor.png?v=16" alt="Tutor" style="width:56px;height:56px;border-radius:50%;object-fit:cover">
         <h3 style="margin:0">Tutor IA</h3>
       </div>
       <div id="tutor-feed" style="margin-top:8px;max-height:240px;overflow:auto;"></div>
@@ -352,7 +326,7 @@
       <small>© 2025 • Material educacional. Não substitui treinamento supervisionado.</small>
     </div>
     <div class="right">
-      <img src="/public/assets/branding/logo-haras.png?v=15" alt="HarasTech"/>
+      <img src="/public/assets/branding/logo-haras.png?v=16" alt="HarasTech"/>
       <small>Desenvolvido por HarasTech • <a href="mailto:harastech@outlook.com">harastech@outlook.com</a></small>
     </div>
   </footer>
@@ -375,6 +349,6 @@
     </div>
   </dialog>
 
-  <script src="/scripts.js?v=15" defer></script>
+  <script src="/scripts.js?v=16" defer></script>
 </body>
 </html>
