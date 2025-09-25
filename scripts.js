@@ -68,90 +68,19 @@
     };
   });
 
-  const startBtn = $('#garrote-start');
-  const stopBtn = $('#garrote-stop');
-  const timerEl = $('#garrote-timer');
-  const alertEl = $('#garrote-alert');
-  let t0=null, tick=null;
-  function fmt(n){const m=Math.floor(n/60), s=Math.floor(n%60); return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');}
-  if (startBtn && stopBtn && timerEl){
-    startBtn.addEventListener('click',()=>{
-      if (tick) return;
-      if (alertEl) alertEl.hidden=true;
-      t0 = Date.now();
-      stopBtn.disabled=false;
-      tick = setInterval(()=>{
-        const secs=(Date.now()-t0)/1000;
-        timerEl.textContent = fmt(secs);
-        if (secs>60 && alertEl) alertEl.hidden=false;
-      },200);
-    });
-    stopBtn.addEventListener('click',()=>{
-      clearInterval(tick); tick=null; stopBtn.disabled=true;
-    });
-  }
-
-  const angle = $('#angle');
-  const angleVal = $('#angle-val');
-  const angleFb = $('#angle-feedback');
-  if (angle){
-    const upd=()=>{
-      const v=Number(angle.value);
-      if (angleVal) angleVal.textContent=v+'°';
-      if (angleFb){
-        const ok = v>=30 && v<=45;
-        angleFb.textContent = ok ? 'Correto (30–45°)' : 'Ajuste para 30–45°';
-      }
-    };
-    angle.addEventListener('input',upd); upd();
-  }
-
-  const sky = $('#sky');
-  const panel = $('#hotspot-panel');
-  const hsTitle = $('#hs-title');
-  const hsText = $('#hs-text');
-  $$('.hotspot').forEach(h=>{
-    h.addEventListener('click',()=>{
-      hsTitle.textContent = h.getAttribute('data-title')||'';
-      hsText.textContent = h.getAttribute('data-text')||'';
-      panel.hidden=false;
-    });
-  });
-  const img360 = $('#arm360');
-  const missing360 = $('#missing360');
-  if (img360){
-    img360.addEventListener('error',()=>{ missing360.hidden=false; });
-    img360.addEventListener('load',()=>{ missing360.hidden=true; if(sky) sky.setAttribute('src','#arm360'); });
-  }
-
   const examesBox = $('#exames');
   const deduzidos = $('#deduzidos');
-  const btnDeduzir = $('#btn-deduzir');
-  if (btnDeduzir && examesBox && deduzidos){
-    btnDeduzir.addEventListener('click',()=>{
-      const ex = Array.from(examesBox.querySelectorAll('input:checked')).map(i=>i.value);
-      const tubos = new Set();
-      if (ex.includes('Hemocultura')) tubos.add('Hemocultura');
-      if (ex.some(v=>/TP|TTPa/.test(v))) tubos.add('Citrato');
-      if (ex.includes('VHS')) tubos.add('VHS');
-      if (ex.some(v=>/Hemograma/.test(v))) tubos.add('EDTA');
-      if (ex.some(v=>/Glicose/.test(v))) tubos.add('Fluoreto');
-      if (ex.some(v=>/Eletrólitos|Bioquímica|Sorologia|Hormônios/.test(v))) tubos.add('Soro');
-      if (ex.some(v=>/Eletrólitos|Bioquímica/.test(v))) tubos.add('Heparina');
-      deduzidos.textContent = Array.from(tubos).join(' • ') || 'Nenhum selecionado';
-    });
-  }
-
-  const dispTip = $('#disp-tip');
-  const dispCards = $('#disp-cards');
-  $$('input[name="disp"]').forEach(r=>{
-    r.addEventListener('change',()=>{
-      dispCards.querySelectorAll('.card').forEach(c=>c.classList.remove('selected'));
-      r.closest('.card')?.classList.add('selected');
-      if (r.value==='agulha') dispTip.textContent='Agulha: adultos com veias palpáveis e bom fluxo.';
-      if (r.value==='scalp')  dispTip.textContent='Scalp: crianças, idosos, veias frágeis/difíceis.';
-      if (r.value==='cateter')dispTip.textContent='Cateter periférico: acesso prolongado/coletas seriadas.';
-    });
+  $('#btn-deduzir')?.addEventListener('click',()=>{
+    const ex = Array.from(examesBox.querySelectorAll('input:checked')).map(i=>i.value);
+    const tubos = new Set();
+    if (ex.includes('Hemocultura')) tubos.add('Hemocultura');
+    if (ex.some(v=>/TP|TTPa/.test(v))) tubos.add('Citrato');
+    if (ex.includes('VHS')) tubos.add('VHS');
+    if (ex.some(v=>/Hemograma/.test(v))) tubos.add('EDTA');
+    if (ex.some(v=>/Glicose/.test(v))) tubos.add('Fluoreto');
+    if (ex.some(v=>/Eletrólitos|Bioquímica|Sorologia|Hormônios/.test(v))) tubos.add('Soro');
+    if (ex.some(v=>/Eletrólitos|Bioquímica/.test(v))) tubos.add('Heparina');
+    deduzidos.textContent = Array.from(tubos).join(' • ') || 'Nenhum selecionado';
   });
 
   const bank = $('#tube-bank');
@@ -187,23 +116,21 @@
   function idNum(id){ const m=/^(\d+)-/.exec(id||''); return m? Number(m[1]) : NaN; }
   function currentOrder(){ return Array.from(drop.querySelectorAll('.tube')).map(t=>idNum(t.dataset.id)); }
   function expectedOrder(){
-    const all=[1,2,3,4,5,6,7];
-    return all.filter(n=>document.querySelector('.tube[data-id="'+n+'-'+(['','citrato','vhs','soro','heparina','edta','fluoreto'][n-1]||'')+'"]') || document.querySelector('.tube[data-id^="'+n+'-"]'));
+    const avail = Array.from(document.querySelectorAll('.tube')).map(t=>idNum(t.dataset.id));
+    const goal = [1,2,3,4,5,6,7].filter(n=>avail.includes(n));
+    return goal;
   }
-
   btnValidate?.addEventListener('click',()=>{
     const now=currentOrder();
     const goal=expectedOrder();
     const ok = now.length===goal.length && now.every((v,i)=>v===goal[i]);
-    if (feedback){
-      feedback.textContent = ok ? 'Sequência correta!' : 'Sequência incorreta. Tente novamente.';
-      feedback.classList.toggle('ok',ok);
-      feedback.classList.toggle('bad',!ok);
-    }
+    feedback.textContent = ok ? 'Sequência correta!' : 'Sequência incorreta. Tente novamente.';
+    feedback.classList.toggle('ok',ok);
+    feedback.classList.toggle('bad',!ok);
   });
   btnReset?.addEventListener('click',()=>{
     Array.from(drop.querySelectorAll('.tube')).forEach(t=>bank.appendChild(t));
-    if (feedback){ feedback.textContent=''; feedback.classList.remove('ok','bad'); }
+    feedback.textContent=''; feedback.classList.remove('ok','bad');
   });
 
   const left = $('#puzzle-left');
@@ -300,4 +227,69 @@
     if (pos(6)<pos(4) && pos(6)!==-1 && pos(4)!==-1) dicas.push('Soro antes de EDTA.');
     pushTutor('Tutor', dicas.length ? dicas.join(' ') : 'Sequência parece correta ou quase correta.');
   });
+
+  const gasoQuiz = [
+    {q:'Qual é o local mais utilizado para coleta de gasometria arterial?', opts:['Veia jugular','Artéria radial','Veia cefálica','Artéria femoral'], a:1},
+    {q:'O que o valor de pCO₂ na gasometria arterial representa?', opts:['Oxigenação sanguínea','Ventilação pulmonar','Capacidade de transporte de O₂','Metabolismo hepático'], a:1},
+    {q:'pH 7,25 / pCO₂ 60 / HCO₃⁻ 24. Distúrbio?', opts:['Acidose metabólica','Acidose respiratória','Alcalose respiratória','Alcalose metabólica'], a:1},
+    {q:'pH 7,50 / pCO₂ 30 / HCO₃⁻ 24. Distúrbio?', opts:['Acidose metabólica','Alcalose respiratória','Acidose respiratória','Alcalose metabólica'], a:1},
+    {q:'Em qual situação a gasometria arterial é mais indicada?', opts:['Avaliar perfil lipídico','Monitorar ventilação mecânica','Diagnosticar anemia ferropriva','Avaliar função hepática'], a:1}
+  ];
+  const gqQ = $('#gq-q');
+  const gqOps = $('#gq-options');
+  const gqNext = $('#gq-next');
+  const gqFb = $('#gq-feedback');
+  let gqI=0, gqSel=-1, gqScore=0;
+
+  function renderGaso(){
+    const item=gasoQuiz[gqI];
+    gqQ.textContent = 'Q'+(gqI+1)+': '+item.q;
+    gqOps.innerHTML='';
+    gqSel=-1; gqFb.textContent='';
+    item.opts.forEach((t,i)=>{
+      const b=document.createElement('button');
+      b.className='btn ghost';
+      b.textContent=String.fromCharCode(97+i)+') '+t;
+      b.style.textAlign='left';
+      b.addEventListener('click',()=>{
+        gqSel=i;
+        gqOps.querySelectorAll('button').forEach(x=>x.classList.remove('active'));
+        b.classList.add('active');
+        const ok=i===item.a;
+        gqFb.textContent = ok ? 'Correta' : 'Incorreta';
+        gqFb.classList.toggle('ok',ok);
+        gqFb.classList.toggle('bad',!ok);
+        if (ok) gqScore++;
+      });
+      gqOps.appendChild(b);
+    });
+  }
+  if (gqQ && gqOps && gqNext && gqFb){
+    renderGaso();
+    gqNext.addEventListener('click',()=>{
+      if (gqI<gasoQuiz.length-1){ gqI++; renderGaso(); }
+      else { gqQ.textContent='Fim do quiz. Pontuação: '+gqScore+'/'+gasoQuiz.length; gqOps.innerHTML=''; gqNext.disabled=true; }
+    });
+  }
+
+  const gasoCases = [
+    {t:'DPOC em exacerbação', v:{pH:'7,28', pCO2:'70', HCO3:'26', pO2:'58', Sat:'86%'}, r:'Acidose respiratória descompensada', exp:'pH baixo; pCO₂ alto (causa respiratória); HCO₃⁻ normal (sem compensação).'},
+    {t:'Cetoacidose diabética', v:{pH:'7,15', pCO2:'28', HCO3:'10', pO2:'95', Sat:'98%'}, r:'Acidose metabólica com compensação respiratória', exp:'pH baixo; HCO₃⁻ baixo (metabólica); pCO₂ baixo (hiperventilação).'},
+    {t:'Crise de ansiedade com hiperventilação', v:{pH:'7,55', pCO2:'25', HCO3:'24', pO2:'100', Sat:'99%'}, r:'Alcalose respiratória aguda', exp:'pH alto; pCO₂ baixo (respiratória); HCO₃⁻ normal.'},
+    {t:'Sepse grave (choque séptico)', v:{pH:'7,20', pCO2:'30', HCO3:'14', pO2:'60', Sat:'85%'}, r:'Acidose metabólica com hipoxemia', exp:'pH baixo; HCO₃⁻ baixo; pCO₂ baixo (compensação); pO₂ reduzido.'},
+    {t:'Vômitos prolongados', v:{pH:'7,52', pCO2:'46', HCO3:'34', pO2:'95', Sat:'97%'}, r:'Alcalose metabólica com compensação respiratória', exp:'pH alto; HCO₃⁻ alto; pCO₂ elevado (hipoventilação).'}
+  ];
+  const gasoCasesEl = $('#gaso-cases');
+  if (gasoCasesEl){
+    gasoCases.forEach((c,idx)=>{
+      const d=document.createElement('details');
+      const s=document.createElement('summary');
+      s.textContent = (idx+1)+'. '+c.t+' — pH '+c.v.pH+' | pCO₂ '+c.v.pCO2+' | HCO₃⁻ '+c.v.HCO3+' | pO₂ '+c.v.pO2+' | Sat '+c.v.Sat;
+      d.appendChild(s);
+      const p=document.createElement('p');
+      p.innerHTML = '<b>Resposta:</b> '+c.r+'<br><b>Raciocínio:</b> '+c.exp;
+      d.appendChild(p);
+      gasoCasesEl.appendChild(d);
+    });
+  }
 })();
