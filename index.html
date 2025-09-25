@@ -5,15 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>PPA SimVein • Simulador de Coleta</title>
   <meta name="theme-color" content="#0d1b2a" />
-  <link rel="manifest" href="/manifest.webmanifest?v=13" />
-  <link rel="stylesheet" href="/styles.css?v=13" />
+  <link rel="manifest" href="/manifest.webmanifest?v=14" />
+  <link rel="stylesheet" href="/styles.css?v=14" />
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
 </head>
 <body>
   <header class="app-header">
     <div class="brand">
-      <img src="/public/assets/branding/logo-sim.png" alt="PPA SimVein" />
-      <img src="/public/assets/branding/logo-capacita.png" alt="Capacita+" />
+      <img src="/public/assets/branding/logo-sim.png" alt="PPA SimVein"/>
+      <img src="/public/assets/branding/logo-capacita.png" alt="Capacita+"/>
     </div>
     <nav class="nav">
       <button data-tab="welcome" class="btn">Boas-vindas</button>
@@ -30,16 +30,21 @@
     </nav>
   </header>
 
-  <audio id="audio-ambiente" src="/public/audios/audio-ambiente.mp3?v=13" loop preload="auto"></audio>
+  <audio id="audio-ambiente" src="/public/audios/audio-ambiente.mp3?v=14" loop preload="auto"></audio>
 
   <main class="content" style="grid-template-columns: 1fr 340px; gap: 12px;">
     <div>
       <section id="tab-welcome" class="tab active">
         <h2>Boas-vindas</h2>
-        <p>Ouça a introdução e, quando quiser, clique em Começar.</p>
-        <div class="row" style="margin:8px 0 12px">
-          <button class="btn" data-audio="/public/audios/audio-boas-vindas.mp3">▶ Boas-vindas</button>
-          <button id="welcome-start" class="btn ghost">Começar</button>
+        <div class="row" style="align-items:flex-start;gap:16px">
+          <img src="/public/assets/hero-boas-vindas.png" alt="Boas-vindas" style="max-width:340px;border-radius:12px"/>
+          <div>
+            <p>Ouça a introdução e, quando quiser, clique em Começar.</p>
+            <div class="row" style="margin:8px 0 12px">
+              <button class="btn" data-audio="/public/audios/audio-boas-vindas.mp3">▶ Boas-vindas</button>
+              <button id="welcome-start" class="btn ghost">Começar</button>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -68,7 +73,6 @@
               <input name="unidade" placeholder="UBS/UPA/Hospital"/>
             </label>
           </div>
-
           <h3>Coleta</h3>
           <div class="grid-2">
             <label>Exames solicitados (descrição)
@@ -90,7 +94,6 @@
               <input name="alergias" placeholder="Sem alergias"/>
             </label>
           </div>
-
           <label>Braço preferencial
             <select name="braco"><option>Direito</option><option>Esquerdo</option></select>
           </label>
@@ -153,6 +156,7 @@
           <label class="card"><input type="radio" name="disp" value="scalp"/><span>Scalp (borboleta)</span></label>
           <label class="card"><input type="radio" name="disp" value="cateter"/><span>Cateter periférico</span></label>
         </div>
+        <div id="disp-tip" class="badge" style="margin-top:8px"></div>
       </section>
 
       <section id="tab-punicao" class="tab">
@@ -174,13 +178,12 @@
             <div id="angle-feedback" class="badge">Alvo: 30–45°</div>
           </div>
         </div>
-
         <div class="scene-360 box">
           <h3>Seleção de Veia (360°)</h3>
-          <div id="missing360" class="alert" hidden>⚠️ Coloque public/assets/arm-360.jpg (2:1).</div>
+          <div id="missing360" class="alert" hidden>⚠️ Coloque public/assets/arm-360.png (2:1).</div>
           <a-scene embedded vr-mode-ui="enabled:false" renderer="antialias:true">
             <a-assets>
-              <img id="arm360" src="/public/assets/arm-360.png?v=13" crossorigin="anonymous" />
+              <img id="arm360" src="/public/assets/arm-360.png?v=14" crossorigin="anonymous" />
             </a-assets>
             <a-sky id="sky" src="#arm360" rotation="0 -90 0"></a-sky>
             <a-entity camera look-controls>
@@ -207,13 +210,13 @@
         <p>Arraste os tubos para a área em ordem correta e clique em Validar.</p>
         <div class="quiz">
           <div class="bank" id="tube-bank">
-            <img draggable="true" class="tube" data-id="1-hemocultura" src="/public/assets/tubes/hemocultura.png?v=13" alt="Hemocultura">
-            <img draggable="true" class="tube" data-id="2-citrato" src="/public/assets/tubes/citrato-azul.png?v=13" alt="Citrato (Azul)">
-            <img draggable="true" class="tube tube-vhs" data-id="3-vhs" src="/public/assets/tubes/vhs-preto.png?v=13" alt="VHS (Preto)" style="display:none">
-            <img draggable="true" class="tube" data-id="4-soro" src="/public/assets/tubes/soro-vermelho.png?v=13" alt="Soro (Vermelho/Amarelo)">
-            <img draggable="true" class="tube" data-id="5-heparina" src="/public/assets/tubes/heparina-verde.png?v=13" alt="Heparina (Verde)">
-            <img draggable="true" class="tube" data-id="6-edta" src="/public/assets/tubes/edta-roxo.png?v=13" alt="EDTA (Roxo)">
-            <img draggable="true" class="tube" data-id="7-fluoreto" src="/public/assets/tubes/fluoreto-cinza.png?v=13" alt="Fluoreto (Cinza)">
+            <img draggable="true" class="tube" data-id="1-hemocultura" src="/public/assets/tubes/hemocultura.png?v=14" alt="Hemocultura">
+            <img draggable="true" class="tube" data-id="2-citrato" src="/public/assets/tubes/citrato-azul.png?v=14" alt="Citrato (Azul)">
+            <img draggable="true" class="tube tube-vhs" data-id="3-vhs" src="/public/assets/tubes/vhs-preto.png?v=14" alt="VHS (Preto)" style="display:none">
+            <img draggable="true" class="tube" data-id="4-soro" src="/public/assets/tubes/soro-vermelho.png?v=14" alt="Soro (Vermelho/Amarelo)">
+            <img draggable="true" class="tube" data-id="5-heparina" src="/public/assets/tubes/heparina-verde.png?v=14" alt="Heparina (Verde)">
+            <img draggable="true" class="tube" data-id="6-edta" src="/public/assets/tubes/edta-roxo.png?v=14" alt="EDTA (Roxo)">
+            <img draggable="true" class="tube" data-id="7-fluoreto" src="/public/assets/tubes/fluoreto-cinza.png?v=14" alt="Fluoreto (Cinza)">
           </div>
           <div class="drop" id="tube-drop" aria-label="Área de Montagem"></div>
         </div>
@@ -322,12 +325,12 @@
 
     <aside class="tab box" style="height: fit-content;">
       <div class="row" style="gap:10px; align-items:center;">
-        <img src="/public/assets/branding/avatar-tutor.png?v=13" alt="Tutor" style="width:56px;height:56px;border-radius:50%;object-fit:cover">
+        <img src="/public/assets/branding/avatar-tutor.png?v=14" alt="Tutor" style="width:56px;height:56px;border-radius:50%;object-fit:cover">
         <h3 style="margin:0">Tutor IA</h3>
       </div>
       <div id="tutor-feed" style="margin-top:8px;max-height:240px;overflow:auto;"></div>
       <div class="row" style="margin-top:8px">
-        <input id="tutor-input" placeholder="Pergunte ou responda ao quiz…" style="flex:1;padding:8px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:#0c182b;color:#e6f0ff"/>
+        <input id="tutor-input" placeholder="Pergunte, responda ao quiz, peça correção…" style="flex:1;padding:8px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:#0c182b;color:#e6f0ff"/>
         <button id="tutor-ask" class="btn">Enviar</button>
       </div>
       <button id="tutor-corrigir" class="btn ghost" style="margin-top:8px">Corrigir sequência</button>
@@ -339,7 +342,7 @@
       <small>© 2025 • Material educacional. Não substitui treinamento supervisionado.</small>
     </div>
     <div class="right">
-      <img src="/public/assets/branding/logo-haras.png?v=13" alt="HarasTech"/>
+      <img src="/public/assets/branding/logo-haras.png?v=14" alt="HarasTech"/>
       <small>Desenvolvido por HarasTech • <a href="mailto:harastech@outlook.com">harastech@outlook.com</a></small>
     </div>
   </footer>
@@ -356,6 +359,6 @@
     </div>
   </dialog>
 
-  <script src="/scripts.js?v=13" defer></script>
+  <script src="/scripts.js?v=14" defer></script>
 </body>
 </html>
