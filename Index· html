@@ -1,248 +1,332 @@
-<!doctype html>
-<html lang="pt-BR">
+<!DOCTYPE html>
+<html lang="pt-br">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>SimVein — AR Didática para Coleta de Sangue</title>
-  <meta name="description" content="Página didática com AR para alunos de Análises Clínicas: ordem dos tubos, aditivos, exames, mapa corporal com veias e tabela de valores de referência." />
-  <link rel="icon" href="/public/images/logo-sim.png" />
-  <link rel="manifest" href="/manifest.webmanifest" />
+  <title>PPA SimVein • Simulador de Coleta</title>
   <meta name="theme-color" content="#0d1b2a" />
-  
-  <!-- Fonts (opcional) -->
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-
-  <!-- Styles -->
-  <link rel="stylesheet" href="/styles/style.css" />
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="stylesheet" href="./styles.css" />
+  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
 </head>
 <body>
-  <header class="site-header">
-    <div class="wrap">
-      <div class="brand">
-        <img src="/public/images/logo-sim.png" alt="SimVein" class="logo main" />
-        <div class="titles">
-          <h1>SimVein</h1>
-          <p class="subtitle">AR Didática — Coleta de Sangue para Análises Clínicas</p>
-        </div>
-      </div>
-      <nav class="nav">
-        <a href="#ordem" class="navlink">Ordem de Tubos</a>
-        <a href="#mapa" class="navlink">Mapa de Veias</a>
-        <a href="#tabela" class="navlink">Valores de Referência</a>
-        <a href="#quiz" class="navlink">Quiz</a>
-      </nav>
+  <header class="app-header">
+    <div class="brand">
+      <img src="public/assets/branding/logo-sim.png" alt="PPA SimVein" onerror="this.style.display='none'"/>
+      <img src="public/assets/branding/logo-capacita.png" alt="Capacita+" onerror="this.style.display='none'"/>
     </div>
+    <nav class="nav">
+      <button data-tab="paciente" class="btn ghost">Ficha</button>
+      <button data-tab="solicitacao" class="btn ghost">Solicitação</button>
+      <button data-tab="biosseg" class="btn ghost">Biossegurança</button>
+      <button data-tab="dispositivo" class="btn ghost">Dispositivo</button>
+      <button data-tab="punicao" class="btn ghost">Garrote & Ângulo</button>
+      <button data-tab="sequencia" class="btn">Sequência</button>
+      <button data-tab="aplicacoes" class="btn ghost">Quebra-cabeça</button>
+      <button data-tab="tabelas" class="btn ghost">Tabelas</button>
+      <button data-tab="relatorio" class="btn ghost">Relatório</button>
+      <button id="btn-settings" class="btn ghost" title="Configurações">⚙️</button>
+    </nav>
   </header>
 
-  <main>
-    <!-- Aviso didático -->
-    <section class="notice" aria-label="Aviso didático">
-      <div class="wrap">
-        <strong>⚠️ Uso educacional:</strong> Siga sempre o POP/POE da instituição e os intervalos do laboratório local. Valores de referência variam por método e população.
-      </div>
-    </section>
+  <!-- Áudio ambiente opcional -->
+  <audio id="audio-ambiente" src="public/audio/audio-ambiente.mp3" loop preload="auto"></audio>
 
-    <!-- Ordem Correta de Coleta -->
-    <section id="ordem" class="section">
-      <div class="wrap">
-        <div class="section-head">
-          <h2>Sequência Correta dos Tubos</h2>
-          <button id="btn-ar" class="btn primary" aria-label="Abrir modo AR">Ver em AR</button>
+  <!-- Barra de avisos (imagem 360 ausente, etc.) -->
+  <div id="banner" class="banner" hidden></div>
+
+  <main class="content">
+    <!-- FICHA DO PACIENTE -->
+    <section id="tab-paciente" class="tab active">
+      <h2>Ficha do Paciente</h2>
+      <form id="form-paciente" class="form">
+        <div class="grid-2">
+          <label>Nome
+            <input name="nome" required placeholder="Paciente Exemplo"/>
+          </label>
+          <label>Data de Nascimento
+            <input name="nasc" type="date" required/>
+          </label>
+          <label>Sexo
+            <select name="sexo">
+              <option>F</option><option>M</option><option>Outro</option>
+            </select>
+          </label>
+          <label>Alergias
+            <input name="alergias" placeholder="Sem alergias"/>
+          </label>
         </div>
-        <p class="muted">Seguir esta sequência evita contaminação por aditivos e garante a confiabilidade dos resultados.</p>
+        <label>Braço preferencial
+          <select name="braco"><option>Direito</option><option>Esquerdo</option></select>
+        </label>
+        <div class="row">
+          <label class="check"><input type="checkbox" name="id1"/> Documento conferido</label>
+          <label class="check"><input type="checkbox" name="id2"/> Confirmação verbal</label>
+          <label class="check"><input type="checkbox" name="consent"/> Consentimento informado</label>
+        </div>
+        <button type="button" id="btn-salvar-paciente" class="btn">Salvar ficha</button>
+      </form>
+      <div class="tip">Dica: utilize dois identificadores (documento + confirmação verbal).</div>
+    </section>
 
-        <ol class="tube-sequence" id="tubeSequence" aria-label="Sequência correta de coleta">
-          <li class="tube card" data-tube="hemocultura">
-            <div class="tube-left">
-              <img src="/public/images/tubes/hemocultura.png" alt="Frasco de Hemocultura" class="tube-img" />
-            </div>
-            <div class="tube-body">
-              <h3>Frasco de Hemocultura</h3>
-              <p><strong>Parâmetro:</strong> microbiologia (bactérias/fungos). <strong>Função:</strong> coleta estéril para cultura antes de qualquer aditivo.</p>
-              <div class="tags">
-                <span class="tag">Microbiologia</span>
-                <span class="tag">Cultura</span>
-              </div>
-            </div>
-          </li>
-          <li class="tube card" data-tube="azul">
-            <div class="tube-left">
-              <img src="/public/images/tubes/azul.png" alt="Tubo Azul (Citrato de Sódio)" class="tube-img" />
-            </div>
-            <div class="tube-body">
-              <h3>Tubo Azul — Citrato de Sódio</h3>
-              <p><strong>Aditivo:</strong> citrato (anticoagulante). <strong>Exames:</strong> TP, TTPa. <strong>Nota:</strong> manter relação 9:1 (sangue:aditivo).</p>
-              <div class="tags">
-                <span class="tag">Coagulação</span>
-                <span class="tag">TP</span>
-                <span class="tag">TTPa</span>
-              </div>
-            </div>
-          </li>
-          <li class="tube card" data-tube="amarelo">
-            <div class="tube-left">
-              <img src="/public/images/tubes/amarelo.png" alt="Tubo Amarelo/Vermelho (Ativador de Coágulo ± Gel)" class="tube-img" />
-            </div>
-            <div class="tube-body">
-              <h3>Tubo Amarelo/Vermelho — Ativador de Coágulo ± Gel</h3>
-              <p><strong>Aditivo:</strong> ativador (± gel). <strong>Exames:</strong> bioquímica, sorologia, hormônios.</p>
-              <div class="tags">
-                <span class="tag">Bioquímica</span>
-                <span class="tag">Sorologia</span>
-                <span class="tag">Hormônios</span>
-              </div>
-            </div>
-          </li>
-          <li class="tube card" data-tube="verde">
-            <div class="tube-left">
-              <img src="/public/images/tubes/verde.png" alt="Tubo Verde (Heparina)" class="tube-img" />
-            </div>
-            <div class="tube-body">
-              <h3>Tubo Verde — Heparina</h3>
-              <p><strong>Aditivo:</strong> heparina (anticoagulante). <strong>Exames:</strong> eletrólitos, bioquímica especializada e gasometria (plasma heparinizado, quando aplicável).</p>
-              <div class="tags">
-                <span class="tag">Eletrólitos</span>
-                <span class="tag">Plasma</span>
-              </div>
-            </div>
-          </li>
-          <li class="tube card" data-tube="roxo">
-            <div class="tube-left">
-              <img src="/public/images/tubes/roxo.png" alt="Tubo Roxo/Lilás (EDTA)" class="tube-img" />
-            </div>
-            <div class="tube-body">
-              <h3>Tubo Roxo/Lilás — EDTA</h3>
-              <p><strong>Aditivo:</strong> EDTA. <strong>Exames:</strong> hematologia (ex.: hemograma). <strong>Função:</strong> preserva morfologia celular.</p>
-              <div class="tags">
-                <span class="tag">Hematologia</span>
-                <span class="tag">Hemograma</span>
-              </div>
-            </div>
-          </li>
-          <li class="tube card" data-tube="cinza">
-            <div class="tube-left">
-              <img src="/public/images/tubes/cinza.png" alt="Tubo Cinza (Fluoreto + EDTA)" class="tube-img" />
-            </div>
-            <div class="tube-body">
-              <h3>Tubo Cinza — Fluoreto + EDTA</h3>
-              <p><strong>Aditivo:</strong> fluoreto (inibe glicólise) + EDTA. <strong>Exames:</strong> glicose, lactato.</p>
-              <div class="tags">
-                <span class="tag">Glicemia</span>
-                <span class="tag">Lactato</span>
-              </div>
-            </div>
-          </li>
-        </ol>
+    <!-- SOLICITAÇÃO MÉDICA -->
+    <section id="tab-solicitacao" class="tab">
+      <h2>Solicitação Médica</h2>
+      <p>Selecione os exames solicitados (exemplo didático):</p>
+      <div id="exames" class="chips">
+        <label><input type="checkbox" value="TP/TTPa"/> TP / TTPa</label>
+        <label><input type="checkbox" value="Hemograma"/> Hemograma</label>
+        <label><input type="checkbox" value="Glicose"/> Glicose</label>
+        <label><input type="checkbox" value="Eletrólitos"/> Eletrólitos</label>
+        <label><input type="checkbox" value="Sorologia/Hormônios"/> Sorologia / Hormônios</label>
+        <label><input type="checkbox" value="Hemocultura"/> Hemocultura</label>
+      </div>
+      <button id="btn-deduzir" class="btn">Deduzir tubos necessários</button>
+      <div id="deduzidos" class="pill"></div>
+      <div class="audio-controls">
+        <button class="btn ghost" data-audio="public/audio/audio-boas-vindas.mp3">▶ Boas-vindas</button>
       </div>
     </section>
 
-    <!-- Mapa corporal com hotspots de veias -->
-    <section id="mapa" class="section">
-      <div class="wrap">
-        <div class="section-head">
-          <h2>Mapa Corporal — Veias para Venopunção</h2>
-          <div class="section-actions">
-            <button id="btnHotspotsInfo" class="btn">Como usar</button>
+    <!-- BIOSSEGURANÇA -->
+    <section id="tab-biosseg" class="tab">
+      <h2>Biossegurança (Pré / Durante / Pós)</h2>
+      <div class="grid-3 checklist">
+        <div>
+          <h3>Pré</h3>
+          <label class="check"><input type="checkbox" data-score="epi"/> EPIs completos</label>
+          <label class="check"><input type="checkbox" data-score="maos"/> Higienização das mãos</label>
+          <label class="check"><input type="checkbox" data-score="bancada"/> Bancada organizada</label>
+        </div>
+        <div>
+          <h3>Durante</h3>
+          <label class="check"><input type="checkbox" data-score="antissepsia"/> Antissepsia correta</label>
+          <label class="check"><input type="checkbox" data-score="garrote"/> Garrote ≤ 60s</label>
+          <label class="check"><input type="checkbox" data-score="perfuro"/> Caixa perfuro-cortante</label>
+        </div>
+        <div>
+          <h3>Pós</h3>
+          <label class="check"><input type="checkbox" data-score="rotulo"/> Rotulagem correta</label>
+          <label class="check"><input type="checkbox" data-score="compressao"/> Compressão local</label>
+          <label class="check"><input type="checkbox" data-score="descarte"/> Descarte adequado</label>
+        </div>
+      </div>
+      <div class="audio-controls">
+        <button class="btn ghost" data-audio="public/audio/audio-erros.mp3">▶ Erros comuns</button>
+      </div>
+    </section>
+
+    <!-- DISPOSITIVO -->
+    <section id="tab-dispositivo" class="tab">
+      <h2>Seleção de Dispositivo</h2>
+      <div class="grid-3 cards">
+        <label class="card"><input type="radio" name="disp" value="agulha"/><span>Agulha</span></label>
+        <label class="card"><input type="radio" name="disp" value="scalp"/><span>Scalp (borboleta)</span></label>
+        <label class="card"><input type="radio" name="disp" value="cateter"/><span>Cateter periférico</span></label>
+      </div>
+      <div class="tip">Escolha conforme veia, duração e fragilidade do paciente.</div>
+      <div class="audio-controls">
+        <button class="btn ghost" data-audio="public/audio/audio-selecao-de-tubos.mp3">▶ Seleção de tubos (narração)</button>
+      </div>
+    </section>
+
+    <!-- PUNIÇÃO: GARROTE + ÂNGULO + CENA 360 -->
+    <section id="tab-punicao" class="tab">
+      <h2>Garrote & Ângulo</h2>
+
+      <div class="row gap">
+        <div class="box">
+          <h3>Garrote</h3>
+          <div class="row">
+            <button id="garrote-start" class="btn">Iniciar</button>
+            <button id="garrote-stop" class="btn ghost" disabled>Parar</button>
+            <div id="garrote-timer" class="timer">00:00</div>
           </div>
+          <div id="garrote-alert" class="alert" hidden>⚠️ Garrote excedeu 60s!</div>
         </div>
-        <div class="vein-map">
-          <img src="/public/images/body-veins.svg" alt="Mapa corporal com veias" class="vein-map-img" id="veinMapImg" />
-          <div class="hotspots" id="hotspots"></div>
+
+        <div class="box">
+          <h3>Ângulo da Punção</h3>
+          <input type="range" id="angle" min="0" max="90" value="30" />
+          <div>Ângulo: <span id="angle-val">30°</span></div>
+          <div id="angle-feedback" class="badge">Alvo: 30–45°</div>
         </div>
-        <p class="muted">Clique nos pontos para ver detalhes (ex.: fossa cubital, veias cefálica/basílica, cuidados, contraindicações e dicas de fixação).</p>
+      </div>
+
+      <div class="scene-360 box">
+        <h3>Seleção de Veia (360°)</h3>
+        <div id="missing360" class="alert" hidden>⚠️ Coloque <code>public/assets/arm-360.jpg</code> (equiretangular 2:1).</div>
+
+        <a-scene embedded vr-mode-ui="enabled:false" renderer="antialias:true">
+          <a-assets>
+            <img id="arm360" src="public/assets/arm-360.jpg" crossorigin="anonymous" />
+          </a-assets>
+          <a-sky id="sky" src="#arm360" rotation="0 -90 0"></a-sky>
+
+          <a-entity camera look-controls>
+            <a-entity cursor="rayOrigin: mouse" raycaster="objects: .hotspot"></a-entity>
+          </a-entity>
+
+          <!-- Hotspots (posições genéricas; ajuste depois) -->
+          <a-entity class="hotspot" position="0 1.6 -3"
+            geometry="primitive: sphere; radius: 0.06"
+            material="color:#2ec4b6; emissive:#2ec4b6; opacity:.85"
+            data-title="Mediana Cubital"
+            data-text="Geralmente mais estável; bom calibre e localização."></a-entity>
+
+          <a-entity class="hotspot" position="-0.8 1.5 -2.5"
+            geometry="primitive: sphere; radius: 0.06"
+            material="color:#6c63ff; emissive:#6c63ff; opacity:.85"
+            data-title="Cefálica"
+            data-text="Boa alternativa; atenção à rolagem."></a-entity>
+
+          <a-entity class="hotspot" position="0.8 1.5 -2.5"
+            geometry="primitive: sphere; radius: 0.06"
+            material="color:#f59f00; emissive:#f59f00; opacity:.85"
+            data-title="Basílica"
+            data-text="Mais medial; opte se as outras não forem viáveis."></a-entity>
+        </a-scene>
+
+        <div class="legend">
+          <span class="dot teal"></span> Mediana
+          <span class="dot purple"></span> Cefálica
+          <span class="dot amber"></span> Basílica
+        </div>
+
+        <div id="hotspot-panel" class="box" hidden>
+          <h4 id="hs-title">Veia</h4>
+          <p id="hs-text"></p>
+        </div>
       </div>
     </section>
 
-    <!-- Tabela de valores de referência -->
-    <section id="tabela" class="section">
-      <div class="wrap">
-        <div class="section-head">
-          <h2>Valores de Referência</h2>
-          <div class="filters">
-            <input type="search" id="searchInput" class="input" placeholder="Buscar exame (ex.: TSH, LDL, Ferritina)" aria-label="Buscar exame" />
-            <button id="btnExportCSV" class="btn">Baixar CSV</button>
-          </div>
+    <!-- SEQUÊNCIA DE COLETA -->
+    <section id="tab-sequencia" class="tab">
+      <h2>Sequência de Coleta</h2>
+      <p>Arraste os tubos para a área em ordem correta e clique em <b>Validar</b>.</p>
+      <div class="quiz">
+        <div class="bank" id="tube-bank">
+          <img draggable="true" class="tube" data-id="1-hemocultura" src="public/assets/tubes/hemocultura.png" alt="Hemocultura">
+          <img draggable="true" class="tube" data-id="2-citrato" src="public/assets/tubes/citrato-azul.png" alt="Citrato (Azul)">
+          <img draggable="true" class="tube" data-id="3-soro" src="public/assets/tubes/soro-vermelho.png" alt="Soro (Vermelho/Amarelo)">
+          <img draggable="true" class="tube" data-id="4-heparina" src="public/assets/tubes/heparina-verde.png" alt="Heparina (Verde)">
+          <img draggable="true" class="tube" data-id="5-edta" src="public/assets/tubes/edta-roxo.png" alt="EDTA (Roxo)">
+          <img draggable="true" class="tube" data-id="6-fluoreto" src="public/assets/tubes/fluoreto-cinza.png" alt="Fluoreto (Cinza)">
         </div>
-        <div class="table-scroll">
-          <table id="refTable" class="table" aria-describedby="tabela-info">
-            <thead>
-              <tr>
-                <th>Exame</th>
-                <th>Unidades convencionais</th>
-                <th>Unidades SI</th>
-              </tr>
-            </thead>
-            <tbody><!-- Populado via JS a partir de /public/data/reference-values.csv --></tbody>
-          </table>
-        </div>
-        <p id="tabela-info" class="muted">Intervalos variam por laboratório, método e população. Consulte sempre o laudo local.</p>
+        <div class="drop" id="tube-drop" aria-label="Área de Montagem"></div>
+      </div>
+      <div class="quiz-actions">
+        <button id="btn-reset" class="btn ghost">↺ Resetar</button>
+        <button id="btn-validate" class="btn">Validar</button>
+      </div>
+      <p id="quiz-feedback" class="feedback"></p>
+
+      <div class="audio-controls">
+        <button class="btn ghost" data-audio="public/audio/audio-sequencia-de-coleta.mp3">▶ Sequência (narração)</button>
       </div>
     </section>
 
-    <!-- Quiz (stub) -->
-    <section id="quiz" class="section">
-      <div class="wrap">
-        <div class="section-head">
-          <h2>Quiz Rápido</h2>
-          <button id="btnStartQuiz" class="btn">Iniciar</button>
+    <!-- QUEBRA-CABEÇA: TUBO ↔ APLICAÇÃO -->
+    <section id="tab-aplicacoes" class="tab">
+      <h2>Tubos & Aplicações</h2>
+      <p>Associe cada tubo à sua finalidade/exemplos.</p>
+      <div class="puzzle">
+        <div class="left" id="puzzle-left">
+          <div class="piece" draggable="true" data-key="hemocultura">Hemocultura (Microbiologia)</div>
+          <div class="piece" draggable="true" data-key="citrato">Azul – Citrato (Coagulação: TP/TTPa)</div>
+          <div class="piece" draggable="true" data-key="soro">Vermelho/Amarelo – Soro (Bioquímica/Sorologia/Hormônios)</div>
+          <div class="piece" draggable="true" data-key="heparina">Verde – Heparina (Bioquímica/Eletrólitos)</div>
+          <div class="piece" draggable="true" data-key="edta">Roxo – EDTA (Hematologia: Hemograma)</div>
+          <div class="piece" draggable="true" data-key="fluoreto">Cinza – Fluoreto + EDTA (Glicose/Lactato)</div>
         </div>
-        <div id="quizArea" class="quiz-area" aria-live="polite"></div>
+        <div class="right" id="puzzle-right">
+          <div class="slot" data-accept="hemocultura">Microbiologia (bactérias/fungos)</div>
+          <div class="slot" data-accept="citrato">Coagulação (TP, TTPa)</div>
+          <div class="slot" data-accept="soro">Bioquímica / Sorologia / Hormônios</div>
+          <div class="slot" data-accept="heparina">Bioquímica / Eletrólitos</div>
+          <div class="slot" data-accept="edta">Hematologia (Hemograma)</div>
+          <div class="slot" data-accept="fluoreto">Glicose / Lactato (inibe glicólise)</div>
+        </div>
       </div>
     </section>
 
-    <!-- Tutor IA (stub UI) -->
-    <section id="tutor" class="section">
-      <div class="wrap">
-        <div class="section-head">
-          <h2>Tutor IA</h2>
-        </div>
-        <div class="tutor">
-          <img src="/public/images/avatar-tutor.png" class="tutor-avatar" alt="Tutor IA" />
-          <div class="tutor-panel">
-            <label for="tutorInput" class="sr-only">Pergunte ao Tutor</label>
-            <input id="tutorInput" class="input" placeholder="Pergunte algo (ex.: por que o tubo azul vem antes do roxo?)" />
-            <button id="btnTutorAsk" class="btn primary">Perguntar</button>
-            <div id="tutorAnswer" class="tutor-answer muted">(Resposta aparecerá aqui — stub local. Integração com API será feita no backend.)</div>
-          </div>
-        </div>
+    <!-- TABELAS INFORMATIVAS -->
+    <section id="tab-tabelas" class="tab">
+      <h2>Tabelas de Referência (Informativas)</h2>
+      <div class="tables">
+        <details open>
+          <summary>Hematologia</summary>
+          <ul>
+            <li>Hemoglobina (Hb): 12–16 g/dL (mulher), 13–18 g/dL (homem)</li>
+            <li>Hematócrito (Ht), Leucócitos, Plaquetas, VCM, HCM, CHCM …</li>
+          </ul>
+        </details>
+        <details>
+          <summary>Bioquímica & Eletrólitos</summary>
+          <ul>
+            <li>Glicose, Ureia, Creatinina, TGO/TGP, GGT, FA, Bilirrubinas</li>
+            <li>Na⁺, K⁺, Cl⁻, Ca²⁺, Mg²⁺, Fosfato …</li>
+          </ul>
+        </details>
+        <details>
+          <summary>Coagulação</summary>
+          <ul>
+            <li>TP/INR, TTPa, Fibrinogênio …</li>
+          </ul>
+        </details>
+        <details>
+          <summary>Sorologia / Hormônios</summary>
+          <ul>
+            <li>TSH/T4L, Beta-hCG, PSA, marcadores virais/hepáticos (varia por método)</li>
+          </ul>
+        </details>
       </div>
+      <div class="tip">*Valores variam por método/kit/laboratório. Uso apenas didático.*</div>
+    </section>
+
+    <!-- RELATÓRIO -->
+    <section id="tab-relatorio" class="tab">
+      <h2>Relatório de Desempenho</h2>
+      <div id="relato"></div>
+      <button id="btn-gerar-relato" class="btn">Gerar Relatório</button>
     </section>
   </main>
 
-  <footer class="site-footer">
-    <div class="wrap footer-logos">
-      <img src="/public/images/logo-capacita.png" alt="Capacita — Cursos" class="logo small" />
-      <img src="/public/images/logo-haras.png" alt="HarasTech — Desenvolvimento" class="logo small" />
+  <footer class="app-footer">
+    <div class="left">
+      <small>© 2025 • Material educacional. Não substitui treinamento supervisionado.</small>
     </div>
-    <div class="wrap legal">
-      <p>© <span id="year"></span> SimVein. Conteúdo educacional. Não substitui orientação profissional.</p>
+    <div class="right">
+      <img src="public/assets/branding/logo-haras.png" alt="HarasTech" onerror="this.style.display='none'"/>
+      <small>Desenvolvido por HarasTech • <a href="mailto:harastech@outlook.com">harastech@outlook.com</a></small>
     </div>
   </footer>
 
-  <!-- Modais / UI auxiliares -->
-  <div id="modal" class="modal" hidden>
-    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-      <button class="modal-close" id="modalClose" aria-label="Fechar">×</button>
-      <h3 id="modalTitle">Detalhes</h3>
-      <div id="modalBody" class="modal-body"></div>
+  <!-- Configurações -->
+  <dialog id="settings">
+    <h3>Configurações</h3>
+    <label class="row">
+      <span>Áudio ambiente</span>
+      <input type="checkbox" id="toggle-ambiente"/>
+    </label>
+    <label>OpenAI API Key (opcional – armazena localmente)
+      <input type="password" id="openai-key" placeholder="sk-..." />
+    </label>
+    <div class="row end">
+      <button id="save-settings" class="btn">Salvar</button>
+      <button id="close-settings" class="btn ghost">Fechar</button>
     </div>
-  </div>
+  </dialog>
 
-  <!-- Scripts -->
+  <script src="./scripts.js"></script>
   <script>
-    // Registro de Service Worker (PWA) — opcional; arquivo será adicionado futuramente
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js').catch(() => {});
+      window.addEventListener('load', ()=> {
+        navigator.serviceWorker.register('/sw.js').catch(()=>{});
       });
     }
-    // Ano no footer
-    document.addEventListener('DOMContentLoaded', () => {
-      const y = document.getElementById('year');
-      if (y) y.textContent = new Date().getFullYear();
-    });
   </script>
-  <script src="/scripts/app.js" type="module"></script>
 </body>
 </html>
+
+  
