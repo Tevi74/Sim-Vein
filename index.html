@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>PPA SimVein • Simulador de Coleta</title>
-  <meta name="theme-color" content="#0d1b2a" />
-  <link rel="manifest" href="/manifest.webmanifest?v=16" />
-  <link rel="stylesheet" href="/styles.css?v=16" />
+  <meta name="theme-color" content="#0d1b2a"/>
+  <link rel="manifest" href="/manifest.webmanifest?v=19"/>
+  <link rel="stylesheet" href="/styles.css?v=19"/>
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
 </head>
 <body>
   <header class="app-header">
     <div class="brand">
-      <img src="/public/assets/branding/logo-sim.png" alt="PPA SimVein"/>
-      <img src="/public/assets/branding/logo-capacita.png" alt="Capacita+"/>
+      <img src="/public/assets/branding/logo-sim.png" alt="PPA SimVein" style="height:48px"/>
+      <img src="/public/assets/branding/logo-capacita.png" alt="Capacita+" style="height:48px"/>
     </div>
     <nav class="nav">
       <button data-tab="welcome" class="btn">Boas-vindas</button>
@@ -21,23 +21,23 @@
       <button data-tab="solicitacao" class="btn ghost">Solicitação</button>
       <button data-tab="biosseg" class="btn ghost">Biossegurança</button>
       <button data-tab="gasometria" class="btn ghost">Gasometria</button>
-      <button data-tab="hemato" class="btn ghost">Hemato Químico</button>
+      <button data-tab="hemato" class="btn ghost">Hemato-Imune</button>
       <button data-tab="sequencia" class="btn ghost">Sequência</button>
       <button data-tab="aplicacoes" class="btn ghost">Quebra-cabeça</button>
       <button data-tab="indices" class="btn ghost">Índices de Referência</button>
-      <button data-tab="relatorio" class="btn ghost">Relatório</button>
+      <button data-tab="tutor" class="btn" style="background:#2ec4b6">Tutor-VemSim</button>
       <button id="btn-settings" class="btn ghost" title="Configurações">⚙️</button>
     </nav>
   </header>
 
-  <audio id="audio-ambiente" src="/public/audios/audio-ambiente.mp3?v=16" loop preload="auto"></audio>
+  <audio id="audio-ambiente" src="/public/audios/audio-ambiente.mp3?v=19" loop preload="auto"></audio>
 
   <main class="content" style="grid-template-columns: 1fr 340px; gap: 12px;">
     <div>
       <section id="tab-welcome" class="tab active">
         <h2>Boas-vindas</h2>
         <div class="row" style="align-items:flex-start;gap:16px">
-          <img src="/public/assets/hero-boas-vindas.png" alt="Boas-vindas" style="max-width:340px;border-radius:12px"/>
+          <img src="/public/assets/hero-boas-vindas.png" alt="Boas-vindas" style="max-width:360px;border-radius:12px"/>
           <div>
             <p>Ouça a introdução e, quando quiser, clique em Começar.</p>
             <div class="row" style="margin:8px 0 12px">
@@ -59,9 +59,7 @@
               <input name="nasc" type="date" required/>
             </label>
             <label>Sexo
-              <select name="sexo">
-                <option>F</option><option>M</option><option>Outro</option>
-              </select>
+              <select name="sexo"><option>F</option><option>M</option><option>Outro</option></select>
             </label>
             <label>Nome da mãe
               <input name="mae" placeholder="Nome da mãe"/>
@@ -83,11 +81,7 @@
             </label>
             <label>Tipo de amostra
               <select name="amostra">
-                <option>Sangue venoso</option>
-                <option>Sangue capilar</option>
-                <option>Soro</option>
-                <option>Plasma</option>
-                <option>Outros</option>
+                <option>Sangue venoso</option><option>Sangue capilar</option><option>Soro</option><option>Plasma</option><option>Outros</option>
               </select>
             </label>
             <label>Alergias
@@ -161,7 +155,6 @@
         <div class="audio-controls" style="margin-bottom:12px">
           <button class="btn" data-audio="/public/audios/audio-gasometria.mp3">▶ Áudio: Gasometria</button>
         </div>
-
         <div class="box" id="gaso-quiz">
           <h3>Quizzes</h3>
           <div id="gq-q" class="badge" style="margin-bottom:8px"></div>
@@ -171,7 +164,6 @@
             <div id="gq-feedback" class="feedback"></div>
           </div>
         </div>
-
         <div class="box" style="margin-top:12px">
           <h3>Casos Clínicos</h3>
           <div id="gaso-cases" class="tables"></div>
@@ -179,13 +171,23 @@
       </section>
 
       <section id="tab-hemato" class="tab">
-        <h2>Hemato Químico</h2>
+        <h2>Hemato-Imune</h2>
         <div class="audio-controls" style="margin-bottom:12px">
           <button class="btn ghost" data-audio="/public/audios/audio-hemato-imune.mp3">▶ Hematologia/Imuno</button>
           <button class="btn ghost" data-audio="/public/audios/audio-bioquimica-clinica.mp3">▶ Bioquímica Clínica</button>
         </div>
-        <div class="box">
-          <p>Use os áudios para revisão guiada de hematologia, imunologia e bioquímica clínica.</p>
+        <div class="box" id="hemi-quiz">
+          <h3>Quizzes</h3>
+          <div id="hq-q" class="badge" style="margin-bottom:8px"></div>
+          <div id="hq-options" class="grid-3" style="margin-bottom:8px"></div>
+          <div class="row">
+            <button id="hq-next" class="btn">Próxima</button>
+            <div id="hq-feedback" class="feedback"></div>
+          </div>
+        </div>
+        <div class="box" style="margin-top:12px">
+          <h3>Casos Clínicos</h3>
+          <div id="hemi-cases" class="tables"></div>
         </div>
       </section>
 
@@ -194,13 +196,13 @@
         <p>Arraste os tubos para a área em ordem correta e clique em Validar.</p>
         <div class="quiz">
           <div class="bank" id="tube-bank">
-            <img draggable="true" class="tube" data-id="1-hemocultura" src="/public/assets/tubes/hemocultura.png?v=16" alt="Hemocultura">
-            <img draggable="true" class="tube" data-id="2-citrato" src="/public/assets/tubes/citrato-azul.png?v=16" alt="Citrato (Azul)">
-            <img draggable="true" class="tube tube-vhs" data-id="3-vhs" src="/public/assets/tubes/vhs-preto.png?v=16" alt="VHS (Preto)" style="display:none">
-            <img draggable="true" class="tube" data-id="4-soro" src="/public/assets/tubes/soro-vermelho.png?v=16" alt="Soro (Vermelho/Amarelo)">
-            <img draggable="true" class="tube" data-id="5-heparina" src="/public/assets/tubes/heparina-verde.png?v=16" alt="Heparina (Verde)">
-            <img draggable="true" class="tube" data-id="6-edta" src="/public/assets/tubes/edta-roxo.png?v=16" alt="EDTA (Roxo)">
-            <img draggable="true" class="tube" data-id="7-fluoreto" src="/public/assets/tubes/fluoreto-cinza.png?v=16" alt="Fluoreto (Cinza)">
+            <img draggable="true" class="tube" data-id="1-hemocultura" src="/public/assets/tubes/hemocultura.png?v=19" alt="Hemocultura">
+            <img draggable="true" class="tube" data-id="2-citrato" src="/public/assets/tubes/citrato-azul.png?v=19" alt="Citrato (Azul)">
+            <img draggable="true" class="tube tube-vhs" data-id="3-vhs" src="/public/assets/tubes/vhs-preto.png?v=19" alt="VHS (Preto)" style="display:none">
+            <img draggable="true" class="tube" data-id="4-soro" src="/public/assets/tubes/soro-vermelho.png?v=19" alt="Soro (Vermelho/Amarelo)">
+            <img draggable="true" class="tube" data-id="5-heparina" src="/public/assets/tubes/heparina-verde.png?v=19" alt="Heparina (Verde)">
+            <img draggable="true" class="tube" data-id="6-edta" src="/public/assets/tubes/edta-roxo.png?v=19" alt="EDTA (Roxo)">
+            <img draggable="true" class="tube" data-id="7-fluoreto" src="/public/assets/tubes/fluoreto-cinza.png?v=19" alt="Fluoreto (Cinza)">
           </div>
           <div class="drop" id="tube-drop" aria-label="Área de Montagem"></div>
         </div>
@@ -246,41 +248,13 @@
           <details open>
             <summary>Hemograma — Homens</summary>
             <ul>
-              <li>Hemácias: 4,2 a 5,9 milhões/µL</li>
-              <li>Hemoglobina: 13,0 a 18,0 g/dL</li>
-              <li>Hematócrito: 38 a 52%</li>
-              <li>VCM: 80 a 100 fL</li>
-              <li>HCM: 27 a 32 pg</li>
-              <li>CHCM: 31 a 36 g/dL</li>
-              <li>RDW: 10 a 16%</li>
-              <li>Leucócitos totais: 4.000 a 11.000/µL</li>
-              <li>Neutrófilos bastonetes: 0 a 800/µL</li>
-              <li>Neutrófilos segmentados: 1.600 a 8.000/µL</li>
-              <li>Linfócitos: 900 a 4.000/µL</li>
-              <li>Monócitos: 100 a 1.000/µL</li>
-              <li>Eosinófilos: 0 a 500/µL</li>
-              <li>Basófilos: 0 a 200/µL</li>
-              <li>Plaquetas: 140.000 a 450.000/µL</li>
+              <li>Hemácias: 4,2 a 5,9 milhões/µL</li><li>Hemoglobina: 13,0 a 18,0 g/dL</li><li>Hematócrito: 38 a 52%</li><li>VCM: 80 a 100 fL</li><li>HCM: 27 a 32 pg</li><li>CHCM: 31 a 36 g/dL</li><li>RDW: 10 a 16%</li><li>Leucócitos totais: 4.000 a 11.000/µL</li><li>Neutrófilos bastonetes: 0 a 800/µL</li><li>Neutrófilos segmentados: 1.600 a 8.000/µL</li><li>Linfócitos: 900 a 4.000/µL</li><li>Monócitos: 100 a 1.000/µL</li><li>Eosinófilos: 0 a 500/µL</li><li>Basófilos: 0 a 200/µL</li><li>Plaquetas: 140.000 a 450.000/µL</li>
             </ul>
           </details>
           <details>
             <summary>Hemograma — Mulheres</summary>
             <ul>
-              <li>Hemácias: 3,9 a 5,4 milhões/µL</li>
-              <li>Hemoglobina: 12,0 a 16,0 g/dL</li>
-              <li>Hematócrito: 35 a 47%</li>
-              <li>VCM: 80 a 100 fL</li>
-              <li>HCM: 27 a 32 pg</li>
-              <li>CHCM: 31 a 36 g/dL</li>
-              <li>RDW: 10 a 16%</li>
-              <li>Leucócitos totais: 4.000 a 11.000/µL</li>
-              <li>Neutrófilos bastonetes: 0 a 800/µL</li>
-              <li>Neutrófilos segmentados: 1.600 a 8.000/µL</li>
-              <li>Linfócitos: 900 a 4.000/µL</li>
-              <li>Monócitos: 100 a 1.000/µL</li>
-              <li>Eosinófilos: 0 a 500/µL</li>
-              <li>Basófilos: 0 a 200/µL</li>
-              <li>Plaquetas: 150.000 a 450.000/µL</li>
+              <li>Hemácias: 3,9 a 5,4 milhões/µL</li><li>Hemoglobina: 12,0 a 16,0 g/dL</li><li>Hematócrito: 35 a 47%</li><li>VCM: 80 a 100 fL</li><li>HCM: 27 a 32 pg</li><li>CHCM: 31 a 36 g/dL</li><li>RDW: 10 a 16%</li><li>Leucócitos totais: 4.000 a 11.000/µL</li><li>Neutrófilos bastonetes: 0 a 800/µL</li><li>Neutrófilos segmentados: 1.600 a 8.000/µL</li><li>Linfócitos: 900 a 4.000/µL</li><li>Monócitos: 100 a 1.000/µL</li><li>Eosinófilos: 0 a 500/µL</li><li>Basófilos: 0 a 200/µL</li><li>Plaquetas: 150.000 a 450.000/µL</li>
             </ul>
           </details>
           <details>
@@ -300,16 +274,22 @@
         </div>
       </section>
 
-      <section id="tab-relatorio" class="tab">
-        <h2>Relatório de Desempenho</h2>
-        <div id="relato"></div>
-        <button id="btn-gerar-relato" class="btn">Gerar Relatório</button>
+      <section id="tab-tutor" class="tab">
+        <h2>Tutor-VemSim</h2>
+        <div class="row" style="align-items:center;gap:12px;margin-bottom:8px">
+          <img src="/public/assets/branding/avatar-tutor.png" alt="Tutor" style="width:56px;height:56px;border-radius:50%;object-fit:cover"/>
+          <button class="btn" data-audio="/public/audios/audio-tutor.mp3">▶ Boas-vindas do Tutor</button>
+        </div>
+        <div class="box">
+          <h3>Mini Glossário Interativo</h3>
+          <div id="tutor-gloss" class="chips"></div>
+        </div>
       </section>
     </div>
 
     <aside class="tab box" style="height: fit-content;">
       <div class="row" style="gap:10px; align-items:center;">
-        <img src="/public/assets/branding/avatar-tutor.png?v=16" alt="Tutor" style="width:56px;height:56px;border-radius:50%;object-fit:cover">
+        <img src="/public/assets/branding/avatar-tutor.png?v=19" alt="Tutor" style="width:56px;height:56px;border-radius:50%;object-fit:cover">
         <h3 style="margin:0">Tutor IA</h3>
       </div>
       <div id="tutor-feed" style="margin-top:8px;max-height:240px;overflow:auto;"></div>
@@ -326,7 +306,7 @@
       <small>© 2025 • Material educacional. Não substitui treinamento supervisionado.</small>
     </div>
     <div class="right">
-      <img src="/public/assets/branding/logo-haras.png?v=16" alt="HarasTech"/>
+      <img src="/public/assets/branding/logo-haras.png?v=19" alt="HarasTech"/>
       <small>Desenvolvido por HarasTech • <a href="mailto:harastech@outlook.com">harastech@outlook.com</a></small>
     </div>
   </footer>
@@ -349,6 +329,14 @@
     </div>
   </dialog>
 
-  <script src="/scripts.js?v=16" defer></script>
+  <dialog id="tutor-pop">
+    <h3 id="tp-title"></h3>
+    <p id="tp-text"></p>
+    <div class="row end" style="margin-top:8px">
+      <button id="tp-close" class="btn">Fechar</button>
+    </div>
+  </dialog>
+
+  <script src="/scripts.js?v=19" defer></script>
 </body>
 </html>
