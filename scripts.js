@@ -51,20 +51,21 @@
   document.addEventListener('click',e=>{
     const btn = e.target.closest('button[data-audio]');
     if (!btn) return;
+    const label = btn.textContent.replace(/^(\▶|⏸)\s*/,'');
     const src = btn.getAttribute('data-audio');
     if (fxBtn === btn && !fxEl.paused){
       fxEl.pause(); fxEl.currentTime = 0;
-      btn.textContent = '▶ ' + btn.textContent.replace(/^(\▶|⏸)\s*/,'');
+      btn.textContent = '▶ ' + label;
       fxBtn = null; return;
     }
     if (!fxEl.paused){ fxEl.pause(); fxEl.currentTime = 0; }
     fxEl = new Audio(src);
     fxEl.play().catch(()=>{});
     if (fxBtn) fxBtn.textContent = '▶ ' + fxBtn.textContent.replace(/^(\▶|⏸)\s*/,'');
-    btn.textContent = '⏸ ' + btn.textContent.replace(/^(\▶|⏸)\s*/,'');
+    btn.textContent = '⏸ ' + label;
     fxBtn = btn;
     fxEl.onended = ()=>{
-      if (fxBtn){ fxBtn.textContent = '▶ ' + fxBtn.textContent.replace(/^(\▶|⏸)\s*/,''); fxBtn=null; }
+      if (fxBtn){ fxBtn.textContent = '▶ ' + label; fxBtn=null; }
     };
   });
 
@@ -72,15 +73,11 @@
   const deduzidos = $('#deduzidos');
   $('#btn-deduzir')?.addEventListener('click',()=>{
     const ex = Array.from(examesBox.querySelectorAll('input:checked')).map(i=>i.value);
-    const tubos = new Set();
-    if (ex.includes('Hemocultura')) tubos.add('Hemocultura');
-    if (ex.some(v=>/TP|TTPa/.test(v))) tubos.add('Citrato');
-    if (ex.includes('VHS')) tubos.add('VHS');
-    if (ex.some(v=>/Hemograma/.test(v))) tubos.add('EDTA');
-    if (ex.some(v=>/Glicose/.test(v))) tubos.add('Fluoreto');
-    if (ex.some(v=>/Eletrólitos|Bioquímica|Sorologia|Hormônios/.test(v))) tubos.add('Soro');
-    if (ex.some(v=>/Eletrólitos|Bioquímica/.test(v))) tubos.add('Heparina');
-    deduzidos.textContent = Array.from(tubos).join(' • ') || 'Nenhum selecionado';
+    const tubos = [];
+    if (ex.includes('Hemocultura')) tubos.push('Hemocultura');
+    tubos.push('Citrato','Soro','Heparina','EDTA','Fluoreto');
+    if (ex.includes('VHS')) tubos.push('VHS');
+    deduzidos.textContent = tubos.join(' • ');
   });
 
   const bank = $('#tube-bank');
@@ -114,15 +111,22 @@
   }
 
   function idNum(id){ const m=/^(\d+)-/.exec(id||''); return m? Number(m[1]) : NaN; }
-  function currentOrder(){ return Array.from(drop.querySelectorAll('.tube')).map(t=>idNum(t.dataset.id)); }
-  function expectedOrder(){
-    const avail = Array.from(document.querySelectorAll('.tube')).map(t=>idNum(t.dataset.id));
-    const goal = [1,2,3,4,5,6,7].filter(n=>avail.includes(n));
-    return goal;
+  function currentOrderFiltered(){
+    const allowed = new Set([1,2,4,5,6,7]);
+    return Array.from(drop.querySelectorAll('.tube'))
+      .map(t=>idNum(t.dataset.id))
+      .filter(n=>allowed.has(n));
+  }
+  function hasTube(n){
+    return Array.from(drop.querySelectorAll('.tube')).some(t=>idNum(t.dataset.id)===n);
+  }
+  function expectedSeq(){
+    const withHemo = hasTube(1);
+    return withHemo ? [1,2,4,5,6,7] : [2,4,5,6,7];
   }
   btnValidate?.addEventListener('click',()=>{
-    const now=currentOrder();
-    const goal=expectedOrder();
+    const now = currentOrderFiltered();
+    const goal = expectedSeq();
     const ok = now.length===goal.length && now.every((v,i)=>v===goal[i]);
     feedback.textContent = ok ? 'Sequência correta!' : 'Sequência incorreta. Tente novamente.';
     feedback.classList.toggle('ok',ok);
@@ -191,7 +195,8 @@
   pushTutor('Tutor','Digite "quiz" para iniciar, ou clique em "Corrigir sequência".');
 
   const quiz = [
-    {q:'Ordem correta dos tubos?', a:'hemocultura>citrato>soro>heparina>edta>fluoreto'},
+    {q:'Ordem dos tubos sem hemocultura?', a:'citrato>soro>heparina>edta>fluoreto'},
+    {q:'Ordem com hemocultura?', a:'hemocultura>citrato>soro>heparina>edta>fluoreto'},
     {q:'Ângulo de punção recomendado (°)?', a:'30-45'},
     {q:'Tempo máximo de garrote (s)?', a:'60'}
   ];
@@ -217,15 +222,19 @@
   tutorInput?.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); tutorSend(); }});
 
   tutorCorrigir?.addEventListener('click',()=>{
-    const now = Array.from(document.querySelectorAll('#tube-drop .tube')).map(t=>idNum(t.dataset.id));
-    const goal = expectedOrder();
-    if (!now.length){ pushTutor('Tutor','Arraste os tubos para a área e clique em Validar.'); return; }
+    const cur = currentOrderFiltered();
+    const withHemo = cur[0]===1;
+    const goal = withHemo ? [1,2,4,5,6,7] : [2,4,5,6,7];
+    const ok = cur.length===goal.length && cur.every((v,i)=>v===goal[i]);
+    if (ok){ pushTutor('Tutor','Sequência correta.'); return; }
     const dicas=[];
-    if (goal[0]===1 && now[0]!==1) dicas.push('Hemocultura primeiro.');
-    const pos = n => now.indexOf(n);
-    if (pos(2)>pos(4) && pos(4)!==-1 && pos(2)!==-1) dicas.push('Citrato antes de Soro.');
-    if (pos(6)<pos(4) && pos(6)!==-1 && pos(4)!==-1) dicas.push('Soro antes de EDTA.');
-    pushTutor('Tutor', dicas.length ? dicas.join(' ') : 'Sequência parece correta ou quase correta.');
+    const pos = n => cur.indexOf(n);
+    if (withHemo && pos(1)!==0) dicas.push('Se houver hemocultura, ela deve vir primeiro.');
+    if (pos(2)>pos(4) && pos(2)!==-1 && pos(4)!==-1) dicas.push('Citrato deve vir antes de Soro.');
+    if (pos(4)>pos(5) && pos(5)!==-1) dicas.push('Soro deve vir antes de Heparina.');
+    if (pos(5)>pos(6) && pos(6)!==-1) dicas.push('Heparina deve vir antes de EDTA.');
+    if (pos(6)>pos(7) && pos(7)!==-1) dicas.push('EDTA deve vir antes de Fluoreto.');
+    pushTutor('Tutor', dicas.length ? dicas.join(' ') : 'Reorganize e valide novamente.');
   });
 
   const gasoQuiz = [
@@ -273,11 +282,11 @@
   }
 
   const gasoCases = [
-    {t:'DPOC em exacerbação', v:{pH:'7,28', pCO2:'70', HCO3:'26', pO2:'58', Sat:'86%'}, r:'Acidose respiratória descompensada', exp:'pH baixo; pCO₂ alto (causa respiratória); HCO₃⁻ normal (sem compensação).'},
-    {t:'Cetoacidose diabética', v:{pH:'7,15', pCO2:'28', HCO3:'10', pO2:'95', Sat:'98%'}, r:'Acidose metabólica com compensação respiratória', exp:'pH baixo; HCO₃⁻ baixo (metabólica); pCO₂ baixo (hiperventilação).'},
-    {t:'Crise de ansiedade com hiperventilação', v:{pH:'7,55', pCO2:'25', HCO3:'24', pO2:'100', Sat:'99%'}, r:'Alcalose respiratória aguda', exp:'pH alto; pCO₂ baixo (respiratória); HCO₃⁻ normal.'},
-    {t:'Sepse grave (choque séptico)', v:{pH:'7,20', pCO2:'30', HCO3:'14', pO2:'60', Sat:'85%'}, r:'Acidose metabólica com hipoxemia', exp:'pH baixo; HCO₃⁻ baixo; pCO₂ baixo (compensação); pO₂ reduzido.'},
-    {t:'Vômitos prolongados', v:{pH:'7,52', pCO2:'46', HCO3:'34', pO2:'95', Sat:'97%'}, r:'Alcalose metabólica com compensação respiratória', exp:'pH alto; HCO₃⁻ alto; pCO₂ elevado (hipoventilação).'}
+    {t:'DPOC em exacerbação', v:{pH:'7,28', pCO2:'70', HCO3:'26', pO2:'58', Sat:'86%'}, r:'Acidose respiratória descompensada', exp:'pH baixo; pCO₂ alto (respiratória); HCO₃⁻ normal.'},
+    {t:'Cetoacidose diabética', v:{pH:'7,15', pCO2:'28', HCO3:'10', pO2:'95', Sat:'98%'}, r:'Acidose metabólica com compensação respiratória', exp:'pH baixo; HCO₃⁻ baixo; pCO₂ baixo (compensação).'},
+    {t:'Crise de ansiedade', v:{pH:'7,55', pCO2:'25', HCO3:'24', pO2:'100', Sat:'99%'}, r:'Alcalose respiratória aguda', exp:'pH alto; pCO₂ baixo; HCO₃⁻ normal.'},
+    {t:'Sepse grave', v:{pH:'7,20', pCO2:'30', HCO3:'14', pO2:'60', Sat:'85%'}, r:'Acidose metabólica com hipoxemia', exp:'HCO₃⁻ baixo; pO₂ reduzido.'},
+    {t:'Vômitos prolongados', v:{pH:'7,52', pCO2:'46', HCO3:'34', pO2:'95', Sat:'97%'}, r:'Alcalose metabólica com compensação respiratória', exp:'HCO₃⁻ alto; pCO₂ alto (compensação).'}
   ];
   const gasoCasesEl = $('#gaso-cases');
   if (gasoCasesEl){
@@ -292,4 +301,121 @@
       gasoCasesEl.appendChild(d);
     });
   }
+
+  const hemiQuiz = [
+    {q:'Qual anticoagulante é indicado para hemograma (CBC)?', opts:['Citrato','Heparina','EDTA','Fluoreto'], a:2},
+    {q:'Aumento de eosinófilos sugere com mais frequência:', opts:['Infecção bacteriana','Reação alérgica ou parasitose','Hemólise intravascular','Doença hepática'], a:1},
+    {q:'Blastos circulantes em esfregaço periférico sugerem:', opts:['Deficiência de ferro','Leucemia aguda','Anemia hemolítica autoimune','Plaquetopenia por consumo'], a:1},
+    {q:'Plaquetas participam principalmente de:', opts:['Transporte de O₂','Resposta imune humoral','Coagulação primária','Equilíbrio ácido-básico'], a:2},
+    {q:'LDH e bilirrubina indireta elevadas com Hb baixa sugerem:', opts:['Colestase','Hemólise','Hipotireoidismo','Hipercolesterolemia'], a:1}
+  ];
+  const hqQ = $('#hq-q');
+  const hqOps = $('#hq-options');
+  const hqNext = $('#hq-next');
+  const hqFb = $('#hq-feedback');
+  let hqI=0, hqScore=0;
+
+  function renderHemi(){
+    const item=hemiQuiz[hqI];
+    hqQ.textContent = 'Q'+(hqI+1)+': '+item.q;
+    hqOps.innerHTML=''; hqFb.textContent='';
+    item.opts.forEach((t,i)=>{
+      const b=document.createElement('button');
+      b.className='btn ghost';
+      b.textContent=String.fromCharCode(97+i)+') '+t;
+      b.style.textAlign='left';
+      b.addEventListener('click',()=>{
+        const ok=i===item.a;
+        hqFb.textContent = ok ? 'Correta' : 'Incorreta';
+        hqFb.classList.toggle('ok',ok);
+        hqFb.classList.toggle('bad',!ok);
+        if (ok) hqScore++;
+        hqOps.querySelectorAll('button').forEach(x=>x.disabled=true);
+      });
+      hqOps.appendChild(b);
+    });
+  }
+  if (hqQ && hqOps && hqNext && hqFb){
+    renderHemi();
+    hqNext.addEventListener('click',()=>{
+      if (hqI<hemiQuiz.length-1){ hqI++; renderHemi(); }
+      else { hqQ.textContent='Fim do quiz. Pontuação: '+hqScore+'/'+hemiQuiz.length; hqOps.innerHTML=''; hqNext.disabled=true; }
+    });
+  }
+
+  const hemiCases = [
+    {t:'Anemia ferropriva', v:'Hb 9,2 g/dL; VCM 72 fL; HCM 24 pg; RDW ↑; Ferritina baixa.', r:'Anemia microcítica hipocrômica por deficiência de ferro.', exp:'VCM/HCM baixos e ferritina baixa são típicos.'},
+    {t:'Leucemia linfoblástica aguda', v:'Leucócitos 45.000/µL; Blastos no sangue; Plaquetas 70.000/µL.', r:'LLA provável.', exp:'Presença de blastos periféricos e plaquetopenia.'},
+    {t:'Trombocitopenia imune', v:'Plaquetas 22.000/µL; Hb e leucócitos normais.', r:'PTI provável.', exp:'Plaquetopenia isolada com séries vermelha/branca preservadas.'},
+    {t:'Reação alérgica', v:'Eosinófilos 9%; IgE elevada.', r:'Eosinofilia por alergia.', exp:'Eosinofilia e IgE alta sugerem alergia/parasitas.'},
+    {t:'Hemólise', v:'Hb 10 g/dL; Bilirrubina indireta ↑; LDH ↑; Haptoglobina baixa.', r:'Anemia hemolítica.', exp:'Marcadores de destruição de hemácias.'}
+  ];
+  const hemiCasesEl = $('#hemi-cases');
+  if (hemiCasesEl){
+    hemiCases.forEach((c,idx)=>{
+      const d=document.createElement('details');
+      const s=document.createElement('summary');
+      s.textContent = (idx+1)+'. '+c.t+' — '+c.v;
+      d.appendChild(s);
+      const p=document.createElement('p');
+      p.innerHTML = '<b>Resposta:</b> '+c.r+'<br><b>Raciocínio:</b> '+c.exp;
+      d.appendChild(p);
+      hemiCasesEl.appendChild(d);
+    });
+  }
+
+  const glossData = [
+    {k:'Eritrócito', v:'Célula que transporta oxigênio.'},
+    {k:'Hemoglobina', v:'Proteína no eritrócito que carrega O₂ e CO₂.'},
+    {k:'Plaquetas', v:'Fragmentos celulares que participam da coagulação.'},
+    {k:'Neutrófilos', v:'Defesa contra bactérias; primeira linha da imunidade inata.'},
+    {k:'Linfócitos T', v:'Coordenam a resposta imune celular.'},
+    {k:'Linfócitos B', v:'Produzem anticorpos (imunidade humoral).'},
+    {k:'Eosinófilos', v:'Defesa contra parasitas e alergias.'},
+    {k:'Basófilos', v:'Liberam histamina em reações alérgicas.'},
+    {k:'Blastos', v:'Células imaturas; presença no sangue sugere leucemia.'},
+    {k:'Creatinina', v:'Marcador de função renal.'},
+    {k:'Ureia', v:'Produto do metabolismo proteico; avalia função renal.'},
+    {k:'AST (TGO)', v:'Enzima hepática; aumenta em lesão hepática e muscular.'},
+    {k:'ALT (TGP)', v:'Enzima hepática mais específica de fígado.'},
+    {k:'Bilirrubina', v:'Pigmento da degradação da Hb; aumento causa icterícia.'},
+    {k:'LDL', v:'Colesterol “ruim”, aterogênico.'},
+    {k:'HDL', v:'Colesterol “bom”, efeito protetor.'},
+    {k:'Troponina', v:'Marcador de necrose miocárdica.'},
+    {k:'Triglicerídeos', v:'Gorduras circulantes; risco CV.'},
+    {k:'pH', v:'Acidez/alcalinidade do sangue.'},
+    {k:'pCO₂', v:'Avalia ventilação pulmonar.'},
+    {k:'HCO₃⁻', v:'Componente metabólico/renal do equilíbrio ácido-básico.'},
+    {k:'pO₂', v:'Oxigenação arterial.'},
+    {k:'SatO₂', v:'% de Hb ligada ao O₂.'},
+    {k:'Punção venosa', v:'Coleta em veia periférica.'},
+    {k:'Punção arterial', v:'Coleta em artéria (radial) p/ gasometria.'},
+    {k:'Garrote', v:'Faixa para dilatar a veia; usar ≤60s.'},
+    {k:'Assepsia', v:'Limpeza com antisséptico antes da coleta.'},
+    {k:'Ordem de coleta', v:'Citrato → Soro → Heparina → EDTA → Fluoreto; com hemocultura no início, se houver.'},
+    {k:'Vacutainer', v:'Sistema fechado com agulha dupla e tubos a vácuo.'}
+  ];
+  const gloss = $('#tutor-gloss');
+  const tp = $('#tutor-pop');
+  const tpTitle = $('#tp-title');
+  const tpText = $('#tp-text');
+  const tpClose = $('#tp-close');
+
+  if (gloss){
+    gloss.innerHTML = '';
+    glossData.forEach(item=>{
+      const b=document.createElement('button');
+      b.className='btn ghost';
+      b.textContent=item.k;
+      b.addEventListener('click',()=>{
+        tpTitle.textContent=item.k;
+        tpText.textContent=item.v;
+        tp.showModal();
+      });
+      gloss.appendChild(b);
+    });
+  }
+  tpClose?.addEventListener('click',()=>tp.close());
 })();
+
+      
