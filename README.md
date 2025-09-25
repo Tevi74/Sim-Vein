@@ -1,62 +1,41 @@
-# Sim-Lab (SimVein) • Deploy Vercel
+# Sim-Vein • Simulador de Coleta
 
-Este repositório contém um PWA estático (HTML, CSS, JS) para o **SimVein • Simulador de Coleta**.
+Este repositório contém o PWA estático **Sim-Vein**, um simulador educacional de coleta laboratorial com suporte a PWA, Service Worker e manifest.
 
 ---
 
 ## 🚀 Estrutura do Projeto
-/
 ├── index.html
 ├── styles.css
 ├── scripts.js
 ├── sw.js
 ├── manifest.webmanifest
+├── vercel.json
 ├── /public
 │ ├── /assets
 │ │ ├── /branding
-│ │ │ └── logos, avatar-tutor, etc.
+│ │ │ └── (logos, avatar-tutor, etc.)
 │ │ ├── /tubes
-│ │ │ └── imagens dos tubos
+│ │ │ └── (imagens dos tubos)
 │ │ └── arm-360.jpg
-│ ├── /audio (⚠️ ver nota abaixo)
-│ │ └── mp3 de narrações e sons
+│ ├── /audio
+│ │ └── (mp3 de narrações e sons)
 
 
----
-
-## ⚠️ Importante sobre pastas
-
-- Na Vercel, **arquivos dentro de `/public` ficam disponíveis direto na raiz**.  
-  Exemplo:  
-  `public/assets/branding/logo-sim.png` → acessível em `/assets/branding/logo-sim.png`  
-  `public/audio/audio-ambiente.mp3` → acessível em `/audio/audio-ambiente.mp3`
-
-👉 **Verifique se sua pasta está nomeada `audio` (singular)**, pois no `index.html` você referencia `audio/...`.  
-Se o nome for `audios/`, renomeie a pasta para `audio/`.
+📌 **Atenção:**  
+No código o caminho usado é `audio/...`.  
+Se sua pasta estiver como `audios/`, renomeie para `audio/` (singular).
 
 ---
 
-## 🌐 Deploy na Vercel
+## ⚡ Deploy na Vercel
 
 1. Faça login em [Vercel](https://vercel.com) e importe este repositório.
-2. Em **Project Settings**:
-   - Framework Preset → **Other**
-   - Build Command → (deixe vazio)
-   - Output Directory → **.** (ou vazio)
-3. Deploy 🎉
+2. Nas configurações do projeto:
+   - **Framework Preset** → `Other`
+   - **Build Command** → _(deixe vazio)_
+   - **Output Directory** → `.` ou _(deixe vazio)_
+3. Salve e faça o deploy. 🎉
 
----
-
-## 🔧 Arquivo `vercel.json`
-
-Na raiz do projeto, adicione este arquivo para garantir fallback do SPA e servir corretamente os arquivos:
-
-```json
-{
-  "builds": [
-    { "src": "index.html", "use": "@vercel/static" }
-  ],
-  "routes": [
-    { "src": "/(.*)", "dest": "/index.html" }
-  ]
-}
+                                   
+                                                                                             
