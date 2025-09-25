@@ -3,28 +3,17 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <!-- REMOVA a tag base ou ajuste para ./ -->
-  <base href="./" />
-
   <title>PPA SimVein • Simulador de Coleta</title>
   <meta name="theme-color" content="#0d1b2a" />
-
-  <!-- PWA / Manifest - CAMINHOS CORRIGIDOS -->
-  <link rel="manifest" href="manifest.webmanifest?v=3" />
-
-  <!-- CSS principal - CAMINHO CORRIGIDO -->
-  <link rel="stylesheet" href="styles.css?v=3" />
-  
-  <!-- A-Frame (cena 360) -->
+  <link rel="manifest" href="/manifest.webmanifest?v=6" />
+  <link rel="stylesheet" href="/styles.css?v=6" />
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
 </head>
 <body>
   <header class="app-header">
     <div class="brand">
-      <!-- CAMINHOS CORRIGIDOS - removido /public/ -->
-      <img src="assets/branding/logo-sim.png" alt="PPA SimVein" onerror="this.style.display='none'"/>
-      <img src="assets/branding/logo-capacita.png" alt="Capacita+" onerror="this.style.display='none'"/>
+      <img src="/assets/branding/logo-sim.png" alt="PPA SimVein" onerror="this.style.display='none'"/>
+      <img src="/assets/branding/logo-capacita.png" alt="Capacita+" onerror="this.style.display='none'"/>
     </div>
     <nav class="nav">
       <button data-tab="paciente" class="btn ghost">Ficha</button>
@@ -40,16 +29,12 @@
     </nav>
   </header>
 
-  <!-- Áudio ambiente (opcional) - CAMINHO CORRIGIDO -->
-  <audio id="audio-ambiente" src="audio/audio-ambiente.mp3?v=3" loop preload="auto"></audio>
+  <audio id="audio-ambiente" src="/audio/audio-ambiente.mp3?v=6" loop preload="auto"></audio>
 
-  <!-- Restante do conteúdo mantido com correções de caminhos -->
   <div id="banner" class="banner" hidden></div>
 
   <main class="content" style="grid-template-columns: 1fr 340px; gap: 12px;">
-    <!-- COLUNA ESQUERDA: conteúdo principal -->
     <div>
-      <!-- FICHA DO PACIENTE -->
       <section id="tab-paciente" class="tab active">
         <h2>Ficha do Paciente</h2>
         <form id="form-paciente" class="form">
@@ -81,7 +66,6 @@
         </form>
       </section>
 
-      <!-- SOLICITAÇÃO MÉDICA -->
       <section id="tab-solicitacao" class="tab">
         <h2>Solicitação Médica</h2>
         <p>Selecione os exames solicitados:</p>
@@ -97,12 +81,10 @@
         <button id="btn-deduzir" class="btn">Deduzir tubos necessários</button>
         <div id="deduzidos" class="pill"></div>
         <div class="audio-controls">
-          <!-- CAMINHO CORRIGIDO -->
-          <button class="btn ghost" data-audio="audio/audio-boas-vindas.mp3?v=3">▶ Boas-vindas</button>
+          <button class="btn ghost" data-audio="/audio/audio-boas-vindas.mp3?v=6">▶ Boas-vindas</button>
         </div>
       </section>
 
-      <!-- BIOSSEGURANÇA -->
       <section id="tab-biosseg" class="tab">
         <h2>Biossegurança (Pré / Durante / Pós)</h2>
         <div class="grid-3 checklist">
@@ -126,12 +108,10 @@
           </div>
         </div>
         <div class="audio-controls">
-          <!-- CAMINHO CORRIGIDO -->
-          <button class="btn ghost" data-audio="audio/audio-erros.mp3?v=3">▶ Erros comuns</button>
+          <button class="btn ghost" data-audio="/audio/audio-erros.mp3?v=6">▶ Erros comuns</button>
         </div>
       </section>
 
-      <!-- DISPOSITIVO -->
       <section id="tab-dispositivo" class="tab">
         <h2>Seleção de Dispositivo</h2>
         <div class="grid-3 cards">
@@ -140,12 +120,10 @@
           <label class="card"><input type="radio" name="disp" value="cateter"/><span>Cateter periférico</span></label>
         </div>
         <div class="audio-controls">
-          <!-- CAMINHO CORRIGIDO -->
-          <button class="btn ghost" data-audio="audio/audio-selecao-de-tubos.mp3?v=3">▶ Seleção de tubos (narração)</button>
+          <button class="btn ghost" data-audio="/audio/audio-selecao-de-tubos.mp3?v=6">▶ Seleção de tubos (narração)</button>
         </div>
       </section>
 
-      <!-- PUNIÇÃO: GARROTE + ÂNGULO + CENA 360 -->
       <section id="tab-punicao" class="tab">
         <h2>Garrote & Ângulo</h2>
 
@@ -174,8 +152,7 @@
 
           <a-scene embedded vr-mode-ui="enabled:false" renderer="antialias:true">
             <a-assets>
-              <!-- CAMINHO CORRIGIDO -->
-              <img id="arm360" src="assets/arm-360.jpg?v=3" crossorigin="anonymous" />
+              <img id="arm360" src="/assets/arm-360.jpg?v=6" crossorigin="anonymous" />
             </a-assets>
             <a-sky id="sky" src="#arm360" rotation="0 -90 0"></a-sky>
 
@@ -183,7 +160,6 @@
               <a-entity cursor="rayOrigin: mouse" raycaster="objects: .hotspot"></a-entity>
             </a-entity>
 
-            <!-- Hotspots (posições genéricas; ajuste depois) -->
             <a-entity class="hotspot" position="0 1.6 -3"
               geometry="primitive: sphere; radius: 0.06"
               material="color:#2ec4b6; emissive:#2ec4b6; opacity:.85"
@@ -216,20 +192,18 @@
         </div>
       </section>
 
-      <!-- SEQUÊNCIA DE COLETA -->
       <section id="tab-sequencia" class="tab">
         <h2>Sequência de Coleta</h2>
         <p>Arraste os tubos para a área em ordem correta e clique em <b>Validar</b>.</p>
         <div class="quiz">
           <div class="bank" id="tube-bank">
-            <!-- CAMINHOS CORRIGIDOS -->
-            <img draggable="true" class="tube" data-id="1-hemocultura" src="assets/tubes/hemocultura.png?v=3" alt="Hemocultura">
-            <img draggable="true" class="tube" data-id="2-citrato" src="assets/tubes/citrato-azul.png?v=3" alt="Citrato (Azul)">
-            <img draggable="true" class="tube tube-vhs" data-id="3-vhs" src="assets/tubes/vhs-preto.png?v=3" alt="VHS (Preto)" style="display:none">
-            <img draggable="true" class="tube" data-id="4-soro" src="assets/tubes/soro-vermelho.png?v=3" alt="Soro (Vermelho/Amarelo)">
-            <img draggable="true" class="tube" data-id="5-heparina" src="assets/tubes/heparina-verde.png?v=3" alt="Heparina (Verde)">
-            <img draggable="true" class="tube" data-id="6-edta" src="assets/tubes/edta-roxo.png?v=3" alt="EDTA (Roxo)">
-            <img draggable="true" class="tube" data-id="7-fluoreto" src="assets/tubes/fluoreto-cinza.png?v=3" alt="Fluoreto (Cinza)">
+            <img draggable="true" class="tube" data-id="1-hemocultura" src="/assets/tubes/hemocultura.png?v=6" alt="Hemocultura">
+            <img draggable="true" class="tube" data-id="2-citrato" src="/assets/tubes/citrato-azul.png?v=6" alt="Citrato (Azul)">
+            <img draggable="true" class="tube tube-vhs" data-id="3-vhs" src="/assets/tubes/vhs-preto.png?v=6" alt="VHS (Preto)" style="display:none">
+            <img draggable="true" class="tube" data-id="4-soro" src="/assets/tubes/soro-vermelho.png?v=6" alt="Soro (Vermelho/Amarelo)">
+            <img draggable="true" class="tube" data-id="5-heparina" src="/assets/tubes/heparina-verde.png?v=6" alt="Heparina (Verde)">
+            <img draggable="true" class="tube" data-id="6-edta" src="/assets/tubes/edta-roxo.png?v=6" alt="EDTA (Roxo)">
+            <img draggable="true" class="tube" data-id="7-fluoreto" src="/assets/tubes/fluoreto-cinza.png?v=6" alt="Fluoreto (Cinza)">
           </div>
           <div class="drop" id="tube-drop" aria-label="Área de Montagem"></div>
         </div>
@@ -240,12 +214,10 @@
         <p id="quiz-feedback" class="feedback"></p>
 
         <div class="audio-controls">
-          <!-- CAMINHO CORRIGIDO -->
-          <button class="btn ghost" data-audio="audio/audio-sequencia-de-coleta.mp3?v=3">▶ Sequência (narração)</button>
+          <button class="btn ghost" data-audio="/audio/audio-sequencia-de-coleta.mp3?v=6">▶ Sequência (narração)</button>
         </div>
       </section>
 
-      <!-- QUEBRA-CABEÇA: TUBO ↔ APLICAÇÃO -->
       <section id="tab-aplicacoes" class="tab">
         <h2>Tubos & Aplicações</h2>
         <p>Associe cada tubo à sua finalidade/exemplos.</p>
@@ -271,7 +243,6 @@
         </div>
       </section>
 
-      <!-- TABELAS INFORMATIVAS -->
       <section id="tab-tabelas" class="tab">
         <h2>Tabelas de Referência (Informativas)</h2>
         <div class="tables">
@@ -305,7 +276,6 @@
         <div class="tip">*Valores variam por método/kit/laboratório. Uso apenas didático.*</div>
       </section>
 
-      <!-- RELATÓRIO -->
       <section id="tab-relatorio" class="tab">
         <h2>Relatório de Desempenho</h2>
         <div id="relato"></div>
@@ -313,11 +283,9 @@
       </section>
     </div>
 
-    <!-- COLUNA DIREITA: Painel Tutor (sempre visível) -->
     <aside class="tab box" style="height: fit-content;">
       <div class="row" style="gap:10px; align-items:center;">
-        <!-- CAMINHO CORRIGIDO -->
-        <img src="assets/branding/avatar-tutor.png?v=3" alt="Tutor" style="width:48px;height:48px;border-radius:50%;object-fit:cover" onerror="this.style.display='none'">
+        <img src="/assets/branding/avatar-tutor.png?v=6" alt="Tutor" style="width:48px;height:48px;border-radius:50%;object-fit:cover" onerror="this.style.display='none'">
         <h3 style="margin:0">Tutor IA</h3>
       </div>
       <div id="tutor-feed" style="margin-top:8px;max-height:240px;overflow:auto;"></div>
@@ -334,13 +302,11 @@
       <small>© 2025 • Material educacional. Não substitui treinamento supervisionado.</small>
     </div>
     <div class="right">
-      <!-- CAMINHO CORRIGIDO -->
-      <img src="assets/branding/logo-haras.png?v=3" alt="HarasTech" onerror="this.style.display='none'"/>
+      <img src="/assets/branding/logo-haras.png?v=6" alt="HarasTech" onerror="this.style.display='none'"/>
       <small>Desenvolvido por HarasTech • <a href="mailto:harastech@outlook.com">harastech@outlook.com</a></small>
     </div>
   </footer>
 
-  <!-- Modal de Configurações -->
   <dialog id="settings">
     <h3>Configurações</h3>
     <label class="row">
@@ -359,14 +325,11 @@
     </div>
   </dialog>
 
-  <!-- JS principal - CAMINHO CORRIGIDO -->
-  <script src="scripts.js?v=3" defer></script>
-
-  <!-- Service Worker - CAMINHO CORRIGIDO -->
+  <script src="/scripts.js?v=6" defer></script>
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', ()=> {
-        navigator.serviceWorker.register('sw.js?v=3').catch(()=>{});
+        navigator.serviceWorker.register('/sw.js?v=6').catch(()=>{});
       });
     }
   </script>
