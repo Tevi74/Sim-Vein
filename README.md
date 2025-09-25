@@ -1,32 +1,27 @@
 # Sim-Vein • Simulador de Coleta
 
-Este repositório contém o PWA estático **Sim-Vein**, um simulador educacional de coleta laboratorial com suporte a PWA, Service Worker e manifest.
+Aplicação PWA estática de simulação de coleta laboratorial.
 
----
+## Estrutura
 
-## 🚀 Estrutura do Projeto
+- index.html  
+- styles.css  
+- scripts.js  
+- sw.js  
+- manifest.webmanifest  
+- vercel.json  
+- /public/assets  
+- /public/audio  
 
-├── index.html
-├── styles.css
-├── scripts.js
-├── sw.js
-├── manifest.webmanifest
-├── vercel.json
-├── /public
-│ ├── /assets
-│ │ ├── /branding
-│ │ │ └── (logos, avatar-tutor, etc.)
-│ │ ├── /tubes
-│ │ │ └── (imagens dos tubos)
-│ │ └── arm-360.jpg
-│ ├── /audio
-│ │ └── (mp3 de narrações e sons)
+## Deploy na Vercel
 
+1. Importar o repositório no Vercel.  
+2. Framework Preset: Other  
+3. Build Command: (deixar vazio)  
+4. Output Directory: .  
+5. Deploy  
 
-📌 **Atenção:**  
-No código o caminho usado é `audio/...`.  
-Se sua pasta estiver como `audios/`, renomeie para `audio/` (singular).
+## Contato
 
----
-
-## ⚡ Deploy na Vercel
+Desenvolvido por HarasTech  
+harastech@outlook.com
