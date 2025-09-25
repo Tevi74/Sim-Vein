@@ -12,17 +12,39 @@
   const dlg = $('#settings');
   $('#btn-settings')?.addEventListener('click',()=>dlg.showModal());
   $('#close-settings')?.addEventListener('click',()=>dlg.close());
-  $('#save-settings')?.addEventListener('click',()=>dlg.close());
 
   const ambient = $('#audio-ambiente');
   const toggleAmb = $('#toggle-ambiente');
-  if (ambient) ambient.volume = 0.35;
-  if (toggleAmb && ambient){
-    toggleAmb.addEventListener('change',()=>{
-      if (toggleAmb.checked){ ambient.play().catch(()=>{}); ambient.muted=false; }
-      else { ambient.pause(); ambient.muted=true; }
-    });
+  const ambientVol = $('#ambient-vol');
+  const testWelcome = $('#test-welcome');
+
+  function loadPrefs(){
+    const on = localStorage.getItem('amb_on');
+    const vol = localStorage.getItem('amb_vol');
+    if (toggleAmb) toggleAmb.checked = on === '1';
+    if (ambientVol && vol) ambientVol.value = vol;
+    applyAmbient();
   }
+  function applyAmbient(){
+    if (!ambient) return;
+    ambient.volume = (ambientVol? ambientVol.value : 35)/100;
+    if (toggleAmb && toggleAmb.checked){
+      ambient.muted = false; ambient.play().catch(()=>{});
+    } else {
+      ambient.pause(); ambient.muted = true;
+    }
+  }
+  toggleAmb?.addEventListener('change',applyAmbient);
+  ambientVol?.addEventListener('input',applyAmbient);
+  $('#save-settings')?.addEventListener('click',()=>{
+    localStorage.setItem('amb_on', toggleAmb?.checked ? '1':'0');
+    if (ambientVol) localStorage.setItem('amb_vol', ambientVol.value);
+    dlg.close();
+  });
+  testWelcome?.addEventListener('click',()=>{
+    const a = new Audio('/public/audios/audio-boas-vindas.mp3'); a.play().catch(()=>{});
+  });
+  loadPrefs();
 
   let fxEl = new Audio();
   let fxBtn = null;
@@ -90,16 +112,16 @@
   const hsText = $('#hs-text');
   $$('.hotspot').forEach(h=>{
     h.addEventListener('click',()=>{
-      if (hsTitle) hsTitle.textContent = h.getAttribute('data-title')||'';
-      if (hsText) hsText.textContent = h.getAttribute('data-text')||'';
-      if (panel) panel.hidden=false;
+      hsTitle.textContent = h.getAttribute('data-title')||'';
+      hsText.textContent = h.getAttribute('data-text')||'';
+      panel.hidden=false;
     });
   });
   const img360 = $('#arm360');
   const missing360 = $('#missing360');
   if (img360){
-    img360.addEventListener('error',()=>{ if(missing360) missing360.hidden=false; });
-    img360.addEventListener('load',()=>{ if(missing360) missing360.hidden=true; if(sky) sky.setAttribute('src','#arm360'); });
+    img360.addEventListener('error',()=>{ missing360.hidden=false; });
+    img360.addEventListener('load',()=>{ missing360.hidden=true; if(sky) sky.setAttribute('src','#arm360'); });
   }
 
   const examesBox = $('#exames');
@@ -121,13 +143,14 @@
   }
 
   const dispTip = $('#disp-tip');
+  const dispCards = $('#disp-cards');
   $$('input[name="disp"]').forEach(r=>{
     r.addEventListener('change',()=>{
-      const v=r.value;
-      if (!dispTip) return;
-      if (v==='agulha') dispTip.textContent='Agulha: adultos com veias palpáveis e bom fluxo.';
-      if (v==='scalp') dispTip.textContent='Scalp: crianças, idosos, veias frágeis ou dificeis.';
-      if (v==='cateter') dispTip.textContent='Cateter periférico: acesso prolongado/coletas seriadas.';
+      dispCards.querySelectorAll('.card').forEach(c=>c.classList.remove('selected'));
+      r.closest('.card')?.classList.add('selected');
+      if (r.value==='agulha') dispTip.textContent='Agulha: adultos com veias palpáveis e bom fluxo.';
+      if (r.value==='scalp')  dispTip.textContent='Scalp: crianças, idosos, veias frágeis/difíceis.';
+      if (r.value==='cateter')dispTip.textContent='Cateter periférico: acesso prolongado/coletas seriadas.';
     });
   });
 
@@ -136,8 +159,10 @@
   const feedback = $('#quiz-feedback');
   const btnValidate = $('#btn-validate');
   const btnReset = $('#btn-reset');
+
   function dragSetup(img){ img.addEventListener('dragstart',e=>{ e.dataTransfer.setData('text/plain', img.dataset.id); }); }
   $$('.tube').forEach(d=>dragSetup(d));
+
   if (drop){
     drop.addEventListener('dragover',e=>{e.preventDefault(); drop.classList.add('empty');});
     drop.addEventListener('dragleave',()=>drop.classList.remove('empty'));
@@ -158,11 +183,14 @@
       if (el) bank.appendChild(el);
     });
   }
-  function currentOrder(){ return Array.from(drop.querySelectorAll('.tube')).map(t=>t.dataset.id); }
+
+  function idNum(id){ const m=/^(\d+)-/.exec(id||''); return m? Number(m[1]) : NaN; }
+  function currentOrder(){ return Array.from(drop.querySelectorAll('.tube')).map(t=>idNum(t.dataset.id)); }
   function expectedOrder(){
-    const all=['1-hemocultura','2-citrato','3-vhs','4-soro','5-heparina','6-edta','7-fluoreto'];
-    return all.filter(id=>document.querySelector('.tube[data-id="'+id+'"]'));
+    const all=[1,2,3,4,5,6,7];
+    return all.filter(n=>document.querySelector('.tube[data-id="'+n+'-'+(['','citrato','vhs','soro','heparina','edta','fluoreto'][n-1]||'')+'"]') || document.querySelector('.tube[data-id^="'+n+'-"]'));
   }
+
   btnValidate?.addEventListener('click',()=>{
     const now=currentOrder();
     const goal=expectedOrder();
@@ -192,7 +220,7 @@
         if (s.dataset.accept===key){
           s.classList.add('correct');
           const piece = left.querySelector('.piece[data-key="'+key+'"]');
-          if (piece){ s.textContent = s.textContent; piece.remove(); }
+          if (piece){ piece.remove(); }
         } else {
           s.classList.add('hover');
           setTimeout(()=>s.classList.remove('hover'),400);
@@ -225,22 +253,24 @@
   const tutorAsk = $('#tutor-ask');
   const tutorInput = $('#tutor-input');
   const tutorCorrigir = $('#tutor-corrigir');
+
   function pushTutor(role,text){
-    if (!tutorFeed) return;
     const msg=document.createElement('div');
     msg.style.marginBottom='8px';
     msg.innerHTML = '<b>'+role+':</b> '+text;
     tutorFeed.appendChild(msg);
     tutorFeed.scrollTop = tutorFeed.scrollHeight;
   }
+  pushTutor('Tutor','Digite "quiz" para iniciar, ou clique em "Corrigir sequência".');
+
   const quiz = [
     {q:'Ordem correta dos tubos?', a:'hemocultura>citrato>soro>heparina>edta>fluoreto'},
     {q:'Ângulo de punção recomendado (°)?', a:'30-45'},
     {q:'Tempo máximo de garrote (s)?', a:'60'}
   ];
   let qi=-1;
-  pushTutor('Tutor','Digite "quiz" para iniciar perguntas rápidas ou peça "Corrigir sequência".');
-  tutorAsk?.addEventListener('click',()=>{
+
+  function tutorSend(){
     const text=tutorInput.value.trim();
     if(!text) return;
     pushTutor('Você', text);
@@ -255,16 +285,19 @@
       pushTutor('Tutor','Ok.');
     }
     tutorInput.value='';
-  });
+  }
+  tutorAsk?.addEventListener('click',tutorSend);
+  tutorInput?.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); tutorSend(); }});
+
   tutorCorrigir?.addEventListener('click',()=>{
-    const now = Array.from(document.querySelectorAll('#tube-drop .tube')).map(t=>t.dataset.id);
-    const goal = (function(){const all=['1-hemocultura','2-citrato','3-vhs','4-soro','5-heparina','6-edta','7-fluoreto'];return all.filter(id=>document.querySelector('.tube[data-id="'+id+'"]'));})();
+    const now = Array.from(document.querySelectorAll('#tube-drop .tube')).map(t=>idNum(t.dataset.id));
+    const goal = expectedOrder();
     if (!now.length){ pushTutor('Tutor','Arraste os tubos para a área e clique em Validar.'); return; }
     const dicas=[];
-    if (now[0]!=='1-hemocultura' && document.querySelector('.tube[data-id="1-hemocultura"]')) dicas.push('Hemocultura primeiro.');
-    if (now.indexOf('2-citrato')>now.indexOf('4-soro')) dicas.push('Citrato deve vir antes de Soro.');
-    if (now.indexOf('6-edta')<now.indexOf('4-soro')) dicas.push('Soro antes de EDTA.');
-    if (!dicas.length) pushTutor('Tutor','Sequência parece correta ou quase correta.');
-    else pushTutor('Tutor', dicas.join(' '));
+    if (goal[0]===1 && now[0]!==1) dicas.push('Hemocultura primeiro.');
+    const pos = n => now.indexOf(n);
+    if (pos(2)>pos(4) && pos(4)!==-1 && pos(2)!==-1) dicas.push('Citrato antes de Soro.');
+    if (pos(6)<pos(4) && pos(6)!==-1 && pos(4)!==-1) dicas.push('Soro antes de EDTA.');
+    pushTutor('Tutor', dicas.length ? dicas.join(' ') : 'Sequência parece correta ou quase correta.');
   });
 })();
