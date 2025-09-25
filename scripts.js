@@ -364,58 +364,102 @@
     });
   }
 
-  const glossData = [
-    {k:'Eritrócito', v:'Célula que transporta oxigênio.'},
-    {k:'Hemoglobina', v:'Proteína no eritrócito que carrega O₂ e CO₂.'},
-    {k:'Plaquetas', v:'Fragmentos celulares que participam da coagulação.'},
-    {k:'Neutrófilos', v:'Defesa contra bactérias; primeira linha da imunidade inata.'},
-    {k:'Linfócitos T', v:'Coordenam a resposta imune celular.'},
-    {k:'Linfócitos B', v:'Produzem anticorpos (imunidade humoral).'},
-    {k:'Eosinófilos', v:'Defesa contra parasitas e alergias.'},
-    {k:'Basófilos', v:'Liberam histamina em reações alérgicas.'},
-    {k:'Blastos', v:'Células imaturas; presença no sangue sugere leucemia.'},
-    {k:'Creatinina', v:'Marcador de função renal.'},
-    {k:'Ureia', v:'Produto do metabolismo proteico; avalia função renal.'},
-    {k:'AST (TGO)', v:'Enzima hepática; aumenta em lesão hepática e muscular.'},
-    {k:'ALT (TGP)', v:'Enzima hepática mais específica de fígado.'},
-    {k:'Bilirrubina', v:'Pigmento da degradação da Hb; aumento causa icterícia.'},
-    {k:'LDL', v:'Colesterol “ruim”, aterogênico.'},
-    {k:'HDL', v:'Colesterol “bom”, efeito protetor.'},
-    {k:'Troponina', v:'Marcador de necrose miocárdica.'},
-    {k:'Triglicerídeos', v:'Gorduras circulantes; risco CV.'},
-    {k:'pH', v:'Acidez/alcalinidade do sangue.'},
-    {k:'pCO₂', v:'Avalia ventilação pulmonar.'},
-    {k:'HCO₃⁻', v:'Componente metabólico/renal do equilíbrio ácido-básico.'},
-    {k:'pO₂', v:'Oxigenação arterial.'},
-    {k:'SatO₂', v:'% de Hb ligada ao O₂.'},
-    {k:'Punção venosa', v:'Coleta em veia periférica.'},
-    {k:'Punção arterial', v:'Coleta em artéria (radial) p/ gasometria.'},
-    {k:'Garrote', v:'Faixa para dilatar a veia; usar ≤60s.'},
-    {k:'Assepsia', v:'Limpeza com antisséptico antes da coleta.'},
-    {k:'Ordem de coleta', v:'Citrato → Soro → Heparina → EDTA → Fluoreto; com hemocultura no início, se houver.'},
-    {k:'Vacutainer', v:'Sistema fechado com agulha dupla e tubos a vácuo.'}
+  const glossGroups = [
+    {
+      g:'Hemato-Imune',
+      items:[
+        {k:'Eritrócito', v:'Célula que transporta oxigênio.'},
+        {k:'Hemoglobina', v:'Proteína dentro do eritrócito que carrega O₂ e CO₂.'},
+        {k:'Plaquetas (trombócitos)', v:'Fragmentos celulares que participam da coagulação.'},
+        {k:'Neutrófilos', v:'Defesa contra bactérias, primeira linha da imunidade inata.'},
+        {k:'Linfócitos T', v:'Coordenam a resposta imune celular.'},
+        {k:'Linfócitos B', v:'Produzem anticorpos.'},
+        {k:'Eosinófilos', v:'Defesa contra parasitas e alergias.'},
+        {k:'Basófilos', v:'Liberam histamina em reações alérgicas.'},
+        {k:'Blastos', v:'Células jovens/imaturoas no sangue; presença sugere leucemia.'}
+      ]
+    },
+    {
+      g:'Bioquímica Clínica',
+      items:[
+        {k:'Creatinina', v:'Marcador da função renal.'},
+        {k:'Ureia', v:'Produto do metabolismo proteico; avalia função renal.'},
+        {k:'TGO (AST)', v:'Enzima hepática que aumenta em lesão do fígado e músculo.'},
+        {k:'TGP (ALT)', v:'Enzima hepática mais específica para fígado.'},
+        {k:'Bilirrubina', v:'Pigmento da degradação da hemoglobina; aumento causa icterícia.'},
+        {k:'Colesterol LDL', v:'Colesterol “ruim”, ligado à aterosclerose.'},
+        {k:'Colesterol HDL', v:'Colesterol “bom”, efeito protetor.'},
+        {k:'Troponina', v:'Marcador de necrose do músculo cardíaco.'},
+        {k:'Triglicerídeos', v:'Gordura circulante, associada a risco cardiovascular.'}
+      ]
+    },
+    {
+      g:'Gasometria',
+      items:[
+        {k:'pH', v:'Indica acidez ou alcalinidade do sangue.'},
+        {k:'pCO₂', v:'Avalia ventilação pulmonar (respiração).'},
+        {k:'HCO₃⁻', v:'Parâmetro metabólico/renal do equilíbrio ácido-básico.'},
+        {k:'pO₂', v:'Mede oxigenação no sangue arterial.'},
+        {k:'SatO₂', v:'Porcentagem de hemoglobina ligada ao oxigênio.'}
+      ]
+    },
+    {
+      g:'Coleta e Dispositivos',
+      items:[
+        {k:'Punção venosa', v:'Introdução da agulha em veia periférica para coleta de sangue.'},
+        {k:'Punção arterial', v:'Coleta diretamente da artéria (geralmente radial) para gasometria.'},
+        {k:'Torniquete/garrote', v:'Faixa para dilatar a veia e facilitar punção.'},
+        {k:'Assepsia', v:'Limpeza com álcool 70% ou antisséptico antes da coleta.'},
+        {k:'Ordem de coleta', v:'Citrato → Soro → Heparina → EDTA → Fluoreto; com hemocultura no início, se houver.'},
+        {k:'Seringa', v:'Instrumento graduado com êmbolo para aspirar sangue.'},
+        {k:'Agulha hipodérmica', v:'Agulha acoplada à seringa para punção venosa.'},
+        {k:'Agulha scalp', v:'“Butterfly”; usada em veias frágeis ou pacientes pediátricos/geriátricos.'},
+        {k:'Jelco (PIV)', v:'Cateter periférico para coleta ou infusão contínua.'},
+        {k:'Vacutainer', v:'Sistema fechado com agulha dupla e tubos a vácuo.'},
+        {k:'Capilar', v:'Vidro/plástico para testes capilares e hematócrito.'},
+        {k:'Sonda arterial heparinizada', v:'Específica para gasometria arterial.'}
+      ]
+    }
   ];
-  const gloss = $('#tutor-gloss');
+
+  const glossWrap = $('#tutor-gloss-groups');
   const tp = $('#tutor-pop');
   const tpTitle = $('#tp-title');
   const tpText = $('#tp-text');
   const tpClose = $('#tp-close');
 
-  if (gloss){
-    gloss.innerHTML = '';
-    glossData.forEach(item=>{
-      const b=document.createElement('button');
-      b.className='btn ghost';
-      b.textContent=item.k;
-      b.addEventListener('click',()=>{
-        tpTitle.textContent=item.k;
-        tpText.textContent=item.v;
-        tp.showModal();
+  function renderGloss(){
+    if (!glossWrap) return;
+    glossWrap.innerHTML = '';
+    glossGroups.forEach(group=>{
+      const box=document.createElement('div');
+      box.className='box';
+      const h=document.createElement('h4');
+      h.textContent=group.g;
+      box.appendChild(h);
+      const grid=document.createElement('div');
+      grid.style.display='grid';
+      grid.style.gridTemplateColumns='repeat(auto-fill,minmax(220px,1fr))';
+      grid.style.gap='10px';
+      group.items.forEach(item=>{
+        const card=document.createElement('button');
+        card.className='card';
+        card.style.justifyContent='flex-start';
+        card.style.textAlign='left';
+        card.innerHTML='<span>'+item.k+'</span>';
+        card.addEventListener('click',()=>{
+          tpTitle.textContent=item.k;
+          tpText.textContent=item.v;
+          tp.showModal();
+        });
+        grid.appendChild(card);
       });
-      gloss.appendChild(b);
+      box.appendChild(grid);
+      glossWrap.appendChild(box);
     });
   }
+  renderGloss();
   tpClose?.addEventListener('click',()=>tp.close());
 })();
 
-      
+ 
