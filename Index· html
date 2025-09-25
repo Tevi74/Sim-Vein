@@ -3,17 +3,27 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Base: força todas as URLs relativas a partirem da raiz -->
+  <base href="/" />
+
   <title>PPA SimVein • Simulador de Coleta</title>
   <meta name="theme-color" content="#0d1b2a" />
-  <link rel="manifest" href="./manifest.webmanifest" />
-  <link rel="stylesheet" href="./styles.css" />
+
+  <!-- PWA / Manifest -->
+  <link rel="manifest" href="/manifest.webmanifest?v=3" />
+
+  <!-- CSS principal -->
+  <link rel="stylesheet" href="/styles.css?v=3" />
+  
+  <!-- A-Frame (cena 360) -->
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
 </head>
 <body>
   <header class="app-header">
     <div class="brand">
-      <img src="public/assets/branding/logo-sim.png" alt="PPA SimVein" onerror="this.style.display='none'"/>
-      <img src="public/assets/branding/logo-capacita.png" alt="Capacita+" onerror="this.style.display='none'"/>
+      <img src="/public/assets/branding/logo-sim.png" alt="PPA SimVein" onerror="this.style.display='none'"/>
+      <img src="/public/assets/branding/logo-capacita.png" alt="Capacita+" onerror="this.style.display='none'"/>
     </div>
     <nav class="nav">
       <button data-tab="paciente" class="btn ghost">Ficha</button>
@@ -29,267 +39,287 @@
     </nav>
   </header>
 
-  <!-- Áudio ambiente opcional -->
-  <audio id="audio-ambiente" src="public/audio/audio-ambiente.mp3" loop preload="auto"></audio>
+  <!-- Áudio ambiente (opcional) -->
+  <audio id="audio-ambiente" src="/public/audio/audio-ambiente.mp3?v=3" loop preload="auto"></audio>
 
-  <!-- Barra de avisos (imagem 360 ausente, etc.) -->
+  <!-- Avisos (ex.: imagem 360 ausente) -->
   <div id="banner" class="banner" hidden></div>
 
-  <main class="content">
-    <!-- FICHA DO PACIENTE -->
-    <section id="tab-paciente" class="tab active">
-      <h2>Ficha do Paciente</h2>
-      <form id="form-paciente" class="form">
-        <div class="grid-2">
-          <label>Nome
-            <input name="nome" required placeholder="Paciente Exemplo"/>
-          </label>
-          <label>Data de Nascimento
-            <input name="nasc" type="date" required/>
-          </label>
-          <label>Sexo
-            <select name="sexo">
-              <option>F</option><option>M</option><option>Outro</option>
-            </select>
-          </label>
-          <label>Alergias
-            <input name="alergias" placeholder="Sem alergias"/>
-          </label>
-        </div>
-        <label>Braço preferencial
-          <select name="braco"><option>Direito</option><option>Esquerdo</option></select>
-        </label>
-        <div class="row">
-          <label class="check"><input type="checkbox" name="id1"/> Documento conferido</label>
-          <label class="check"><input type="checkbox" name="id2"/> Confirmação verbal</label>
-          <label class="check"><input type="checkbox" name="consent"/> Consentimento informado</label>
-        </div>
-        <button type="button" id="btn-salvar-paciente" class="btn">Salvar ficha</button>
-      </form>
-      <div class="tip">Dica: utilize dois identificadores (documento + confirmação verbal).</div>
-    </section>
-
-    <!-- SOLICITAÇÃO MÉDICA -->
-    <section id="tab-solicitacao" class="tab">
-      <h2>Solicitação Médica</h2>
-      <p>Selecione os exames solicitados (exemplo didático):</p>
-      <div id="exames" class="chips">
-        <label><input type="checkbox" value="TP/TTPa"/> TP / TTPa</label>
-        <label><input type="checkbox" value="Hemograma"/> Hemograma</label>
-        <label><input type="checkbox" value="Glicose"/> Glicose</label>
-        <label><input type="checkbox" value="Eletrólitos"/> Eletrólitos</label>
-        <label><input type="checkbox" value="Sorologia/Hormônios"/> Sorologia / Hormônios</label>
-        <label><input type="checkbox" value="Hemocultura"/> Hemocultura</label>
-      </div>
-      <button id="btn-deduzir" class="btn">Deduzir tubos necessários</button>
-      <div id="deduzidos" class="pill"></div>
-      <div class="audio-controls">
-        <button class="btn ghost" data-audio="public/audio/audio-boas-vindas.mp3">▶ Boas-vindas</button>
-      </div>
-    </section>
-
-    <!-- BIOSSEGURANÇA -->
-    <section id="tab-biosseg" class="tab">
-      <h2>Biossegurança (Pré / Durante / Pós)</h2>
-      <div class="grid-3 checklist">
-        <div>
-          <h3>Pré</h3>
-          <label class="check"><input type="checkbox" data-score="epi"/> EPIs completos</label>
-          <label class="check"><input type="checkbox" data-score="maos"/> Higienização das mãos</label>
-          <label class="check"><input type="checkbox" data-score="bancada"/> Bancada organizada</label>
-        </div>
-        <div>
-          <h3>Durante</h3>
-          <label class="check"><input type="checkbox" data-score="antissepsia"/> Antissepsia correta</label>
-          <label class="check"><input type="checkbox" data-score="garrote"/> Garrote ≤ 60s</label>
-          <label class="check"><input type="checkbox" data-score="perfuro"/> Caixa perfuro-cortante</label>
-        </div>
-        <div>
-          <h3>Pós</h3>
-          <label class="check"><input type="checkbox" data-score="rotulo"/> Rotulagem correta</label>
-          <label class="check"><input type="checkbox" data-score="compressao"/> Compressão local</label>
-          <label class="check"><input type="checkbox" data-score="descarte"/> Descarte adequado</label>
-        </div>
-      </div>
-      <div class="audio-controls">
-        <button class="btn ghost" data-audio="public/audio/audio-erros.mp3">▶ Erros comuns</button>
-      </div>
-    </section>
-
-    <!-- DISPOSITIVO -->
-    <section id="tab-dispositivo" class="tab">
-      <h2>Seleção de Dispositivo</h2>
-      <div class="grid-3 cards">
-        <label class="card"><input type="radio" name="disp" value="agulha"/><span>Agulha</span></label>
-        <label class="card"><input type="radio" name="disp" value="scalp"/><span>Scalp (borboleta)</span></label>
-        <label class="card"><input type="radio" name="disp" value="cateter"/><span>Cateter periférico</span></label>
-      </div>
-      <div class="tip">Escolha conforme veia, duração e fragilidade do paciente.</div>
-      <div class="audio-controls">
-        <button class="btn ghost" data-audio="public/audio/audio-selecao-de-tubos.mp3">▶ Seleção de tubos (narração)</button>
-      </div>
-    </section>
-
-    <!-- PUNIÇÃO: GARROTE + ÂNGULO + CENA 360 -->
-    <section id="tab-punicao" class="tab">
-      <h2>Garrote & Ângulo</h2>
-
-      <div class="row gap">
-        <div class="box">
-          <h3>Garrote</h3>
-          <div class="row">
-            <button id="garrote-start" class="btn">Iniciar</button>
-            <button id="garrote-stop" class="btn ghost" disabled>Parar</button>
-            <div id="garrote-timer" class="timer">00:00</div>
+  <main class="content" style="grid-template-columns: 1fr 340px; gap: 12px;">
+    <!-- COLUNA ESQUERDA: conteúdo principal -->
+    <div>
+      <!-- FICHA DO PACIENTE -->
+      <section id="tab-paciente" class="tab active">
+        <h2>Ficha do Paciente</h2>
+        <form id="form-paciente" class="form">
+          <div class="grid-2">
+            <label>Nome
+              <input name="nome" required placeholder="Paciente Exemplo"/>
+            </label>
+            <label>Data de Nascimento
+              <input name="nasc" type="date" required/>
+            </label>
+            <label>Sexo
+              <select name="sexo">
+                <option>F</option><option>M</option><option>Outro</option>
+              </select>
+            </label>
+            <label>Alergias
+              <input name="alergias" placeholder="Sem alergias"/>
+            </label>
           </div>
-          <div id="garrote-alert" class="alert" hidden>⚠️ Garrote excedeu 60s!</div>
+          <label>Braço preferencial
+            <select name="braco"><option>Direito</option><option>Esquerdo</option></select>
+          </label>
+          <div class="row">
+            <label class="check"><input type="checkbox" name="id1"/> Documento conferido</label>
+            <label class="check"><input type="checkbox" name="id2"/> Confirmação verbal</label>
+            <label class="check"><input type="checkbox" name="consent"/> Consentimento informado</label>
+          </div>
+          <button type="button" id="btn-salvar-paciente" class="btn">Salvar ficha</button>
+        </form>
+      </section>
+
+      <!-- SOLICITAÇÃO MÉDICA -->
+      <section id="tab-solicitacao" class="tab">
+        <h2>Solicitação Médica</h2>
+        <p>Selecione os exames solicitados:</p>
+        <div id="exames" class="chips">
+          <label><input type="checkbox" value="TP/TTPa"/> TP / TTPa</label>
+          <label><input type="checkbox" value="Hemograma"/> Hemograma</label>
+          <label><input type="checkbox" value="Glicose"/> Glicose</label>
+          <label><input type="checkbox" value="Eletrólitos"/> Eletrólitos</label>
+          <label><input type="checkbox" value="Sorologia/Hormônios"/> Sorologia / Hormônios</label>
+          <label><input type="checkbox" value="Hemocultura"/> Hemocultura</label>
+          <label><input type="checkbox" value="VHS"/> VHS</label>
+        </div>
+        <button id="btn-deduzir" class="btn">Deduzir tubos necessários</button>
+        <div id="deduzidos" class="pill"></div>
+        <div class="audio-controls">
+          <button class="btn ghost" data-audio="/public/audio/audio-boas-vindas.mp3?v=3">▶ Boas-vindas</button>
+        </div>
+      </section>
+
+      <!-- BIOSSEGURANÇA -->
+      <section id="tab-biosseg" class="tab">
+        <h2>Biossegurança (Pré / Durante / Pós)</h2>
+        <div class="grid-3 checklist">
+          <div>
+            <h3>Pré</h3>
+            <label class="check"><input type="checkbox" data-score="epi"/> EPIs completos</label>
+            <label class="check"><input type="checkbox" data-score="maos"/> Higienização das mãos</label>
+            <label class="check"><input type="checkbox" data-score="bancada"/> Bancada organizada</label>
+          </div>
+          <div>
+            <h3>Durante</h3>
+            <label class="check"><input type="checkbox" data-score="antissepsia"/> Antissepsia correta</label>
+            <label class="check"><input type="checkbox" data-score="garrote"/> Garrote ≤ 60s</label>
+            <label class="check"><input type="checkbox" data-score="perfuro"/> Caixa perfuro-cortante</label>
+          </div>
+          <div>
+            <h3>Pós</h3>
+            <label class="check"><input type="checkbox" data-score="rotulo"/> Rotulagem correta</label>
+            <label class="check"><input type="checkbox" data-score="compressao"/> Compressão local</label>
+            <label class="check"><input type="checkbox" data-score="descarte"/> Descarte adequado</label>
+          </div>
+        </div>
+        <div class="audio-controls">
+          <button class="btn ghost" data-audio="/public/audio/audio-erros.mp3?v=3">▶ Erros comuns</button>
+        </div>
+      </section>
+
+      <!-- DISPOSITIVO -->
+      <section id="tab-dispositivo" class="tab">
+        <h2>Seleção de Dispositivo</h2>
+        <div class="grid-3 cards">
+          <label class="card"><input type="radio" name="disp" value="agulha"/><span>Agulha</span></label>
+          <label class="card"><input type="radio" name="disp" value="scalp"/><span>Scalp (borboleta)</span></label>
+          <label class="card"><input type="radio" name="disp" value="cateter"/><span>Cateter periférico</span></label>
+        </div>
+        <div class="audio-controls">
+          <button class="btn ghost" data-audio="/public/audio/audio-selecao-de-tubos.mp3?v=3">▶ Seleção de tubos (narração)</button>
+        </div>
+      </section>
+
+      <!-- PUNIÇÃO: GARROTE + ÂNGULO + CENA 360 -->
+      <section id="tab-punicao" class="tab">
+        <h2>Garrote & Ângulo</h2>
+
+        <div class="row gap">
+          <div class="box">
+            <h3>Garrote</h3>
+            <div class="row">
+              <button id="garrote-start" class="btn">Iniciar</button>
+              <button id="garrote-stop" class="btn ghost" disabled>Parar</button>
+              <div id="garrote-timer" class="timer">00:00</div>
+            </div>
+            <div id="garrote-alert" class="alert" hidden>⚠️ Garrote excedeu 60s!</div>
+          </div>
+
+          <div class="box">
+            <h3>Ângulo da Punção</h3>
+            <input type="range" id="angle" min="0" max="90" value="30" />
+            <div>Ângulo: <span id="angle-val">30°</span></div>
+            <div id="angle-feedback" class="badge">Alvo: 30–45°</div>
+          </div>
         </div>
 
-        <div class="box">
-          <h3>Ângulo da Punção</h3>
-          <input type="range" id="angle" min="0" max="90" value="30" />
-          <div>Ângulo: <span id="angle-val">30°</span></div>
-          <div id="angle-feedback" class="badge">Alvo: 30–45°</div>
+        <div class="scene-360 box">
+          <h3>Seleção de Veia (360°)</h3>
+          <div id="missing360" class="alert" hidden>⚠️ Coloque <code>/public/assets/arm-360.jpg</code> (equiretangular 2:1).</div>
+
+          <a-scene embedded vr-mode-ui="enabled:false" renderer="antialias:true">
+            <a-assets>
+              <img id="arm360" src="/public/assets/arm-360.jpg?v=3" crossorigin="anonymous" />
+            </a-assets>
+            <a-sky id="sky" src="#arm360" rotation="0 -90 0"></a-sky>
+
+            <a-entity camera look-controls>
+              <a-entity cursor="rayOrigin: mouse" raycaster="objects: .hotspot"></a-entity>
+            </a-entity>
+
+            <!-- Hotspots (posições genéricas; ajuste depois) -->
+            <a-entity class="hotspot" position="0 1.6 -3"
+              geometry="primitive: sphere; radius: 0.06"
+              material="color:#2ec4b6; emissive:#2ec4b6; opacity:.85"
+              data-title="Mediana Cubital"
+              data-text="Geralmente mais estável; bom calibre e localização."></a-entity>
+
+            <a-entity class="hotspot" position="-0.8 1.5 -2.5"
+              geometry="primitive: sphere; radius: 0.06"
+              material="color:#6c63ff; emissive:#6c63ff; opacity:.85"
+              data-title="Cefálica"
+              data-text="Boa alternativa; atenção à rolagem."></a-entity>
+
+            <a-entity class="hotspot" position="0.8 1.5 -2.5"
+              geometry="primitive: sphere; radius: 0.06"
+              material="color:#f59f00; emissive:#f59f00; opacity:.85"
+              data-title="Basílica"
+              data-text="Mais medial; opte se as outras não forem viáveis."></a-entity>
+          </a-scene>
+
+          <div class="legend">
+            <span class="dot teal"></span> Mediana
+            <span class="dot purple"></span> Cefálica
+            <span class="dot amber"></span> Basílica
+          </div>
+
+          <div id="hotspot-panel" class="box" hidden>
+            <h4 id="hs-title">Veia</h4>
+            <p id="hs-text"></p>
+          </div>
         </div>
-      </div>
+      </section>
 
-      <div class="scene-360 box">
-        <h3>Seleção de Veia (360°)</h3>
-        <div id="missing360" class="alert" hidden>⚠️ Coloque <code>public/assets/arm-360.jpg</code> (equiretangular 2:1).</div>
-
-        <a-scene embedded vr-mode-ui="enabled:false" renderer="antialias:true">
-          <a-assets>
-            <img id="arm360" src="public/assets/arm-360.jpg" crossorigin="anonymous" />
-          </a-assets>
-          <a-sky id="sky" src="#arm360" rotation="0 -90 0"></a-sky>
-
-          <a-entity camera look-controls>
-            <a-entity cursor="rayOrigin: mouse" raycaster="objects: .hotspot"></a-entity>
-          </a-entity>
-
-          <!-- Hotspots (posições genéricas; ajuste depois) -->
-          <a-entity class="hotspot" position="0 1.6 -3"
-            geometry="primitive: sphere; radius: 0.06"
-            material="color:#2ec4b6; emissive:#2ec4b6; opacity:.85"
-            data-title="Mediana Cubital"
-            data-text="Geralmente mais estável; bom calibre e localização."></a-entity>
-
-          <a-entity class="hotspot" position="-0.8 1.5 -2.5"
-            geometry="primitive: sphere; radius: 0.06"
-            material="color:#6c63ff; emissive:#6c63ff; opacity:.85"
-            data-title="Cefálica"
-            data-text="Boa alternativa; atenção à rolagem."></a-entity>
-
-          <a-entity class="hotspot" position="0.8 1.5 -2.5"
-            geometry="primitive: sphere; radius: 0.06"
-            material="color:#f59f00; emissive:#f59f00; opacity:.85"
-            data-title="Basílica"
-            data-text="Mais medial; opte se as outras não forem viáveis."></a-entity>
-        </a-scene>
-
-        <div class="legend">
-          <span class="dot teal"></span> Mediana
-          <span class="dot purple"></span> Cefálica
-          <span class="dot amber"></span> Basílica
+      <!-- SEQUÊNCIA DE COLETA -->
+      <section id="tab-sequencia" class="tab">
+        <h2>Sequência de Coleta</h2>
+        <p>Arraste os tubos para a área em ordem correta e clique em <b>Validar</b>.</p>
+        <div class="quiz">
+          <div class="bank" id="tube-bank">
+            <img draggable="true" class="tube" data-id="1-hemocultura" src="/public/assets/tubes/hemocultura.png?v=3" alt="Hemocultura">
+            <img draggable="true" class="tube" data-id="2-citrato" src="/public/assets/tubes/citrato-azul.png?v=3" alt="Citrato (Azul)">
+            <!-- VHS só aparece se solicitado (scripts decide) -->
+            <img draggable="true" class="tube tube-vhs" data-id="3-vhs" src="/public/assets/tubes/vhs-preto.png?v=3" alt="VHS (Preto)" style="display:none">
+            <img draggable="true" class="tube" data-id="4-soro" src="/public/assets/tubes/soro-vermelho.png?v=3" alt="Soro (Vermelho/Amarelo)">
+            <img draggable="true" class="tube" data-id="5-heparina" src="/public/assets/tubes/heparina-verde.png?v=3" alt="Heparina (Verde)">
+            <img draggable="true" class="tube" data-id="6-edta" src="/public/assets/tubes/edta-roxo.png?v=3" alt="EDTA (Roxo)">
+            <img draggable="true" class="tube" data-id="7-fluoreto" src="/public/assets/tubes/fluoreto-cinza.png?v=3" alt="Fluoreto (Cinza)">
+          </div>
+          <div class="drop" id="tube-drop" aria-label="Área de Montagem"></div>
         </div>
-
-        <div id="hotspot-panel" class="box" hidden>
-          <h4 id="hs-title">Veia</h4>
-          <p id="hs-text"></p>
+        <div class="quiz-actions">
+          <button id="btn-reset" class="btn ghost">↺ Resetar</button>
+          <button id="btn-validate" class="btn">Validar</button>
         </div>
-      </div>
-    </section>
+        <p id="quiz-feedback" class="feedback"></p>
 
-    <!-- SEQUÊNCIA DE COLETA -->
-    <section id="tab-sequencia" class="tab">
-      <h2>Sequência de Coleta</h2>
-      <p>Arraste os tubos para a área em ordem correta e clique em <b>Validar</b>.</p>
-      <div class="quiz">
-        <div class="bank" id="tube-bank">
-          <img draggable="true" class="tube" data-id="1-hemocultura" src="public/assets/tubes/hemocultura.png" alt="Hemocultura">
-          <img draggable="true" class="tube" data-id="2-citrato" src="public/assets/tubes/citrato-azul.png" alt="Citrato (Azul)">
-          <img draggable="true" class="tube" data-id="3-soro" src="public/assets/tubes/soro-vermelho.png" alt="Soro (Vermelho/Amarelo)">
-          <img draggable="true" class="tube" data-id="4-heparina" src="public/assets/tubes/heparina-verde.png" alt="Heparina (Verde)">
-          <img draggable="true" class="tube" data-id="5-edta" src="public/assets/tubes/edta-roxo.png" alt="EDTA (Roxo)">
-          <img draggable="true" class="tube" data-id="6-fluoreto" src="public/assets/tubes/fluoreto-cinza.png" alt="Fluoreto (Cinza)">
+        <div class="audio-controls">
+          <button class="btn ghost" data-audio="/public/audio/audio-sequencia-de-coleta.mp3?v=3">▶ Sequência (narração)</button>
         </div>
-        <div class="drop" id="tube-drop" aria-label="Área de Montagem"></div>
-      </div>
-      <div class="quiz-actions">
-        <button id="btn-reset" class="btn ghost">↺ Resetar</button>
-        <button id="btn-validate" class="btn">Validar</button>
-      </div>
-      <p id="quiz-feedback" class="feedback"></p>
+      </section>
 
-      <div class="audio-controls">
-        <button class="btn ghost" data-audio="public/audio/audio-sequencia-de-coleta.mp3">▶ Sequência (narração)</button>
-      </div>
-    </section>
-
-    <!-- QUEBRA-CABEÇA: TUBO ↔ APLICAÇÃO -->
-    <section id="tab-aplicacoes" class="tab">
-      <h2>Tubos & Aplicações</h2>
-      <p>Associe cada tubo à sua finalidade/exemplos.</p>
-      <div class="puzzle">
-        <div class="left" id="puzzle-left">
-          <div class="piece" draggable="true" data-key="hemocultura">Hemocultura (Microbiologia)</div>
-          <div class="piece" draggable="true" data-key="citrato">Azul – Citrato (Coagulação: TP/TTPa)</div>
-          <div class="piece" draggable="true" data-key="soro">Vermelho/Amarelo – Soro (Bioquímica/Sorologia/Hormônios)</div>
-          <div class="piece" draggable="true" data-key="heparina">Verde – Heparina (Bioquímica/Eletrólitos)</div>
-          <div class="piece" draggable="true" data-key="edta">Roxo – EDTA (Hematologia: Hemograma)</div>
-          <div class="piece" draggable="true" data-key="fluoreto">Cinza – Fluoreto + EDTA (Glicose/Lactato)</div>
+      <!-- QUEBRA-CABEÇA: TUBO ↔ APLICAÇÃO -->
+      <section id="tab-aplicacoes" class="tab">
+        <h2>Tubos & Aplicações</h2>
+        <p>Associe cada tubo à sua finalidade/exemplos.</p>
+        <div class="puzzle">
+          <div class="left" id="puzzle-left">
+            <div class="piece" draggable="true" data-key="hemocultura">Hemocultura (Microbiologia)</div>
+            <div class="piece" draggable="true" data-key="citrato">Azul – Citrato (Coagulação: TP/TTPa)</div>
+            <div class="piece" draggable="true" data-key="soro">Vermelho/Amarelo – Soro (Bioquímica/Sorologia/Hormônios)</div>
+            <div class="piece" draggable="true" data-key="heparina">Verde – Heparina (Bioquímica/Eletrólitos)</div>
+            <div class="piece" draggable="true" data-key="edta">Roxo – EDTA (Hematologia: Hemograma)</div>
+            <div class="piece" draggable="true" data-key="fluoreto">Cinza – Fluoreto + EDTA (Glicose/Lactato)</div>
+            <div class="piece" draggable="true" data-key="vhs">Preto – VHS (Velocidade de Hemossedimentação)</div>
+          </div>
+          <div class="right" id="puzzle-right">
+            <div class="slot" data-accept="hemocultura">Microbiologia (bactérias/fungos)</div>
+            <div class="slot" data-accept="citrato">Coagulação (TP, TTPa)</div>
+            <div class="slot" data-accept="soro">Bioquímica / Sorologia / Hormônios</div>
+            <div class="slot" data-accept="heparina">Bioquímica / Eletrólitos</div>
+            <div class="slot" data-accept="edta">Hematologia (Hemograma)</div>
+            <div class="slot" data-accept="fluoreto">Glicose / Lactato (inibe glicólise)</div>
+            <div class="slot" data-accept="vhs">Velocidade de Hemossedimentação (VHS)</div>
+          </div>
         </div>
-        <div class="right" id="puzzle-right">
-          <div class="slot" data-accept="hemocultura">Microbiologia (bactérias/fungos)</div>
-          <div class="slot" data-accept="citrato">Coagulação (TP, TTPa)</div>
-          <div class="slot" data-accept="soro">Bioquímica / Sorologia / Hormônios</div>
-          <div class="slot" data-accept="heparina">Bioquímica / Eletrólitos</div>
-          <div class="slot" data-accept="edta">Hematologia (Hemograma)</div>
-          <div class="slot" data-accept="fluoreto">Glicose / Lactato (inibe glicólise)</div>
+      </section>
+
+      <!-- TABELAS INFORMATIVAS -->
+      <section id="tab-tabelas" class="tab">
+        <h2>Tabelas de Referência (Informativas)</h2>
+        <div class="tables">
+          <details open>
+            <summary>Hematologia</summary>
+            <ul>
+              <li>Hemoglobina (Hb): 12–16 g/dL (mulher), 13–18 g/dL (homem)</li>
+              <li>Hematócrito (Ht), Leucócitos, Plaquetas, VCM, HCM, CHCM …</li>
+            </ul>
+          </details>
+          <details>
+            <summary>Bioquímica & Eletrólitos</summary>
+            <ul>
+              <li>Glicose, Ureia, Creatinina, TGO/TGP, GGT, FA, Bilirrubinas</li>
+              <li>Na⁺, K⁺, Cl⁻, Ca²⁺, Mg²⁺, Fosfato …</li>
+            </ul>
+          </details>
+          <details>
+            <summary>Coagulação</summary>
+            <ul>
+              <li>TP/INR, TTPa, Fibrinogênio …</li>
+            </ul>
+          </details>
+          <details>
+            <summary>Sorologia / Hormônios</summary>
+            <ul>
+              <li>TSH/T4L, Beta-hCG, PSA, marcadores virais/hepáticos (varia por método)</li>
+            </ul>
+          </details>
         </div>
-      </div>
-    </section>
+        <div class="tip">*Valores variam por método/kit/laboratório. Uso apenas didático.*</div>
+      </section>
 
-    <!-- TABELAS INFORMATIVAS -->
-    <section id="tab-tabelas" class="tab">
-      <h2>Tabelas de Referência (Informativas)</h2>
-      <div class="tables">
-        <details open>
-          <summary>Hematologia</summary>
-          <ul>
-            <li>Hemoglobina (Hb): 12–16 g/dL (mulher), 13–18 g/dL (homem)</li>
-            <li>Hematócrito (Ht), Leucócitos, Plaquetas, VCM, HCM, CHCM …</li>
-          </ul>
-        </details>
-        <details>
-          <summary>Bioquímica & Eletrólitos</summary>
-          <ul>
-            <li>Glicose, Ureia, Creatinina, TGO/TGP, GGT, FA, Bilirrubinas</li>
-            <li>Na⁺, K⁺, Cl⁻, Ca²⁺, Mg²⁺, Fosfato …</li>
-          </ul>
-        </details>
-        <details>
-          <summary>Coagulação</summary>
-          <ul>
-            <li>TP/INR, TTPa, Fibrinogênio …</li>
-          </ul>
-        </details>
-        <details>
-          <summary>Sorologia / Hormônios</summary>
-          <ul>
-            <li>TSH/T4L, Beta-hCG, PSA, marcadores virais/hepáticos (varia por método)</li>
-          </ul>
-        </details>
-      </div>
-      <div class="tip">*Valores variam por método/kit/laboratório. Uso apenas didático.*</div>
-    </section>
+      <!-- RELATÓRIO -->
+      <section id="tab-relatorio" class="tab">
+        <h2>Relatório de Desempenho</h2>
+        <div id="relato"></div>
+        <button id="btn-gerar-relato" class="btn">Gerar Relatório</button>
+      </section>
+    </div>
 
-    <!-- RELATÓRIO -->
-    <section id="tab-relatorio" class="tab">
-      <h2>Relatório de Desempenho</h2>
-      <div id="relato"></div>
-      <button id="btn-gerar-relato" class="btn">Gerar Relatório</button>
-    </section>
+    <!-- COLUNA DIREITA: Painel Tutor (sempre visível) -->
+    <aside class="tab box" style="height: fit-content;">
+      <div class="row" style="gap:10px; align-items:center;">
+        <img src="/public/assets/branding/avatar-tutor.png?v=3" alt="Tutor" style="width:48px;height:48px;border-radius:50%;object-fit:cover" onerror="this.style.display='none'">
+        <h3 style="margin:0">Tutor IA</h3>
+      </div>
+      <div id="tutor-feed" style="margin-top:8px;max-height:240px;overflow:auto;"></div>
+      <div class="row" style="margin-top:8px">
+        <input id="tutor-input" placeholder="Peça um caso fictício ou tire uma dúvida…" style="flex:1;padding:8px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:#0c182b;color:#e6f0ff"/>
+        <button id="tutor-ask" class="btn">Perguntar</button>
+      </div>
+      <button id="tutor-corrigir" class="btn ghost" style="margin-top:8px">Corrigir agora</button>
+    </aside>
   </main>
 
   <footer class="app-footer">
@@ -297,12 +327,12 @@
       <small>© 2025 • Material educacional. Não substitui treinamento supervisionado.</small>
     </div>
     <div class="right">
-      <img src="public/assets/branding/logo-haras.png" alt="HarasTech" onerror="this.style.display='none'"/>
+      <img src="/public/assets/branding/logo-haras.png?v=3" alt="HarasTech" onerror="this.style.display='none'"/>
       <small>Desenvolvido por HarasTech • <a href="mailto:harastech@outlook.com">harastech@outlook.com</a></small>
     </div>
   </footer>
 
-  <!-- Configurações -->
+  <!-- Modal de Configurações -->
   <dialog id="settings">
     <h3>Configurações</h3>
     <label class="row">
@@ -312,21 +342,25 @@
     <label>OpenAI API Key (opcional – armazena localmente)
       <input type="password" id="openai-key" placeholder="sk-..." />
     </label>
+    <label>Assistant ID (opcional)
+      <input type="text" id="assistant-id" placeholder="asst_..." />
+    </label>
     <div class="row end">
       <button id="save-settings" class="btn">Salvar</button>
       <button id="close-settings" class="btn ghost">Fechar</button>
     </div>
   </dialog>
 
-  <script src="./scripts.js"></script>
+  <!-- JS principal -->
+  <script src="/scripts.js?v=3" defer></script>
+
+  <!-- Service Worker -->
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', ()=> {
-        navigator.serviceWorker.register('/sw.js').catch(()=>{});
+        navigator.serviceWorker.register('/sw.js?v=3').catch(()=>{});
       });
     }
   </script>
 </body>
 </html>
-
-  
