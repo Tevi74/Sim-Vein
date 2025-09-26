@@ -27,7 +27,6 @@
       <button data-tab="indices" class="btn ghost">Índices de Referência</button>
       <button data-tab="tutor" class="btn" style="background:#2ec4b6">Tutor-VemSim</button>
       <button id="btn-settings" class="btn ghost" title="Configurações">⚙️</button>
-      <button data-tab="trilha" class="btn">Trilha do Conhecimento</button>
     </nav>
   </header>
 
@@ -300,92 +299,300 @@
       <button id="tutor-corrigir" class="btn ghost" style="margin-top:8px">Corrigir sequência</button>
     </aside>
   </main>
-  <section id="tab-trilha" class="tab" hidden>
+  
+<section id="tab-trilha" class="tab" hidden>
   <h2>Trilha do Conhecimento</h2>
 
-  <div id="tree-step1" class="box">
-    <h3>1) Tipo de paciente</h3>
-    <div class="row">
-      <button class="btn ghost tree-opt" data-k="paciente" data-v="adulto">Adulto</button>
-      <button class="btn ghost tree-opt" data-k="paciente" data-v="crianca">Criança</button>
-      <button class="btn ghost tree-opt" data-k="paciente" data-v="idoso">Idoso</button>
-      <button class="btn ghost tree-opt" data-k="paciente" data-v="choque">Choque / Hipoperfusão</button>
-    </div>
-  </div>
+  <!-- Navegação rápida dentro da trilha -->
+  <nav class="pill-nav" aria-label="Navegação da trilha">
+    <a href="#mod-imuno">Imunologia e Sorologia</a>
+    <a href="#mod-micro">Microbiologia Clínica</a>
+    <a href="#mod-casos">Casos Clínicos Integrados</a>
+  </nav>
 
-  <div id="tree-step2" class="box" hidden>
-    <h3>2) Avaliação das veias</h3>
-    <div class="row">
-      <button class="btn ghost tree-opt" data-k="veias" data-v="boas">Visíveis e palpáveis</button>
-      <button class="btn ghost tree-opt" data-k="veias" data-v="dificeis">Não visíveis / acesso difícil</button>
-    </div>
-  </div>
+  <!-- =========================
+       MÓDULO: IMUNOLOGIA E SOROLOGIA
+       ========================= -->
+  <article id="mod-imuno" class="box module">
+    <header class="module-header">
+      <h3>Imunologia e Sorologia</h3>
+      <p class="module-sub">Base para interpretação de testes imunológicos no laboratório clínico.</p>
+    </header>
 
-  <div id="tree-step3" class="box" hidden>
-    <h3>3) Finalidade / volume</h3>
-    <div class="row">
-      <button class="btn ghost tree-opt" data-k="finalidade" data-v="poct">Pequeno volume / POCT</button>
-      <button class="btn ghost tree-opt" data-k="finalidade" data-v="rotina">Exames de rotina</button>
-      <button class="btn ghost tree-opt" data-k="finalidade" data-v="gasometria">Gasometria arterial</button>
-    </div>
-  </div>
+    <!-- Reações antígeno-anticorpo -->
+    <details class="topic" open>
+      <summary class="topic-title">Reações antígeno-anticorpo</summary>
+      <div class="topic-body">
+        <ul class="bullets">
+          <li>Conceitos-chave: epítopo, parátopo, afinidade vs. avidez, especificidade e sensibilidade.</li>
+          <li>Formatos clássicos: <b>precipitação</b>, <b>aglutinação</b>, <b>imunofluorescência</b>, <b>imunocromatografia</b>.</li>
+          <li>Fatores pré-analíticos: hemólise, lipemia, volume insuficiente, janela imunológica.</li>
+        </ul>
+        <div class="actions row wrap">
+          <button class="btn ghost" data-action="open-quiz" data-target="imuno-reacoes">Abrir Quiz</button>
+          <button class="btn ghost" data-action="open-sim" data-target="imuno-reacoes">Abrir Simulador</button>
+          <a class="btn" target="_blank" href="https://chatgpt.com/g/g-68d6e0109858819198be5119b77a5a30-tutor-de-estudos-para-enfermagem">Pergunte ao Tutor (IA)</a>
+        </div>
+      </div>
+    </details>
 
-  <div id="tree-capilar" class="box" hidden>
-    <h3>4) Capilar</h3>
-    <div class="row">
-      <button class="btn ghost tree-opt" data-k="capilar_perf" data-v="ok">Perfusão adequada</button>
-      <button class="btn ghost tree-opt" data-k="capilar_perf" data-v="ruim">Perfusão inadequada</button>
-    </div>
-  </div>
+    <!-- Testes rápidos -->
+    <details class="topic">
+      <summary class="topic-title">Testes rápidos (HIV, HBsAg, dengue etc.)</summary>
+      <div class="topic-body">
+        <ul class="bullets">
+          <li>Metodologia: imunocromatografia (fluxo lateral) e leitura visual de bandas.</li>
+          <li><b>HIV:</b> janela imunológica, testes combinados (Ag p24/Ac), conduta para resultados indeterminados.</li>
+          <li><b>HBsAg:</b> triagem de hepatite B; confirmar com testes de segunda linha quando necessário.</li>
+          <li><b>Dengue:</b> NS1 (fase precoce) vs. IgM/IgG (fase posterior); atenção a coinfecções (ex.: Zika).</li>
+          <li>Controle de qualidade interno (CQI) e rastreabilidade do lote.</li>
+        </ul>
+        <div class="actions row wrap">
+          <button class="btn ghost" data-action="open-quiz" data-target="imuno-rapidos">Abrir Quiz</button>
+          <button class="btn ghost" data-action="open-sim" data-target="imuno-rapidos">Abrir Simulador</button>
+          <a class="btn" target="_blank" href="https://chatgpt.com/g/g-68d6e0109858819198be5119b77a5a30-tutor-de-estudos-para-enfermagem">Pergunte ao Tutor (IA)</a>
+        </div>
+      </div>
+    </details>
 
-  <div id="tree-venosa1" class="box" hidden>
-    <h3>5) Venosa — contraindicações no membro?</h3>
-    <div class="row">
-      <button class="btn ghost tree-opt" data-k="venosa_ci" data-v="sim">Sim</button>
-      <button class="btn ghost tree-opt" data-k="venosa_ci" data-v="nao">Não</button>
-    </div>
-  </div>
+    <!-- ELISA -->
+    <details class="topic">
+      <summary class="topic-title">Ensaios por ELISA</summary>
+      <div class="topic-body">
+        <ul class="bullets">
+          <li>Tipos: <b>direto</b>, <b>indireto</b>, <b>sandwich</b> e <b>competitivo</b>.</li>
+          <li>Curva padrão, linearidade, limites de detecção e quantificação.</li>
+          <li>Erros comuns: lavagem insuficiente, tempos de incubação, temperatura, contaminação cruzada.</li>
+          <li>Interpretação: valores de corte, controles (positivo/negativo), repetição e confirmação.</li>
+        </ul>
+        <div class="actions row wrap">
+          <button class="btn ghost" data-action="open-quiz" data-target="imuno-elisa">Abrir Quiz</button>
+          <button class="btn ghost" data-action="open-sim" data-target="imuno-elisa">Abrir Simulador</button>
+          <a class="btn" target="_blank" href="https://chatgpt.com/g/g-68d6e0109858819198be5119b77a5a30-tutor-de-estudos-para-enfermagem">Pergunte ao Tutor (IA)</a>
+        </div>
+      </div>
+    </details>
+  </article>
 
-  <div id="tree-venosa2" class="box" hidden>
-    <h3>5.1) Venosa — dispositivo</h3>
-    <div class="row">
-      <button class="btn ghost tree-opt" data-k="venosa_disp" data-v="scalp">Scalp</button>
-      <button class="btn ghost tree-opt" data-k="venosa_disp" data-v="agulha">Agulha + holder</button>
-      <button class="btn ghost tree-opt" data-k="venosa_disp" data-v="jelco">Jelco</button>
-    </div>
-  </div>
+  <!-- =========================
+       MÓDULO: MICROBIOLOGIA CLÍNICA
+       ========================= -->
+  <article id="mod-micro" class="box module">
+    <header class="module-header">
+      <h3>Microbiologia Clínica</h3>
+      <p class="module-sub">Do preparo da amostra à interpretação de resultados culturais.</p>
+    </header>
 
-  <div id="tree-arterial1" class="box" hidden>
-    <h3>6) Arterial — anticoagulação importante?</h3>
-    <div class="row">
-      <button class="btn ghost tree-opt" data-k="anti" data-v="sim">Sim</button>
-      <button class="btn ghost tree-opt" data-k="anti" data-v="nao">Não</button>
-    </div>
-  </div>
+    <!-- Meios de cultura e Gram -->
+    <details class="topic" open>
+      <summary class="topic-title">Meios de cultura e coloração de Gram</summary>
+      <div class="topic-body">
+        <ul class="bullets">
+          <li>Meios: não seletivos (Ágar sangue), seletivos (MacConkey), diferenciais (TCBS, Mannitol Salt).</li>
+          <li>Gram: sequência correta (cristal violeta → lugol → álcool/acetona → safranina) e artefatos comuns.</li>
+          <li>Qualidade da amostra: volume, tempo de transporte, uso de swab vs. aspirado.</li>
+        </ul>
+        <div class="actions row wrap">
+          <button class="btn ghost" data-action="open-quiz" data-target="micro-gram">Abrir Quiz</button>
+          <button class="btn ghost" data-action="open-sim" data-target="micro-gram">Abrir Simulador</button>
+          <a class="btn" target="_blank" href="https://chatgpt.com/g/g-68d6e0109858819198be5119b77a5a30-tutor-de-estudos-para-enfermagem">Pergunte ao Tutor (IA)</a>
+        </div>
+      </div>
+    </details>
 
-  <div id="tree-arterial2" class="box" hidden>
-    <h3>6.1) Teste de Allen</h3>
-    <div class="row">
-      <button class="btn ghost tree-opt" data-k="allen" data-v="positivo">Positivo</button>
-      <button class="btn ghost tree-opt" data-k="allen" data-v="negativo">Negativo</button>
-    </div>
-  </div>
+    <!-- Identificação -->
+    <details class="topic">
+      <summary class="topic-title">Identificação de bactérias comuns</summary>
+      <div class="topic-body">
+        <ul class="bullets">
+          <li>Fluxos básicos: cocos Gram-positivos (Staphylococcus vs. Streptococcus), bacilos Gram-negativos (Enterobactérias vs. não fermentadores).</li>
+          <li>Testes: catalase, coagulase, oxidase, IMViC, urease, TSI/KIA.</li>
+          <li>Métodos modernos: MALDI-TOF (se disponível) e painéis automatizados.</li>
+        </ul>
+        <div class="actions row wrap">
+          <button class="btn ghost" data-action="open-quiz" data-target="micro-id">Abrir Quiz</button>
+          <button class="btn ghost" data-action="open-sim" data-target="micro-id">Abrir Simulador</button>
+          <a class="btn" target="_blank" href="https://chatgpt.com/g/g-68d6e0109858819198be5119b77a5a30-tutor-de-estudos-para-enfermagem">Pergunte ao Tutor (IA)</a>
+        </div>
+      </div>
+    </details>
 
-  <div id="tree-result" class="box" hidden>
-    <h3>Resultado</h3>
-    <div id="tree-out"></div>
-    <div class="row end" style="margin-top:10px">
-      <button id="tree-reset" class="btn ghost">Reiniciar</button>
-    </div>
-  </div>
+    <!-- Resistência/Antibiograma -->
+    <details class="topic">
+      <summary class="topic-title">Resistência bacteriana e antibiograma</summary>
+      <div class="topic-body">
+        <ul class="bullets">
+          <li>Princípios do disco-difusão (Kirby-Bauer) e MIC (microdiluição).</li>
+          <li>Interpretação segundo breakpoints (CLSI/EUCAST) e categorias S/I/R.</li>
+          <li>Mecanismos de resistência: β-lactamases, ESBL, carbapenemases, alterações de alvo, bombas de efluxo.</li>
+          <li>Boas práticas: controle de qualidade, escolha de painel, comunicação com equipe clínica.</li>
+        </ul>
+        <div class="actions row wrap">
+          <button class="btn ghost" data-action="open-quiz" data-target="micro-atb">Abrir Quiz</button>
+          <button class="btn ghost" data-action="open-sim" data-target="micro-atb">Abrir Simulador</button>
+          <a class="btn" target="_blank" href="https://chatgpt.com/g/g-68d6e0109858819198be5119b77a5a30-tutor-de-estudos-para-enfermagem">Pergunte ao Tutor (IA)</a>
+        </div>
+      </div>
+    </details>
+  </article>
 
+  <!-- =========================
+       MÓDULO: CASOS CLÍNICOS INTEGRADOS
+       ========================= -->
+  <article id="mod-casos" class="box module">
+    <header class="module-header">
+      <h3>Casos Clínicos Integrados</h3>
+      <p class="module-sub">Cenários práticos que conectam coleta, processamento e interpretação.</p>
+    </header>
+
+    <div class="case-grid">
+      <!-- Caso 1 -->
+      <section class="case-card">
+        <h4>Infecção do Trato Urinário (ITU)</h4>
+        <ul class="bullets">
+          <li><b>Objetivo:</b> conduzir coleta correta de urina tipo jato médio e interpretar EAS + urocultura.</li>
+          <li><b>Pontos-chave:</b> contaminação de amostra, contagem de colônias, Gram de urina positiva.</li>
+          <li><b>Desfecho:</b> decisão clínica simulada baseada em antibiograma.</li>
+        </ul>
+        <div class="actions row wrap">
+          <button class="btn" data-action="start-case" data-case="caso-itu">Iniciar Caso</button>
+          <button class="btn ghost" data-action="open-quiz" data-target="caso-itu">Quiz do Caso</button>
+          <button class="btn ghost" data-action="open-sim" data-target="caso-itu">Simulador</button>
+        </div>
+      </section>
+
+      <!-- Caso 2 -->
+      <section class="case-card">
+        <h4>Suspeita de Diabetes</h4>
+        <ul class="bullets">
+          <li><b>Objetivo:</b> interpretar glicemia, HbA1c e testes complementares (perfil lipídico).</li>
+          <li><b>Pontos-chave:</b> jejum adequado, variação pré-analítica, correlação clínica.</li>
+          <li><b>Desfecho:</b> relatório integrado com recomendações laboratoriais.</li>
+        </ul>
+        <div class="actions row wrap">
+          <button class="btn" data-action="start-case" data-case="caso-diabetes">Iniciar Caso</button>
+          <button class="btn ghost" data-action="open-quiz" data-target="caso-diabetes">Quiz do Caso</button>
+          <button class="btn ghost" data-action="open-sim" data-target="caso-diabetes">Simulador</button>
+        </div>
+      </section>
+
+      <!-- Caso 3 -->
+      <section class="case-card">
+        <h4>Alteração Hepática</h4>
+        <ul class="bullets">
+          <li><b>Objetivo:</b> correlacionar TGO/TGP, GGT, FA, bilirrubinas e sorologias virais.</li>
+          <li><b>Pontos-chave:</b> padrão citolítico vs. colestático, interferentes, confirmação sorológica.</li>
+          <li><b>Desfecho:</b> relatório com hipóteses e próximos passos laboratoriais.</li>
+        </ul>
+        <div class="actions row wrap">
+          <button class="btn" data-action="start-case" data-case="caso-hepatico">Iniciar Caso</button>
+          <button class="btn ghost" data-action="open-quiz" data-target="caso-hepatico">Quiz do Caso</button>
+          <button class="btn ghost" data-action="open-sim" data-target="caso-hepatico">Simulador</button>
+        </div>
+      </section>
+    </div>
+  </article>
+
+  <!-- Suporte IA (mantido) -->
   <div class="box" style="margin-top:14px">
     <b>Suporte IA (Tutor):</b>
-    <a href="https://chatgpt.com/g/g-68d6e0109858819198be5119b77a5a30-tutor-de-estudos-para-enfermagem" target="_blank">
+    <a href="https://chatgpt.com/g/g-68d6e0109858819198be5119b77a5a30-tutor-de-estudos-para-enfermagem" target="_blank" rel="noopener">
       Abrir Tutor de Estudos para Enfermagem
     </a>
   </div>
 </section>
+
+<!-- ====== ESTILOS LOCAIS (opcional, escopados à seção) ====== -->
+<style>
+  /* Escopo apenas dentro da seção da trilha */
+  #tab-trilha .pill-nav {
+    display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0 14px;
+  }
+  #tab-trilha .pill-nav a {
+    padding: 6px 10px; border: 1px solid var(--line, #e5e5e5);
+    border-radius: 999px; text-decoration: none; font-size: .9rem;
+  }
+  #tab-trilha .module-header { margin-bottom: 10px; }
+  #tab-trilha .module-sub { color: var(--muted, #666); margin-top: -4px; }
+  #tab-trilha details.topic {
+    border: 1px solid var(--line, #e9e9e9); border-radius: 10px; margin: 10px 0; overflow: hidden;
+  }
+  #tab-trilha summary.topic-title {
+    cursor: pointer; padding: 10px 12px; font-weight: 600; list-style: none;
+  }
+  #tab-trilha .topic-body { padding: 10px 12px 12px; border-top: 1px solid var(--line, #eee); }
+  #tab-trilha .bullets { margin: 0; padding-left: 18px; }
+  #tab-trilha .bullets li { margin: 6px 0; }
+  #tab-trilha .actions { gap: 8px; margin-top: 10px; }
+  #tab-trilha .row { display: flex; gap: 8px; align-items: center; }
+  #tab-trilha .wrap { flex-wrap: wrap; }
+  #tab-trilha .case-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; margin-top: 6px;
+  }
+  #tab-trilha .case-card {
+    border: 1px solid var(--line, #e9e9e9); border-radius: 12px; padding: 12px;
+    box-shadow: 0 1px 0 rgba(0,0,0,.03);
+  }
+  #tab-trilha .case-card h4 { margin: 0 0 6px; }
+  /* Reaproveita seus botões .btn e .btn.ghost se já existirem;
+     abaixo vai um fallback simples caso não exista */
+  #tab-trilha .btn {
+    padding: 8px 12px; border-radius: 10px; border: 1px solid transparent; cursor: pointer; text-decoration: none;
+    background: var(--btn-bg, #111); color: var(--btn-fg, #fff); font-size: .92rem;
+  }
+  #tab-trilha .btn.ghost {
+    background: transparent; color: inherit; border-color: var(--line, #ddd);
+  }
+</style>
+
+<!-- ====== SCRIPT DE COMPORTAMENTO (rolagem, acordeão e ganchos) ====== -->
+<script>
+  (function () {
+    const root = document.getElementById('tab-trilha');
+    if (!root) return;
+
+    // Rolagem suave para âncoras internas da pill-nav
+    root.querySelectorAll('.pill-nav a[href^="#"]').forEach(a => {
+      a.addEventListener('click', (e) => {
+        const id = a.getAttribute('href');
+        const el = root.querySelector(id);
+        if (el) {
+          e.preventDefault();
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          // Abre o primeiro tópico do módulo ao chegar
+          const firstDetails = el.querySelector('details.topic');
+          if (firstDetails && !firstDetails.open) firstDetails.open = true;
+        }
+      });
+    });
+
+    // Ganchos para integrar com seus quizzes/simuladores
+    root.addEventListener('click', (e) => {
+      const btn = e.target.closest('button, a.btn');
+      if (!btn) return;
+
+      const action = btn.getAttribute('data-action');
+      if (!action) return;
+
+      // Dispara eventos customizados para o app ouvir e abrir a rota certa
+      const payload = {
+        action,
+        target: btn.getAttribute('data-target') || null,
+        caseId: btn.getAttribute('data-case') || null
+      };
+      root.dispatchEvent(new CustomEvent('simvein:trilha', { detail: payload, bubbles: true }));
+
+      // Exemplos de roteamento (substitua pelos caminhos reais do seu app)
+      if (action === 'open-quiz') {
+        // window.location.href = `/quizzes/${payload.target}`;
+      } else if (action === 'open-sim') {
+        // window.location.href = `/simuladores/${payload.target}`;
+      } else if (action === 'start-case') {
+        // window.location.href = `/casos/${payload.caseId}`;
+      }
+    });
+  })();
+</script>
 
   <footer class="app-footer">
     <div class="left">
@@ -426,3 +633,7 @@
   <script src="/scripts.js?v=30" defer></script>
 </body>
 </html>
+     
+
+  
+   
