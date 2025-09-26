@@ -27,6 +27,7 @@
       <button data-tab="indices" class="btn ghost">Índices de Referência</button>
       <button data-tab="tutor" class="btn" style="background:#2ec4b6">Tutor-VemSim</button>
       <button id="btn-settings" class="btn ghost" title="Configurações">⚙️</button>
+      <button data-tab="trilha" class="btn">Trilha do Conhecimento</button>
     </nav>
   </header>
 
@@ -299,6 +300,92 @@
       <button id="tutor-corrigir" class="btn ghost" style="margin-top:8px">Corrigir sequência</button>
     </aside>
   </main>
+  <section id="tab-trilha" class="tab" hidden>
+  <h2>Trilha do Conhecimento</h2>
+
+  <div id="tree-step1" class="box">
+    <h3>1) Tipo de paciente</h3>
+    <div class="row">
+      <button class="btn ghost tree-opt" data-k="paciente" data-v="adulto">Adulto</button>
+      <button class="btn ghost tree-opt" data-k="paciente" data-v="crianca">Criança</button>
+      <button class="btn ghost tree-opt" data-k="paciente" data-v="idoso">Idoso</button>
+      <button class="btn ghost tree-opt" data-k="paciente" data-v="choque">Choque / Hipoperfusão</button>
+    </div>
+  </div>
+
+  <div id="tree-step2" class="box" hidden>
+    <h3>2) Avaliação das veias</h3>
+    <div class="row">
+      <button class="btn ghost tree-opt" data-k="veias" data-v="boas">Visíveis e palpáveis</button>
+      <button class="btn ghost tree-opt" data-k="veias" data-v="dificeis">Não visíveis / acesso difícil</button>
+    </div>
+  </div>
+
+  <div id="tree-step3" class="box" hidden>
+    <h3>3) Finalidade / volume</h3>
+    <div class="row">
+      <button class="btn ghost tree-opt" data-k="finalidade" data-v="poct">Pequeno volume / POCT</button>
+      <button class="btn ghost tree-opt" data-k="finalidade" data-v="rotina">Exames de rotina</button>
+      <button class="btn ghost tree-opt" data-k="finalidade" data-v="gasometria">Gasometria arterial</button>
+    </div>
+  </div>
+
+  <div id="tree-capilar" class="box" hidden>
+    <h3>4) Capilar</h3>
+    <div class="row">
+      <button class="btn ghost tree-opt" data-k="capilar_perf" data-v="ok">Perfusão adequada</button>
+      <button class="btn ghost tree-opt" data-k="capilar_perf" data-v="ruim">Perfusão inadequada</button>
+    </div>
+  </div>
+
+  <div id="tree-venosa1" class="box" hidden>
+    <h3>5) Venosa — contraindicações no membro?</h3>
+    <div class="row">
+      <button class="btn ghost tree-opt" data-k="venosa_ci" data-v="sim">Sim</button>
+      <button class="btn ghost tree-opt" data-k="venosa_ci" data-v="nao">Não</button>
+    </div>
+  </div>
+
+  <div id="tree-venosa2" class="box" hidden>
+    <h3>5.1) Venosa — dispositivo</h3>
+    <div class="row">
+      <button class="btn ghost tree-opt" data-k="venosa_disp" data-v="scalp">Scalp</button>
+      <button class="btn ghost tree-opt" data-k="venosa_disp" data-v="agulha">Agulha + holder</button>
+      <button class="btn ghost tree-opt" data-k="venosa_disp" data-v="jelco">Jelco</button>
+    </div>
+  </div>
+
+  <div id="tree-arterial1" class="box" hidden>
+    <h3>6) Arterial — anticoagulação importante?</h3>
+    <div class="row">
+      <button class="btn ghost tree-opt" data-k="anti" data-v="sim">Sim</button>
+      <button class="btn ghost tree-opt" data-k="anti" data-v="nao">Não</button>
+    </div>
+  </div>
+
+  <div id="tree-arterial2" class="box" hidden>
+    <h3>6.1) Teste de Allen</h3>
+    <div class="row">
+      <button class="btn ghost tree-opt" data-k="allen" data-v="positivo">Positivo</button>
+      <button class="btn ghost tree-opt" data-k="allen" data-v="negativo">Negativo</button>
+    </div>
+  </div>
+
+  <div id="tree-result" class="box" hidden>
+    <h3>Resultado</h3>
+    <div id="tree-out"></div>
+    <div class="row end" style="margin-top:10px">
+      <button id="tree-reset" class="btn ghost">Reiniciar</button>
+    </div>
+  </div>
+
+  <div class="box" style="margin-top:14px">
+    <b>Suporte IA (Tutor):</b>
+    <a href="https://chatgpt.com/g/g-68d6e0109858819198be5119b77a5a30-tutor-de-estudos-para-enfermagem" target="_blank">
+      Abrir Tutor de Estudos para Enfermagem
+    </a>
+  </div>
+</section>
 
   <footer class="app-footer">
     <div class="left">
