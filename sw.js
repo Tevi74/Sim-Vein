@@ -1,12 +1,13 @@
-const CACHE_NAME = 'simvein-v6';
+// sw.js (raiz do deploy)
+const CACHE_NAME = 'simvein-v30'; // pode mudar quando fizer grande atualização
 const OFFLINE_URL = '/offline.html';
 
 const CRITICAL_ASSETS = [
-  '/',
-  '/index.html',
-  '/styles.css?v=6',
-  '/scripts.js?v=6',
-  '/manifest.webmanifest?v=6',
+  '/',                   // app shell (opcional)
+  '/index.html',         // HTML principal
+  '/styles.css',         // sem ?v
+  '/scripts.js',         // sem ?v
+  '/manifest.webmanifest', // sem ?v
   '/assets/branding/logo-sim.png',
   '/assets/branding/logo-capacita.png',
   '/assets/branding/logo-haras.png'
@@ -30,7 +31,7 @@ class SWManager {
     if (request.method !== 'GET') return false;
     const url = new URL(request.url);
     if (!ALLOWED_DOMAINS.some(d => url.hostname.includes(d))) return false;
-    return CACHEABLE_EXTENSIONS.some(ext => url.pathname.endsWith(ext)) || url.pathname === '/' ;
+    return CACHEABLE_EXTENSIONS.some(ext => url.pathname.endsWith(ext)) || url.pathname === '/';
   }
 
   async cacheFirst(request) {
@@ -87,7 +88,7 @@ self.addEventListener('install', event => {
 self.addEventListener('activate', event => {
   event.waitUntil((async () => {
     const keys = await caches.keys();
-    await Promise.all(keys.map(k => k !== CACHE_NAME ? caches.delete(k) : null));
+    await Promise.all(keys.map(k => (k !== CACHE_NAME ? caches.delete(k) : null)));
     await self.clients.claim();
   })());
 });
