@@ -319,7 +319,8 @@
   </main>
 
   <!-- ABA TUTOR / TRILHAS -->
-  <section id="tab-tutor" class="tab" hidden>
+  <!-- REMOVIDO hidden AQUI -->
+  <section id="tab-tutor" class="tab">
     <h2>Tutor • Trilhas</h2>
 
     <!-- Banner visual + áudio -->
@@ -515,6 +516,7 @@
     #tab-tutor .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
     #tab-tutor .case-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-top:6px;}
     #tab-tutor .case-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:12px;}
+    #tab-tutor .hero-tutor-img{width:100%;height:auto;display:block;border-radius:12px;background:#0e1c31;border:1px solid rgba(255,255,255,.08);box-shadow: var(--shadow);}
   </style>
 
   <!-- DIÁLOGOS & FOOTER -->
@@ -560,7 +562,7 @@
        ========================================================= -->
   <script>
   (function () {
-    const BANK_URL = '/public/data/quizzes.json?v=36'; // troque versão para forçar atualização
+    const BANK_URL = '/public/data/quizzes.json?v=36';
     let BANK = null;
 
     function dlgRefs() {
@@ -667,14 +669,21 @@
       dlg.showModal();
     }
 
+    // Delegação dos botões da TRILHA (com proteção)
     document.addEventListener('click', (e) => {
       const btn = e.target.closest('[data-action]');
       if (!btn) return;
-      const action = btn.dataset.action;
-      if (action === 'open-quiz') {
-        const id = btn.dataset.target; if (id) openQuiz(id);
-      } else if (action === 'start-case') {
-        const id = btn.dataset.case; if (id) openCase(id);
+      e.preventDefault();
+      try {
+        const action = btn.dataset.action;
+        if (action === 'open-quiz') {
+          const id = btn.dataset.target; if (id) openQuiz(id);
+        } else if (action === 'start-case') {
+          const id = btn.dataset.case; if (id) openCase(id);
+        }
+      } catch (err) {
+        console.error('Erro ao acionar ação do Tutor:', err);
+        alert('Não foi possível abrir. Veja o console para detalhes.');
       }
     });
 
@@ -695,6 +704,25 @@
       });
     }
   })();
+  </script>
+
+  <!-- HOTFIX DE ABAS (garante que o botão Tutor ativa #tab-tutor mesmo sem scripts.js) -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const sections = Array.from(document.querySelectorAll('.tab'));
+      const buttons = Array.from(document.querySelectorAll('[data-tab]'));
+      function activate(id) {
+        sections.forEach(s => s.classList.remove('active'));
+        const el = document.getElementById('tab-' + id);
+        if (el) el.classList.add('active');
+        buttons.forEach(b => b.classList.toggle('active', b.dataset.tab === id));
+      }
+      buttons.forEach(b => {
+        b.addEventListener('click', () => activate(b.dataset.tab));
+      });
+      // Se quiser iniciar direto no Tutor, descomente:
+      // activate('tutor');
+    });
   </script>
 
   <!-- SEU SCRIPT GERAL -->
