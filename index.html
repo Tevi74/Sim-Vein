@@ -329,10 +329,17 @@
 <section id="tab-tutor" class="tab" hidden>
   <h2>Tutor • Trilhas</h2>
 
-  <!-- HERO TUTOR (IMAGEM ADICIONADA) -->
-  <div class="hero-tutor" style="margin:8px 0 14px">
-    <img src="/public/assets/hero-tutor.png?v=30" alt="Tutor - Trilhas" style="width:100%;max-height:320px;object-fit:cover;border-radius:12px;border:1px solid rgba(255,255,255,.08)"/>
+  <!-- >>> ADIÇÃO: IMAGEM DO TUTOR (PNG) SEM CORTES <<< -->
+  <figure style="margin:8px 0 12px">
+    <img src="/public/assets/hero-tutor.png?v=30" alt="Tutor - Hero" style="width:100%;height:auto;max-width:100%;display:block;border-radius:12px;object-fit:contain"/>
+  </figure>
+
+  <!-- >>> ADIÇÃO: ÁUDIO DO TUTOR <<< -->
+  <div class="audio-controls" style="margin:8px 0 14px;display:flex;gap:8px;flex-wrap:wrap">
+    <button class="btn" data-audio="/public/audios/audio-tutor.mp3">▶ Áudio do Tutor</button>
   </div>
+  <!-- Pré-carregamento opcional (não conflita com o player global do projeto) -->
+  <audio id="audio-tutor" src="/public/audios/audio-tutor.mp3" preload="auto"></audio>
 
   <nav class="pill-nav" aria-label="Navegação da trilha">
     <a href="#mod-imuno">Imunologia e Sorologia</a>
@@ -902,3 +909,4 @@ document.addEventListener('click', (e) => {
 </script>
 </body>
 </html>
+
