@@ -227,7 +227,7 @@ dialog::backdrop{background:rgba(0,0,0,.7); backdrop-filter:blur(4px);}
 #tree-out p{margin:6px 0;}
 
 /* ===========================
-   Estilos da Trilha
+   Estilos da Trilha (IDs antigos mantidos por compat)
    =========================== */
 #tab-trilha .pill-nav{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 14px;}
 #tab-trilha .pill-nav a{
@@ -255,6 +255,7 @@ dialog::backdrop{background:rgba(0,0,0,.7); backdrop-filter:blur(4px);}
   border:1px solid rgba(255,255,255,.08);
   border-radius:12px; padding:12px;
 }
+
 /* Banner Tutor */
 #tab-tutor .hero-tutor-img{
   width:100%;
@@ -265,7 +266,4 @@ dialog::backdrop{background:rgba(0,0,0,.7); backdrop-filter:blur(4px);}
   border:1px solid rgba(255,255,255,.08);
   box-shadow: var(--shadow);
 }
-/* Se quiser limitar a altura máxima sem cortar, descomente: */
 /* #tab-tutor .hero-tutor-img{ max-height:360px; object-fit:contain; } */
-
-  
