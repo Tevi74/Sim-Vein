@@ -1,62 +1,143 @@
 {
   "topics": {
     "imuno-reacoes": [
-      { "q": "Qual método detecta complexos Ag-Ac por migração capilar?", "opts": ["ELISA", "Imunocromatografia", "Imunofluorescência"], "a": 1 },
-      { "q": "Qual termo descreve a força global da ligação Ag-Ac?", "opts": ["Afinidade", "Avidêz", "Especificidade"], "a": 1 },
-      { "q": "Falso-negativo precoce em HIV é comum por:", "opts": ["Lipemia", "Janela imunológica", "Hemólise"], "a": 1 }
+      {"q":"Qual método detecta complexos Ag-Ac por migração capilar?","opts":["ELISA","Imunocromatografia","Imunofluorescência"],"a":1},
+      {"q":"Qual termo descreve a força GLOBAL da ligação Ag-Ac?","opts":["Afinidade","Avidêz","Especificidade"],"a":1},
+      {"q":"Qual termo descreve a força PONTUAL de cada sítio Ag-Ac?","opts":["Afinidade","Avidêz","Sensibilidade"],"a":0},
+      {"q":"Em aglutinação, a pró-zona causa:","opts":["Falso-negativo por excesso de anticorpo","Falso-positivo por partículas","Sem efeito"],"a":0},
+      {"q":"Em precipitação radial, o diâmetro do halo é proporcional à:","opts":["Concentração de anticorpo","Raiz da concentração de antígeno","Log do tempo de reação"],"a":1},
+      {"q":"Sensibilidade de um teste é:","opts":["Capacidade de identificar VP (verdadeiros positivos)","Capacidade de identificar VN (verdadeiros negativos)","Precisão do equipamento"],"a":0},
+      {"q":"Especificidade de um teste é:","opts":["Capacidade de identificar VP","Capacidade de identificar VN","Limite de detecção (LOD)"],"a":1},
+      {"q":"Reações cruzadas tendem a gerar:","opts":["Falso-positivo","Falso-negativo","Sem impacto"],"a":0},
+      {"q":"Fator reumatoide em imunoensaios pode gerar:","opts":["Falso-positivo","Falso-negativo","Inconclusivo obrigatório"],"a":0},
+      {"q":"Pré-analítico: escolha o MAIS crítico para sorologia","opts":["Janela imunológica","Jejum absoluto","Uso de EDTA"],"a":0}
     ],
     "imuno-rapidos": [
-      { "q": "Em dengue, NS1 é mais útil na:", "opts": ["Fase precoce", "Fase tardia", "Convalescença"], "a": 0 },
-      { "q": "Sem banda de controle no teste rápido o resultado é:", "opts": ["Reagente", "Não reagente", "Inválido"], "a": 2 }
+      {"q":"Teste rápido típico usa:","opts":["Imunocromatografia","Imunodifusão dupla","Western blot"],"a":0},
+      {"q":"Ausência de banda de controle indica:","opts":["Reagente","Não reagente","Inválido"],"a":2},
+      {"q":"Dengue: NS1 é mais útil na:","opts":["Fase precoce","Fase tardia","Convalescença"],"a":0},
+      {"q":"HIV 4ª geração detecta:","opts":["Somente IgM","Ag p24 + anticorpos","Somente IgG"],"a":1},
+      {"q":"Triagem HIV indeterminada:","opts":["Liberar negativo","Repetir/confirmar por método suplementar","Descartar amostra"],"a":1},
+      {"q":"HBsAg reagente em teste rápido:","opts":["Confirmar por imunoensaio/ELISA","Ignorar","Tratar como falso-positivo sempre"],"a":0},
+      {"q":"Interferência comum em teste rápido:","opts":["Hemólise leve","Temperatura/tempo de leitura","Tamanho do tubo"],"a":1},
+      {"q":"Zika x Dengue em teste IgM/IgG:","opts":["Sem reação cruzada","Pode haver reação cruzada","Nunca reagente"],"a":1},
+      {"q":"Dupla leitura (2 avaliadores) tende a:","opts":["Aumentar reprodutibilidade","Reduzir sensibilidade","Ser proibida"],"a":0},
+      {"q":"Controle interno do kit serve para:","opts":["Ver execução adequada","Medir carga viral","Ajustar cutoff"],"a":0}
     ],
     "imuno-elisa": [
-      { "q": "ELISA ideal para antígeno com 2 epítopos distintos:", "opts": ["Direto", "Indireto", "Sandwich"], "a": 2 },
-      { "q": "Controle negativo alto no ELISA →", "opts": ["Liberar", "Repetir e revisar contaminação", "Ignorar"], "a": 1 }
+      {"q":"ELISA sanduíche é ideal para:","opts":["Anticorpos inespecíficos","Antígenos com 2 epitopos distintos","Haptenos sem conjugação"],"a":1},
+      {"q":"ELISA indireto mede tipicamente:","opts":["Antígeno","Anticorpo","Enzima livre"],"a":1},
+      {"q":"Lavagem insuficiente leva a:","opts":["Sinal baixo","Sinal alto/falso-positivo","Sem impacto"],"a":1},
+      {"q":"Curva padrão adequada exige:","opts":["Vários pontos numa faixa apropriada","Apenas 2 pontos extremos","Sem controles"],"a":0},
+      {"q":"Cutoff é:","opts":["Valor fixo universal","Ponto de decisão do ensaio","Maior valor da curva"],"a":1},
+      {"q":"Controles positivo/negativo servem para:","opts":["Avaliar desempenho do lote","Substituir amostra do paciente","Ajustar volume do poço"],"a":0},
+      {"q":"Alta variação intra-placa sugere:","opts":["Pipetagem/temperatura inconsistentes","Curva perfeita","Lavagem excessiva"],"a":0},
+      {"q":"Sinal baixo em todos os poços pode ser:","opts":["Reagentes vencidos/armazenados incorretamente","Lavagem insuficiente","Placa saturada"],"a":0},
+      {"q":"ELISA competitivo: aumento do analito causa:","opts":["Aumento do sinal","Redução do sinal","Sinal inalterado"],"a":1},
+      {"q":"Ação imediata se controle negativo ficar alto:","opts":["Liberar assim mesmo","Repetir e revisar contaminação/lavagem","Ignorar"],"a":1}
     ],
-
     "micro-gram": [
-      { "q": "Qual meio é seletivo para Gram-negativos entéricos?", "opts": ["Ágar sangue", "MacConkey", "TCBS"], "a": 1 },
-      { "q": "Safranina na coloração de Gram funciona como:", "opts": ["Corante primário", "Mordente", "Contra-corante"], "a": 2 }
+      {"q":"Meio seletivo para Gram− entéricos:","opts":["Ágar sangue","MacConkey","Ágar chocolate"],"a":1},
+      {"q":"TCBS é seletivo/diferencial para:","opts":["Vibrio spp.","Salmonella spp.","Staphylococcus aureus"],"a":0},
+      {"q":"Mannitol Salt Agar ajuda a selecionar:","opts":["Staphylococcus","Streptococcus","Pseudomonas"],"a":0},
+      {"q":"Gram: sequência correta:","opts":["CV → álcool → lugol → safranina","CV → lugol → álcool/acetona → safranina","Safranina → CV → álcool → lugol"],"a":1},
+      {"q":"Gram-variáveis podem ocorrer por:","opts":["Descoloração excessiva","Fixação perfeita","Meio de cultura ideal"],"a":0},
+      {"q":"Gram positivo típico cora:","opts":["Roxo","Rosa","Incolor"],"a":0},
+      {"q":"Gram negativo típico cora:","opts":["Roxo","Rosa","Incolor"],"a":1},
+      {"q":"Amostra ideal para cultura respiratória:","opts":["Escarro com muitas células epiteliais","Aspirado com pouco epitélio escamoso","Saliva"],"a":1},
+      {"q":"Coleta com swab vs aspirado:","opts":["Swab sempre superior","Aspirado tende a ser melhor","Indiferente"],"a":1},
+      {"q":"Transporte demorado sem refrigeração pode:","opts":["Não afetar","Reduzir viabilidade/falsear cultura","Melhorar recuperação"],"a":1}
     ],
     "micro-id": [
-      { "q": "Teste que diferencia Staphylococcus de Streptococcus:", "opts": ["Coagulase", "Catalase", "Oxidase"], "a": 1 },
-      { "q": "IMViC é aplicado principalmente a:", "opts": ["Não fermentadores", "Enterobactérias", "Cocos Gram-positivos"], "a": 1 }
+      {"q":"Catalase positiva sugere:","opts":["Staphylococcus","Streptococcus","Enterococcus"],"a":0},
+      {"q":"Coagulase positiva típica de:","opts":["S. epidermidis","S. saprophyticus","S. aureus"],"a":2},
+      {"q":"Oxidase positiva é típica em:","opts":["Pseudomonas","E. coli","Streptococcus"],"a":0},
+      {"q":"IMViC é aplicado sobretudo a:","opts":["Enterobactérias","Cocos Gram+","Bacilos não fermentadores"],"a":0},
+      {"q":"Urease positiva clássica em:","opts":["Proteus","Streptococcus","Shigella"],"a":0},
+      {"q":"Fermentação de lactose em MacConkey:","opts":["Colonias incolores","Colonias róseas/vermelhas","Colonias negras"],"a":1},
+      {"q":"KIA/TSI: formação de H2S se observa por:","opts":["Escurecimento do meio","Meio esverdeado","Halo fluorescente"],"a":0},
+      {"q":"MALDI-TOF identifica:","opts":["Perfil proteico","Sequência genômica","Perfil lipídico"],"a":0},
+      {"q":"Strep β-hemolítico do grupo A é:","opts":["S. pneumoniae","S. pyogenes","S. agalactiae"],"a":1},
+      {"q":"Enterococcus crescimento em NaCl 6,5%:","opts":["Não cresce","Tende a crescer","Necessita 10%"],"a":1}
     ],
     "micro-atb": [
-      { "q": "MIC significa:", "opts": ["Dose mínima eficaz", "Menor concentração inibitória", "Maior concentração tolerada"], "a": 1 },
-      { "q": "Categoria \"I\" (EUCAST) indica:", "opts": ["Resistente", "Sensível padrão", "Sensibilidade aumentada por exposição"], "a": 2 }
+      {"q":"Kirby-Bauer avalia:","opts":["Difusão em disco","Microdiluição","Etest"],"a":0},
+      {"q":"MIC significa:","opts":["Dose mínima eficaz","Menor concentração inibitória","Maior concentração tolerada"],"a":1},
+      {"q":"Breakpoints (CLSI/EUCAST) definem:","opts":["Categorias S/I/R","Concentração do corante","Tempo de incubação"],"a":0},
+      {"q":"ESBL é um tipo de:","opts":["β-lactamase","Bomba de efluxo","Alteração de alvo"],"a":0},
+      {"q":"Carbapenemase está associada a:","opts":["Resistência a carbapenêmicos","Hipersensibilidade a penicilina","Redução de MIC para ceftazidima"],"a":0},
+      {"q":"Categoria “I” (EUCAST) significa:","opts":["Resistente","Sensível padrão","Sensibilidade aumentada por exposição"],"a":2},
+      {"q":"QC em antibiograma serve para:","opts":["Validar desempenho do teste","Evitar coleta","Dispensar incubação"],"a":0},
+      {"q":"Etest mede:","opts":["MIC por gradiente","Apenas presença/ausência","Resistência a vírus"],"a":0},
+      {"q":"Alteração de alvo é mecanismo típico de:","opts":["MRSA (PBP2a)","ESBL","Carbapenemase metálica"],"a":0},
+      {"q":"Bomba de efluxo tende a:","opts":["Aumentar concentração intracelular","Reduzir concentração intracelular de droga","Inibir crescimento por si só"],"a":1}
     ],
-
-    /* Gasometria (seus quizzes antigos) */
     "gaso": [
-      { "q": "pH 7,30; pCO2 55 mmHg; HCO3- 26 mEq/L. Interpretação:", "opts": ["Acidose respiratória", "Acidose metabólica", "Alcalose respiratória"], "a": 0 },
-      { "q": "pH 7,48; pCO2 30 mmHg; HCO3- 22 mEq/L. Interpretação:", "opts": ["Alcalose respiratória", "Alcalose metabólica", "Compensação metabólica"], "a": 0 }
+      {"q":"pH 7,30; pCO2 55; HCO3- 26:","opts":["Acidose respiratória","Acidose metabólica","Alcalose respiratória"],"a":0},
+      {"q":"pH 7,48; pCO2 30; HCO3- 22:","opts":["Alcalose respiratória","Alcalose metabólica","Compensação metabólica"],"a":0},
+      {"q":"pH 7,20; HCO3- 12; pCO2 28:","opts":["Acidose metabólica com compensação","Acidose respiratória","Alcalose metabólica"],"a":0},
+      {"q":"Anion gap elevado é típico de:","opts":["Cetoacidose diabética","Alcalose metabólica","Hiperventilação psicogênica"],"a":0},
+      {"q":"pO2 ↓ com A-a ↑ sugere:","opts":["Hipoventilação simples","Shunt/V-Q mismatch","Erro de coleta"],"a":1},
+      {"q":"Excesso de base (BE) negativo sugere:","opts":["Déficit metabólico de base","Excesso de base","Não se usa em gasometria"],"a":0},
+      {"q":"Amostra com bolhas de ar pode:","opts":["Aumentar pCO2","Aumentar pO2 e reduzir pCO2","Não alterar nada"],"a":1},
+      {"q":"Coleta em seringa com heparina serve para:","opts":["Evitar coagulação","Aumentar CO2","Colorir amostra"],"a":0},
+      {"q":"pH 7,55; pCO2 25; HCO3- 22:","opts":["Alcalose respiratória aguda","Alcalose metabólica","Acidose respiratória crônica"],"a":0},
+      {"q":"pH 7,32; HCO3- 16; pCO2 31:","opts":["Acidose metabólica com compensação","Acidose respiratória","Alcalose metabólica"],"a":0}
     ],
-
-    /* Hemato-Imune (seus quizzes antigos) */
     "hemi": [
-      { "q": "Tubo ideal para hemograma:", "opts": ["Soro", "EDTA", "Citrato"], "a": 1 },
-      { "q": "TP/TTPa devem preferir qual aditivo:", "opts": ["Heparina", "Citrato", "Fluoreto"], "a": 1 }
-    ],
-
-    /* Casos (quizzes associados aos casos) */
-    "caso-itu": [
-      { "q": "Urocultura 10^5 UFC/mL E. coli em jato médio sugere:", "opts": ["Contaminação", "Infecção provável", "Colonização"], "a": 1 },
-      { "q": "Para reduzir contaminação na coleta:", "opts": ["Jejum 8h", "Higienizar genitália", "Coletar pós-ATB"], "a": 1 }
-    ],
-    "caso-diabetes": [
-      { "q": "HbA1c ≥ 6,5% indica:", "opts": ["Normal", "Pré-diabetes", "Diabetes"], "a": 2 },
-      { "q": "Preparo correto para glicemia de jejum:", "opts": ["12h jejum + água liberada", "6h sem água", "Jejum opcional"], "a": 0 }
-    ],
-    "caso-hepatico": [
-      { "q": "Predomínio de TGO/TGP sugere padrão:", "opts": ["Colestático", "Citolítico", "Hemolítico"], "a": 1 },
-      { "q": "FA/GGT altas + bilirrubina direta ↑ sugere:", "opts": ["Colestase", "Hepatite fulminante", "Anemia hemolítica"], "a": 0 }
+      {"q":"Tubo ideal para hemograma:","opts":["Soro","EDTA","Citrato"],"a":1},
+      {"q":"TP/TTPa preferem:","opts":["Heparina","Citrato","Fluoreto"],"a":1},
+      {"q":"Plaquetas: faixa de referência (adultos):","opts":["50–150 mil/µL","140–450 mil/µL","600–900 mil/µL"],"a":1},
+      {"q":"VCM alto é típico de:","opts":["Microcitose","Macrocitose","Esferocitose"],"a":1},
+      {"q":"RDW aumentado sugere:","opts":["Anisocitose","Poquilocitose","Leucocitose"],"a":0},
+      {"q":"Reticulócitos altos após anemia hemolítica indicam:","opts":["Resposta medular adequada","Falência medular","Erro pré-analítico"],"a":0},
+      {"q":"EDTA evita:","opts":["Coagulação (quelando Ca2+)","Hemólise por osmose","Oxidação de Hb"],"a":0},
+      {"q":"Sangue coagulado no tubo EDTA resulta em:","opts":["Leitura normal de plaquetas","Falso baixo de plaquetas","Falso alto de plaquetas"],"a":1},
+      {"q":"VHS usa tubo:","opts":["Preto (citrato específico)","Vermelho (soro)","Verde (heparina)"],"a":0},
+      {"q":"Leucoeritroblastose pode indicar:","opts":["Estresse medular/ocupação de MO","Hipotireoidismo","Desidratação"],"a":0}
     ]
   },
-
   "cases": {
-    "caso-itu": { "title": "Caso: Infecção do Trato Urinário (ITU)", "intro": "Feminina, 26a, disúria/polaciúria há 2 dias. Coleta jato médio adequada.", "quizId": "caso-itu" },
-    "caso-diabetes": { "title": "Caso: Suspeita de Diabetes", "intro": "Masculino, 48a, poliúria/polidipsia. Glicemia casual 218 mg/dL.", "quizId": "caso-diabetes" },
-    "caso-hepatico": { "title": "Caso: Alteração Hepática", "intro": "35a, icterícia leve, colúria. TGO/TGP elevadas; GGT/FA moderadas.", "quizId": "caso-hepatico" }
+    "caso-itu": {
+      "title": "Caso: Infecção do Trato Urinário (ITU)",
+      "intro": "Feminina, 26 anos, disúria e polaciúria há 2 dias. Sem febre. Urina jato médio coletada adequadamente.",
+      "quizId": "caso-itu"
+    },
+    "caso-diabetes": {
+      "title": "Caso: Suspeita de Diabetes",
+      "intro": "Masculino, 48 anos, poliúria/polidipsia. Glicemia casual 218 mg/dL. Solicita-se glicemia de jejum e HbA1c.",
+      "quizId": "caso-diabetes"
+    },
+    "caso-hepatico": {
+      "title": "Caso: Alteração Hepática",
+      "intro": "Paciente 35 anos, icterícia leve, colúria. TGO/TGP elevadas; GGT/FA moderadas.",
+      "quizId": "caso-hepatico"
+    }
+  },
+  "topics_cases": {
+    "caso-itu": [
+      {"q":"Urocultura 10^5 UFC/mL E. coli (jato médio) sugere:","opts":["Contaminação","Infecção provável","Colonização"],"a":1},
+      {"q":"Primeiro passo para reduzir contaminação:","opts":["Jejum 8h","Higienização adequada da genitália","Coleta pós-antibiótico"],"a":1},
+      {"q":"Nitrito positivo + esterase leucocitária no EAS indica:","opts":["Provável bacteriúria","Amostra descaracterizada","Erro de leitura"],"a":0},
+      {"q":"Coleta ideal para urocultura:","opts":["Primeiro jato","Jato médio","Jato final"],"a":1},
+      {"q":"Gram de urina: bacilos Gram− abundantes sugerem:","opts":["Contaminantes ambientais","Enterobactérias","Anaeróbios estritos"],"a":1},
+      {"q":"Decisão clínica após antibiograma com S para nitrofurantoína:","opts":["Evitar devido a resistência","Prescrever conforme diretriz","Tratar como R"],"a":1}
+    ],
+    "caso-diabetes": [
+      {"q":"HbA1c ≥ 6,5% indica:","opts":["Normal","Pré-diabetes","Diabetes"],"a":2},
+      {"q":"Glicemia de jejum diagnóstica de diabetes (mg/dL):","opts":["≥ 100","≥ 126","≥ 200"],"a":1},
+      {"q":"Preparo correto para glicemia de jejum:","opts":["12h jejum + água liberada","6h sem água","Jejum opcional"],"a":0},
+      {"q":"HbA1c reflete média glicêmica de:","opts":["1 semana","1 mês","2–3 meses"],"a":2},
+      {"q":"Paciente com TG muito alta pode interferir em:","opts":["Sódio","Glicose por método enzimático","Bilirrubina direta"],"a":1},
+      {"q":"Conduta com glicemia casual ≥ 200 mg/dL + sintomas:","opts":["Repetir só em 3 meses","Confirmar com outro método/laboratório","Já é diagnóstico, considerar repetição/confirmatória"],"a":2}
+    ],
+    "caso-hepatico": [
+      {"q":"Predomínio de TGO/TGP sugere padrão:","opts":["Colestático","Citolítico","Hemolítico"],"a":1},
+      {"q":"FA e GGT elevadas com bilirrubina direta ↑ sugerem:","opts":["Colestase","Hepatite fulminante","Anemia hemolítica"],"a":0},
+      {"q":"AST>ALT (≈2:1) pode sugerir:","opts":["Alcoolismo","Hepatite viral aguda","Colestase pós-hepática"],"a":0},
+      {"q":"Bilirrubina indireta isoladamente elevada sugere:","opts":["Hemólise/Gilbert","Colestase","Obstrução completa"],"a":0},
+      {"q":"Tempo de protrombina (INR) prolongado indica:","opts":["Síntese hepática comprometida","Hipercoagulabilidade","Deficiência de ferro"],"a":0},
+      {"q":"USG com dilatação de vias biliares favorece:","opts":["Causa intra-hepática","Causa extra-hepática (obstrutiva)","Causa hematológica"],"a":1}
+    ]
   }
 }
