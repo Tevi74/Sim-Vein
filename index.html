@@ -328,17 +328,15 @@
      ========================= -->
 <section id="tab-tutor" class="tab" hidden>
   <h2>Tutor • Trilhas</h2>
-   <!-- Banner visual do Tutor (imagem inteira) -->
-<div class="hero-tutor" style="margin:10px 0 12px">
-  <img src="/public/assets/hero-tutor.png"
-       alt="Tutor SimVein"
-       class="hero-tutor-img"/>
-  <div class="row" style="margin-top:8px">
-    <button class="btn" data-audio="/public/audios/audio-tutor.mp3">▶ Áudio do Tutor</button>
-  </div>
-</div>
 
+  <!-- Banner visual do Tutor (imagem inteira + áudio) -->
+  <div class="hero-tutor" style="margin:10px 0 12px">
+    <img src="/public/assets/hero-tutor.png" alt="Tutor SimVein" class="hero-tutor-img"/>
+    <div class="row" style="margin-top:8px">
+      <button class="btn" data-audio="/public/audios/audio-tutor.mp3">▶ Áudio do Tutor</button>
+    </div>
   </div>
+
   <nav class="pill-nav" aria-label="Navegação da trilha">
     <a href="#mod-imuno">Imunologia e Sorologia</a>
     <a href="#mod-micro">Microbiologia Clínica</a>
@@ -524,215 +522,21 @@
   #tab-tutor .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
   #tab-tutor .case-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-top:6px;}
   #tab-tutor .case-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:12px;}
+  /* Banner tutor imagem inteira */
+  #tab-tutor .hero-tutor-img{
+    width:100%;
+    height:auto;
+    display:block;
+    border-radius:12px;
+    background:#0e1c31;
+    border:1px solid rgba(255,255,255,.08);
+    box-shadow: var(--shadow);
+  }
+  /* Destaque certo/errado nas alternativas (funciona no modal) */
+  .quiz-opt { transition: background .15s ease, border-color .15s ease; }
+  .quiz-opt.opt-correct { border:1px solid rgba(18,184,134,.6); background:rgba(18,184,134,.12); }
+  .quiz-opt.opt-wrong   { border:1px solid rgba(224,49,49,.6);  background:rgba(224,49,49,.10); }
 </style>
-
-<!-- ====== SCRIPT DA ABA TUTOR (rolagem + quizzes/casos) ====== -->
-<script>
-  (function () {
-    // --- Navegação suave dentro da aba Tutor ---
-    const tutorSection = document.getElementById('tab-tutor');
-    if (tutorSection) {
-      tutorSection.querySelectorAll('.pill-nav a[href^="#"]').forEach(a => {
-        a.addEventListener('click', (e) => {
-          const id = a.getAttribute('href');
-          const el = tutorSection.querySelector(id);
-          if (el) {
-            e.preventDefault();
-            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            const firstDetails = el.querySelector('details.topic');
-            if (firstDetails && !firstDetails.open) firstDetails.open = true;
-          }
-        });
-      });
-    }
-
-    // --- Banco de QUIZZES (múltipla escolha) ---
-    const QUIZZES = {
-      'imuno-reacoes': [
-        { q: 'Qual método detecta complexos Ag-Ac por migração capilar?', opts: ['ELISA', 'Imunocromatografia', 'Imunofluorescência'], a: 1 },
-        { q: 'Qual termo descreve a força global da ligação Ag-Ac?', opts: ['Afinidade', 'Avidêz', 'Especificidade'], a: 1 },
-        { q: 'Que fator pode levar a falso-negativo precoce em HIV?', opts: ['Lipemia', 'Janela imunológica', 'Hemólise'], a: 1 }
-      ],
-      'imuno-rapidos': [
-        { q: 'Em dengue, NS1 é mais útil em qual fase?', opts: ['Fase precoce', 'Fase tardia', 'Convalescença'], a: 0 },
-        { q: 'Banda de controle ausente no teste rápido significa:', opts: ['Resultado reagente', 'Resultado não reagente', 'Teste inválido'], a: 2 }
-      ],
-      'imuno-elisa': [
-        { q: 'Formato ELISA ideal para antígeno com dois epítopos distintos:', opts: ['Direto', 'Indireto', 'Sandwich'], a: 2 },
-        { q: 'Controle negativo alto no ELISA. Próxima ação?', opts: ['Liberar resultado', 'Repetir e revisar reagentes/contaminação', 'Ignorar controle'], a: 1 }
-      ],
-      'micro-gram': [
-        { q: 'Qual meio é seletivo para Gram-negativos entéricos?', opts: ['Ágar sangue', 'MacConkey', 'TCBS'], a: 1 },
-        { q: 'Safranina na coloração de Gram funciona como:', opts: ['Corante primário', 'Mordente', 'Contra-corante'], a: 2 }
-      ],
-      'micro-id': [
-        { q: 'Teste que diferencia Staphylococcus de Streptococcus:', opts: ['Coagulase', 'Catalase', 'Oxidase'], a: 1 },
-        { q: 'IMViC é aplicado principalmente a:', opts: ['Não fermentadores', 'Enterobactérias', 'Cocos Gram-positivos'], a: 1 }
-      ],
-      'micro-atb': [
-        { q: 'MIC significa:', opts: ['Dose mínima eficaz', 'Menor concentração inibitória', 'Maior concentração tolerada'], a: 1 },
-        { q: 'Categoria "I" (EUCAST) indica:', opts: ['Resistente', 'Sensível padrão', 'Sensibilidade aumentada por exposição'], a: 2 }
-      ],
-      // Quizzes dos CASOS
-      'caso-itu': [
-        { q: 'Urocultura com 10^5 UFC/mL de E. coli em jato médio sugere:', opts: ['Contaminação', 'Infecção provável', 'Colonização'], a: 1 },
-        { q: 'Primeiro passo para reduzir contaminação na coleta:', opts: ['Jejum de 8h', 'Higienização adequada da genitália', 'Coleta pós-antibiótico'], a: 1 }
-      ],
-      'caso-diabetes': [
-        { q: 'HbA1c ≥ 6,5% indica:', opts: ['Normal', 'Pré-diabetes', 'Diabetes'], a: 2 },
-        { q: 'Para glicemia de jejum, o preparo correto é:', opts: ['12h de jejum + água liberada', '6h de jejum + sem água', 'Jejum opcional'], a: 0 }
-      ],
-      'caso-hepatico': [
-        { q: 'Elevação predominante de TGO/TGP sugere padrão:', opts: ['Colestático', 'Citolítico', 'Hemolítico'], a: 1 },
-        { q: 'Aumento de FA e GGT com bilirrubina direta elevada sugere:', opts: ['Colestase', 'Hepatite fulminante', 'Anemia hemolítica'], a: 0 }
-      ]
-    };
-
-    // --- Banco de CASOS (enunciado + perguntas) ---
-    const CASES = {
-      'caso-itu': {
-        title: 'Caso: Infecção do Trato Urinário (ITU)',
-        intro: 'Paciente feminina, 26 anos, disúria e polaciúria há 2 dias. Sem febre. Urina jato médio coletada adequadamente.',
-        quizId: 'caso-itu'
-      },
-      'caso-diabetes': {
-        title: 'Caso: Suspeita de Diabetes',
-        intro: 'Paciente masculino, 48 anos, poliúria, polidipsia. Glicemia casual 218 mg/dL. Solicita-se glicemia de jejum e HbA1c.',
-        quizId: 'caso-diabetes'
-      },
-      'caso-hepatico': {
-        title: 'Caso: Alteração Hepática',
-        intro: 'Paciente 35 anos, icterícia leve, colúria. Exames mostram TGO/TGP elevadas e GGT/FA moderadas.',
-        quizId: 'caso-hepatico'
-      }
-    };
-
-    // --- UI: Diálogo de quizzes/casos (reaproveita #tutor-pop) ---
-    const dlg = document.getElementById('tutor-pop');
-    const dlgTitle = document.getElementById('tp-title');
-    const dlgBody = document.getElementById('tp-text');
-    const dlgClose = document.getElementById('tp-close');
-    if (dlg && dlgClose) {
-      dlgClose.addEventListener('click', () => dlg.close());
-    }
-
-    function renderQuiz(targetId, customTitle) {
-      const items = QUIZZES[targetId];
-      if (!items) return;
-
-      let current = 0;
-      let score = 0;
-
-      dlgTitle.textContent = customTitle || 'Quiz';
-      dlgBody.innerHTML = `
-        <div id="quiz-wrap">
-          <div id="quiz-q" class="badge"></div>
-          <div id="quiz-opts" class="tables" style="margin:8px 0"></div>
-          <div class="row end">
-            <button id="quiz-next" class="btn">Responder</button>
-          </div>
-          <div id="quiz-feedback" class="feedback"></div>
-        </div>
-      `;
-
-      const qEl = dlgBody.querySelector('#quiz-q');
-      const optsEl = dlgBody.querySelector('#quiz-opts');
-      const nextBtn = dlgBody.querySelector('#quiz-next');
-      const fbEl = dlgBody.querySelector('#quiz-feedback');
-
-      function paint() {
-        const it = items[current];
-        qEl.textContent = `Pergunta ${current + 1} de ${items.length}: ${it.q}`;
-        optsEl.innerHTML = it.opts.map((opt, i) => `
-          <label class="card" style="cursor:pointer">
-            <input type="radio" name="opt" value="${i}"/> ${opt}
-          </label>
-        `).join('');
-        fbEl.textContent = '';
-        nextBtn.textContent = 'Responder';
-      }
-
-      function finish() {
-        qEl.textContent = `Pontuação: ${score}/${items.length}`;
-        optsEl.innerHTML = '';
-        nextBtn.remove();
-        fbEl.className = 'feedback ' + (score >= Math.ceil(items.length*0.7) ? 'ok' : 'bad');
-        fbEl.textContent = score >= Math.ceil(items.length*0.7)
-          ? 'Muito bom! Você atingiu o objetivo deste quiz.'
-          : 'Revisite o conteúdo e tente novamente.';
-      }
-
-      nextBtn.addEventListener('click', () => {
-        const sel = dlgBody.querySelector('input[name="opt"]:checked');
-        if (!sel) { fbEl.textContent = 'Selecione uma alternativa.'; return; }
-        const it = items[current];
-        const choice = Number(sel.value);
-        const correct = it.a;
-
-        if (choice === correct) {
-          fbEl.className = 'feedback ok';
-          fbEl.textContent = '✔ Resposta correta!';
-          score++;
-        } else {
-          fbEl.className = 'feedback bad';
-          fbEl.textContent = `✖ Incorreto. Correta: "${it.opts[correct]}".`;
-        }
-
-        current++;
-        if (current < items.length) {
-          // pequena pausa visual
-          setTimeout(paint, 450);
-        } else {
-          setTimeout(finish, 450);
-        }
-      });
-
-      paint();
-      dlg.showModal();
-    }
-
-    function renderCase(caseId) {
-      const data = CASES[caseId];
-      if (!data) return;
-      dlgTitle.textContent = data.title;
-      dlgBody.innerHTML = `
-        <p style="margin-bottom:8px">${data.intro}</p>
-        <div class="box" style="margin-top:6px">
-          <h4>Questões do Caso</h4>
-          <div id="case-area"></div>
-        </div>
-        <div class="row end" style="margin-top:8px">
-          <button id="case-start-quiz" class="btn">Responder</button>
-        </div>
-      `;
-      dlg.showModal();
-
-      const btn = dlgBody.querySelector('#case-start-quiz');
-      btn.addEventListener('click', () => {
-        renderQuiz(data.quizId, data.title + ' • Quiz');
-      });
-    }
-
-    // --- Ações de clique na aba Tutor ---
-    if (tutorSection) {
-      tutorSection.addEventListener('click', (e) => {
-        const btn = e.target.closest('button, a.btn');
-        if (!btn) return;
-        const action = btn.getAttribute('data-action');
-        if (!action) return;
-        const target = btn.getAttribute('data-target');
-        const caseId = btn.getAttribute('data-case');
-
-        if (action === 'open-quiz' && target) {
-          renderQuiz(target);
-        }
-        if (action === 'start-case' && caseId) {
-          renderCase(caseId);
-        }
-      });
-    }
-  })();
-</script>
 
   <footer class="app-footer">
     <div class="left">
@@ -770,141 +574,139 @@
     </div>
   </dialog>
 
+  <!-- Seu JS global permanece -->
   <script src="/scripts.js?v=30" defer></script>
+
+  <!-- ====== BLOCO QUE CONECTA AO BANCO (JSON) E MOSTRA A CORRETA QUANDO ERRAR ====== -->
   <script>
-/* ===== QUIZZES E CASOS (mínimo funcional) ===== */
-const QUIZZES = {
-  'imuno-reacoes': [
-    { q:'Qual método detecta complexos Ag-Ac por migração capilar?', opts:['ELISA','Imunocromatografia','Imunofluorescência'], a:1 },
-    { q:'Qual termo descreve a força global da ligação Ag-Ac?', opts:['Afinidade','Avidêz','Especificidade'], a:1 },
-    { q:'Falso-negativo precoce em HIV é comum por:', opts:['Lipemia','Janela imunológica','Hemólise'], a:1 }
-  ],
-  'imuno-rapidos': [
-    { q:'Em dengue, NS1 é mais útil na:', opts:['Fase precoce','Fase tardia','Convalescença'], a:0 },
-    { q:'Sem banda de controle no teste rápido o resultado é:', opts:['Reagente','Não reagente','Inválido'], a:2 }
-  ],
-  'imuno-elisa': [
-    { q:'ELISA ideal para antígeno com 2 epítopos distintos:', opts:['Direto','Indireto','Sandwich'], a:2 },
-    { q:'Controle negativo alto no ELISA →', opts:['Liberar','Repetir e revisar contaminação','Ignorar'], a:1 }
-  ],
-  'micro-gram': [
-    { q:'Meio seletivo para Gram− entéricos:', opts:['Ágar sangue','MacConkey','TCBS'], a:1 },
-    { q:'Safranina na coloração de Gram é:', opts:['Corante primário','Mordente','Contra-corante'], a:2 }
-  ],
-  'micro-id': [
-    { q:'Teste que diferencia Staph de Strep:', opts:['Coagulase','Catalase','Oxidase'], a:1 },
-    { q:'IMViC aplica-se principalmente a:', opts:['Não fermentadores','Enterobactérias','Cocos G+'], a:1 }
-  ],
-  'micro-atb': [
-    { q:'MIC significa:', opts:['Dose mínima eficaz','Menor concentração inibitória','Maior concentração tolerada'], a:1 },
-    { q:'Categoria "I" (EUCAST) indica:', opts:['Resistente','Sensível padrão','Sensibilidade aumentada por exposição'], a:2 }
-  ],
-  'caso-itu': [
-    { q:'Urocultura 10^5 UFC/mL E. coli em jato médio sugere:', opts:['Contaminação','Infecção provável','Colonização'], a:1 },
-    { q:'Para reduzir contaminação na coleta:', opts:['Jejum 8h','Higienizar genitália','Coletar pós-ATB'], a:1 }
-  ],
-  'caso-diabetes': [
-    { q:'HbA1c ≥ 6,5% indica:', opts:['Normal','Pré-diabetes','Diabetes'], a:2 },
-    { q:'Preparo correto para glicemia de jejum:', opts:['12h jejum + água liberada','6h sem água','Jejum opcional'], a:0 }
-  ],
-  'caso-hepatico': [
-    { q:'Predomínio TGO/TGP sugere padrão:', opts:['Colestático','Citolítico','Hemolítico'], a:1 },
-    { q:'FA/GGT altas + bilirrubina direta ↑ sugere:', opts:['Colestase','Hepatite fulminante','Anemia hemolítica'], a:0 }
-  ]
-};
+  /* Carrega banco externo (evita cache do SW com ?v=34) */
+  let QBANK = null;
+  async function loadQuestionBank() {
+    if (QBANK) return QBANK;
+    const res = await fetch('/public/data/quizzes.json?v=34', { cache: 'no-store' });
+    if (!res.ok) throw new Error('Falha ao carregar quizzes.json');
+    QBANK = await res.json();
+    return QBANK;
+  }
 
-const CASES = {
-  'caso-itu': { title:'Caso: Infecção do Trato Urinário (ITU)', intro:'Feminina, 26a, disúria/polaciúria há 2 dias. Coleta jato médio adequada.', quizId:'caso-itu' },
-  'caso-diabetes': { title:'Caso: Suspeita de Diabetes', intro:'Masculino, 48a, poliúria/polidipsia. Glicemia casual 218 mg/dL.', quizId:'caso-diabetes' },
-  'caso-hepatico': { title:'Caso: Alteração Hepática', intro:'35a, icterícia leve, colúria. TGO/TGP elevadas; GGT/FA moderadas.', quizId:'caso-hepatico' }
-};
-
-/* ===== DIÁLOGO REUTILIZADO (#tutor-pop) ===== */
-function getDlg() {
-  const dlg = document.getElementById('tutor-pop');
-  const t = document.getElementById('tp-title');
-  const b = document.getElementById('tp-text');
-  return { dlg, t, b };
-}
-
-/* ===== RENDER QUIZ ===== */
-function openQuiz(targetId, titleOverride) {
-  const items = QUIZZES[targetId];
-  if (!items || !items.length) { alert('Quiz não encontrado.'); return; }
-
-  const { dlg, t, b } = getDlg();
-  t.textContent = titleOverride || 'Quiz';
-  let i = 0, score = 0;
-
-  function paint() {
-    const it = items[i];
-    b.innerHTML = `
-      <div class="badge" style="margin-bottom:8px">Pergunta ${i+1} de ${items.length}</div>
-      <p style="margin:6px 0">${it.q}</p>
-      <div id="opts" class="tables" style="margin:8px 0">
-        ${it.opts.map((o, idx) => `
-          <label class="card" style="cursor:pointer">
-            <input type="radio" name="opt" value="${idx}"/> ${o}
-          </label>`).join('')}
-      </div>
-      <div class="row end"><button id="answer" class="btn">Responder</button></div>
-      <div id="fb" class="feedback" style="min-height:24px"></div>
-    `;
-    b.querySelector('#answer').onclick = () => {
-      const sel = b.querySelector('input[name="opt"]:checked');
-      if (!sel) { b.querySelector('#fb').textContent='Selecione uma alternativa.'; return; }
-      const ok = Number(sel.value) === it.a;
-      b.querySelector('#fb').className = 'feedback ' + (ok ? 'ok' : 'bad');
-      b.querySelector('#fb').textContent = ok ? '✔ Correto!' : `✖ Errado. Correta: "${it.opts[it.a]}".`;
-      if (ok) score++;
-      i++;
-      if (i < items.length) setTimeout(paint, 450);
-      else setTimeout(() => {
-        b.innerHTML = `
-          <div class="badge">Pontuação</div>
-          <p style="margin:8px 0; font-weight:700">${score} / ${items.length}</p>
-          <div class="row end"><button class="btn" id="closeQuiz">Concluir</button></div>
-        `;
-        b.querySelector('#closeQuiz').onclick = () => dlg.close();
-      }, 450);
+  /* Utilidades do diálogo */
+  function getDlg(){
+    return {
+      dlg: document.getElementById('tutor-pop'),
+      t: document.getElementById('tp-title'),
+      b: document.getElementById('tp-text'),
+      closeBtn: document.getElementById('tp-close')
     };
   }
 
-  paint();
-  dlg.showModal();
-}
+  /* Abre quiz (mostra a correta ao errar) */
+  async function openQuiz(targetId, titleOverride){
+    const bank = await loadQuestionBank();
+    const items = bank.topics?.[targetId];
+    if (!items || !items.length) { alert('Quiz não encontrado.'); return; }
 
-/* ===== RENDER CASO ===== */
-function openCase(caseId) {
-  const data = CASES[caseId];
-  if (!data) { alert('Caso não encontrado.'); return; }
-  const { dlg, t, b } = getDlg();
-  t.textContent = data.title || 'Caso Clínico';
-  b.innerHTML = `
-    <p style="margin-bottom:8px">${data.intro || ''}</p>
-    <div class="row end" style="margin-top:12px">
-      <button id="startCaseQuiz" class="btn">Responder Quiz do Caso</button>
-    </div>
-  `;
-  b.querySelector('#startCaseQuiz').onclick = () => openQuiz(data.quizId, (data.title || '') + ' • Quiz');
-  dlg.showModal();
-}
+    const { dlg, t, b, closeBtn } = getDlg();
+    t.textContent = titleOverride || 'Quiz';
+    let i=0, score=0, phase='answer';
 
-/* ===== LIGA OS BOTÕES (funciona em toda a página) ===== */
-document.addEventListener('click', (e) => {
-  const btn = e.target.closest('[data-action]');
-  if (!btn) return;
-  const action = btn.dataset.action;
-  if (action === 'open-quiz') {
-    const id = btn.dataset.target;
-    if (id) openQuiz(id);
+    function paint(){
+      const it = items[i];
+      b.innerHTML = `
+        <div class="badge" style="margin-bottom:8px">Pergunta ${i+1} de ${items.length}</div>
+        <p style="margin:6px 0">${it.q}</p>
+        <div id="opts" class="tables" style="margin:8px 0">
+          ${it.opts.map((o, idx) => `
+            <label class="card quiz-opt" data-idx="\${idx}" style="cursor:pointer">
+              <input type="radio" name="opt" value="\${idx}"/> \${o}
+            </label>`).join('')}
+        </div>
+        <div class="row end"><button id="primaryBtn" class="btn">Responder</button></div>
+        <div id="fb" class="feedback" style="min-height:24px"></div>
+      `;
+
+      const btn = b.querySelector('#primaryBtn');
+      const fb  = b.querySelector('#fb');
+      const optsWrap = b.querySelector('#opts');
+
+      function lockOptions(correctIdx, chosenIdx){
+        optsWrap.querySelectorAll('input[name="opt"]').forEach(inp => inp.disabled = true);
+        optsWrap.querySelectorAll('.quiz-opt').forEach(lbl => {
+          const idx = Number(lbl.dataset.idx);
+          if (idx === correctIdx) lbl.classList.add('opt-correct');
+          if (chosenIdx != null && idx === chosenIdx && chosenIdx !== correctIdx) {
+            lbl.classList.add('opt-wrong');
+          }
+        });
+      }
+
+      btn.onclick = () => {
+        if (phase === 'answer') {
+          const sel = b.querySelector('input[name="opt"]:checked');
+          if (!sel) { fb.textContent = 'Selecione uma alternativa.'; return; }
+
+          const chosen  = Number(sel.value);
+          const correct = it.a;
+
+          if (chosen === correct) {
+            score++;
+            fb.className = 'feedback ok';
+            fb.textContent = '✔ Correto!';
+          } else {
+            fb.className = 'feedback bad';
+            fb.textContent = `✖ Errado. Correta: "${it.opts[correct]}".`;
+          }
+
+          lockOptions(correct, chosen);
+          btn.textContent = (i < items.length - 1) ? 'Próxima' : 'Concluir';
+          phase = 'next';
+        } else {
+          i++;
+          if (i < items.length) {
+            phase = 'answer';
+            paint();
+          } else {
+            b.innerHTML = `
+              <div class="badge">Pontuação</div>
+              <p style="margin:8px 0;font-weight:700">\${score} / ${items.length}</p>
+              <div class="row end"><button class="btn" id="closeQuiz">Fechar</button></div>
+            `;
+            b.querySelector('#closeQuiz').onclick = () => dlg.close();
+          }
+        }
+      };
+    }
+
+    paint();
+    dlg.showModal();
+    if (closeBtn) closeBtn.onclick = () => dlg.close();
   }
-  if (action === 'start-case') {
-    const id = btn.dataset.case;
-    if (id) openCase(id);
+
+  /* Abre caso (usa banco.cases) */
+  async function openCase(caseId){
+    const bank = await loadQuestionBank();
+    const data = bank.cases?.[caseId];
+    if (!data) { alert('Caso não encontrado.'); return; }
+
+    const { dlg, t, b, closeBtn } = getDlg();
+    t.textContent = data.title || 'Caso Clínico';
+    b.innerHTML = `
+      <p style="margin-bottom:8px">${data.intro || ''}</p>
+      <div class="row end" style="margin-top:12px">
+        <button id="startCaseQuiz" class="btn">Responder Quiz do Caso</button>
+      </div>
+    `;
+    b.querySelector('#startCaseQuiz').onclick = () => openQuiz(data.quizId, (data.title || '') + ' • Quiz');
+    dlg.showModal();
+    if (closeBtn) closeBtn.onclick = () => dlg.close();
   }
-});
-</script>
+
+  /* Liga botões existentes (toda a página) */
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-action]');
+    if (!btn) return;
+    if (btn.dataset.action === 'open-quiz') openQuiz(btn.dataset.target);
+    if (btn.dataset.action === 'start-case') openCase(btn.dataset.case);
+  });
+  </script>
 </body>
 </html>
-
