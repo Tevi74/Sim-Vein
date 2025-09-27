@@ -1,0 +1,58 @@
+{
+  "topics": {
+    "imuno-reacoes": [
+      { "q": "Qual método detecta complexos Ag-Ac por migração capilar?", "opts": ["ELISA", "Imunocromatografia", "Imunofluorescência"], "a": 1, "exp": "Testes rápidos usam fluxo lateral (imunocromatografia)." },
+      { "q": "Qual termo descreve a força global da ligação Ag-Ac?", "opts": ["Afinidade", "Avidêz", "Especificidade"], "a": 1, "exp": "Avidêz = somatório de interações; afinidade = força pontual." },
+      { "q": "O que pode causar falso-negativo precoce em HIV?", "opts": ["Lipemia", "Janela imunológica", "Hemólise"], "a": 1 }
+    ],
+    "imuno-rapidos": [
+      { "q": "Em dengue, NS1 é mais útil na:", "opts": ["Fase precoce", "Fase tardia", "Convalescença"], "a": 0 },
+      { "q": "Sem banda de controle no teste rápido, o resultado é:", "opts": ["Reagente", "Não reagente", "Inválido"], "a": 2 }
+    ],
+    "imuno-elisa": [
+      { "q": "Formato ideal para antígeno com dois epítopos distintos:", "opts": ["Direto", "Indireto", "Sandwich"], "a": 2 },
+      { "q": "Controle negativo alto no ELISA → próximo passo:", "opts": ["Liberar", "Repetir e revisar reagentes/contaminação", "Ignorar"], "a": 1 }
+    ],
+    "micro-gram": [
+      { "q": "Meio seletivo para Gram-negativos entéricos:", "opts": ["Ágar sangue", "MacConkey", "TCBS"], "a": 1 },
+      { "q": "Safranina na coloração de Gram é:", "opts": ["Corante primário", "Mordente", "Contra-corante"], "a": 2 }
+    ],
+    "micro-id": [
+      { "q": "Teste que diferencia Staphylococcus de Streptococcus:", "opts": ["Coagulase", "Catalase", "Oxidase"], "a": 1 },
+      { "q": "IMViC é aplicado principalmente a:", "opts": ["Não fermentadores", "Enterobactérias", "Cocos Gram-positivos"], "a": 1 }
+    ],
+    "micro-atb": [
+      { "q": "MIC significa:", "opts": ["Dose mínima eficaz", "Menor concentração inibitória", "Maior concentração tolerada"], "a": 1 },
+      { "q": "Categoria \"I\" (EUCAST) indica:", "opts": ["Resistente", "Sensível padrão", "Sensibilidade aumentada por exposição"], "a": 2 }
+    ],
+    "caso-itu": [
+      { "q": "Urocultura 10^5 UFC/mL E. coli em jato médio sugere:", "opts": ["Contaminação", "Infecção provável", "Colonização"], "a": 1 },
+      { "q": "Para reduzir contaminação na coleta:", "opts": ["Jejum 8h", "Higienizar genitália", "Coletar pós-antibiótico"], "a": 1 }
+    ],
+    "caso-diabetes": [
+      { "q": "HbA1c ≥ 6,5% indica:", "opts": ["Normal", "Pré-diabetes", "Diabetes"], "a": 2 },
+      { "q": "Preparo correto para glicemia de jejum:", "opts": ["12h jejum + água liberada", "6h sem água", "Jejum opcional"], "a": 0 }
+    ],
+    "caso-hepatico": [
+      { "q": "Predomínio TGO/TGP sugere padrão:", "opts": ["Colestático", "Citolítico", "Hemolítico"], "a": 1 },
+      { "q": "FA/GGT altas + bilirrubina direta ↑ sugere:", "opts": ["Colestase", "Hepatite fulminante", "Anemia hemolítica"], "a": 0 }
+    ]
+  },
+  "cases": {
+    "caso-itu": {
+      "title": "Caso: Infecção do Trato Urinário (ITU)",
+      "intro": "Feminina, 26a, disúria/polaciúria há 2 dias. Coleta jato médio adequada.",
+      "quizId": "caso-itu"
+    },
+    "caso-diabetes": {
+      "title": "Caso: Suspeita de Diabetes",
+      "intro": "Masculino, 48a, poliúria/polidipsia. Glicemia casual 218 mg/dL.",
+      "quizId": "caso-diabetes"
+    },
+    "caso-hepatico": {
+      "title": "Caso: Alteração Hepática",
+      "intro": "35a, icterícia leve, colúria. TGO/TGP elevadas; GGT/FA moderadas.",
+      "quizId": "caso-hepatico"
+    }
+  }
+}
