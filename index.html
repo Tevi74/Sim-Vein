@@ -441,55 +441,6 @@
       </details>
     </article>
 
-    <!-- CASOS -->
-    <article id="mod-casos" class="box module">
-      <header class="module-header">
-        <h3>Casos Clínicos Integrados</h3>
-        <p class="module-sub">Cenários práticos que conectam coleta, processamento e interpretação.</p>
-      </header>
-
-      <div class="case-grid">
-        <section class="case-card">
-          <h4>Infecção do Trato Urinário (ITU)</h4>
-          <ul class="bullets">
-            <li><b>Objetivo:</b> coleta correta (jato médio) e interpretação de EAS + urocultura.</li>
-            <li><b>Pontos-chave:</b> contaminação, UFC/mL, Gram de urina positiva.</li>
-            <li><b>Desfecho:</b> decisão baseada no antibiograma.</li>
-          </ul>
-          <div class="actions row wrap">
-            <button class="btn" data-action="start-case" data-case="caso-itu">Iniciar Caso</button>
-            <button class="btn ghost" data-action="open-quiz" data-target="caso-itu">Quiz do Caso</button>
-          </div>
-        </section>
-
-        <section class="case-card">
-          <h4>Suspeita de Diabetes</h4>
-          <ul class="bullets">
-            <li><b>Objetivo:</b> interpretar glicemia, HbA1c e exames complementares.</li>
-            <li><b>Pontos-chave:</b> jejum, variáveis pré-analíticas, correlação clínica.</li>
-            <li><b>Desfecho:</b> relatório integrado com recomendações laboratoriais.</li>
-          </ul>
-          <div class="actions row wrap">
-            <button class="btn" data-action="start-case" data-case="caso-diabetes">Iniciar Caso</button>
-            <button class="btn ghost" data-action="open-quiz" data-target="caso-diabetes">Quiz do Caso</button>
-          </div>
-        </section>
-
-        <section class="case-card">
-          <h4>Alteração Hepática</h4>
-          <ul class="bullets">
-            <li><b>Objetivo:</b> correlacionar TGO/TGP, GGT, FA, bilirrubinas e sorologias.</li>
-            <li><b>Pontos-chave:</b> padrão citolítico vs. colestático, interferentes, confirmação.</li>
-            <li><b>Desfecho:</b> hipóteses e próximos passos laboratoriais.</li>
-          </ul>
-          <div class="actions row wrap">
-            <button class="btn" data-action="start-case" data-case="caso-hepatico">Iniciar Caso</button>
-            <button class="btn ghost" data-action="open-quiz" data-target="caso-hepatico">Quiz do Caso</button>
-          </div>
-        </section>
-      </div>
-    </article>
-
     <div class="box" style="margin-top:14px">
       <b>Suporte IA (Tutor):</b>
       <a href="https://chatgpt.com/g/g-68d6e0109858819198be5119b77a5a30-tutor-de-estudos-para-enfermagem" target="_blank" rel="noopener">
@@ -568,7 +519,7 @@
       };
     }
 
-    // abertura/fechamento à prova de falhas
+    // Abertura/fechamento à prova de falhas
     function showDialogSafe(dlg) {
       try {
         if (dlg && typeof dlg.showModal === 'function') {
@@ -716,30 +667,39 @@
       showDialogSafe(dlg);
     }
 
-    // Delegação dos botões da trilha
-    document.addEventListener('click', (e) => {
-      const btn = e.target.closest('[data-action]');
-      if (!btn) return;
-      try {
-        const action = btn.dataset.action;
-        if (action === 'open-quiz') {
-          const id = btn.dataset.target; if (id) openQuiz(id);
-        } else if (action === 'start-case') {
-          const id = btn.dataset.case; if (id) openCase(id);
-        }
-      } catch (err) {
-        console.error('Erro ao acionar ação do Tutor:', err);
-        alert('Não foi possível abrir. Veja o console para detalhes.');
-      }
-    });
+    // >>> Listener dedicado SÓ para a aba Tutor, em CAPTURA (resolve conflito com <details>/<summary>)
+    (function () {
+      const tutorSection = document.getElementById('tab-tutor');
+      if (!tutorSection) return;
 
-    // Navegação suave dentro da aba Tutor
-    const tutorSection = document.getElementById('tab-tutor');
-    if (tutorSection) {
-      tutorSection.querySelectorAll('.pill-nav a[href^="#"]').forEach(a => {
+      tutorSection.addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-action]');
+        if (!btn) return;
+
+        e.stopPropagation();
+        e.preventDefault();
+
+        try {
+          const action = btn.dataset.action;
+          if (action === 'open-quiz') {
+            const id = btn.dataset.target; if (id) openQuiz(id);
+          } else if (action === 'start-case') {
+            const id = btn.dataset.case; if (id) openCase(id);
+          }
+        } catch (err) {
+          console.error('Erro ao acionar ação do Tutor:', err);
+          alert('Não foi possível abrir o Quiz/Caso do Tutor. Veja o console para detalhes.');
+        }
+      }, true); // CAPTURE = true
+    })();
+
+    // Navegação suave na aba Tutor
+    const tutorSectionNav = document.getElementById('tab-tutor');
+    if (tutorSectionNav) {
+      tutorSectionNav.querySelectorAll('.pill-nav a[href^="#"]').forEach(a => {
         a.addEventListener('click', (e) => {
           const id = a.getAttribute('href');
-          const el = tutorSection.querySelector(id);
+          const el = tutorSectionNav.querySelector(id);
           if (el) {
             e.preventDefault();
             el.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -752,7 +712,7 @@
   })();
   </script>
 
-  <!-- HOTFIX DE ABAS (garante o switch independentemente do /scripts.js) -->
+  <!-- HOTFIX DE ABAS (independente do /scripts.js) -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const sections = Array.from(document.querySelectorAll('.tab'));
@@ -764,7 +724,7 @@
         buttons.forEach(b => b.classList.toggle('active', b.dataset.tab === id));
       }
       buttons.forEach(b => b.addEventListener('click', () => activate(b.dataset.tab)));
-      // Se quiser iniciar no Tutor, descomente:
+      // Para iniciar no Tutor, descomente:
       // activate('tutor');
     });
   </script>
