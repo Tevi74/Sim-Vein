@@ -761,6 +761,140 @@
   </dialog>
 
   <script src="/scripts.js?v=30" defer></script>
+  <script>
+/* ===== QUIZZES E CASOS (mínimo funcional) ===== */
+const QUIZZES = {
+  'imuno-reacoes': [
+    { q:'Qual método detecta complexos Ag-Ac por migração capilar?', opts:['ELISA','Imunocromatografia','Imunofluorescência'], a:1 },
+    { q:'Qual termo descreve a força global da ligação Ag-Ac?', opts:['Afinidade','Avidêz','Especificidade'], a:1 },
+    { q:'Falso-negativo precoce em HIV é comum por:', opts:['Lipemia','Janela imunológica','Hemólise'], a:1 }
+  ],
+  'imuno-rapidos': [
+    { q:'Em dengue, NS1 é mais útil na:', opts:['Fase precoce','Fase tardia','Convalescença'], a:0 },
+    { q:'Sem banda de controle no teste rápido o resultado é:', opts:['Reagente','Não reagente','Inválido'], a:2 }
+  ],
+  'imuno-elisa': [
+    { q:'ELISA ideal para antígeno com 2 epítopos distintos:', opts:['Direto','Indireto','Sandwich'], a:2 },
+    { q:'Controle negativo alto no ELISA →', opts:['Liberar','Repetir e revisar contaminação','Ignorar'], a:1 }
+  ],
+  'micro-gram': [
+    { q:'Meio seletivo para Gram− entéricos:', opts:['Ágar sangue','MacConkey','TCBS'], a:1 },
+    { q:'Safranina na coloração de Gram é:', opts:['Corante primário','Mordente','Contra-corante'], a:2 }
+  ],
+  'micro-id': [
+    { q:'Teste que diferencia Staph de Strep:', opts:['Coagulase','Catalase','Oxidase'], a:1 },
+    { q:'IMViC aplica-se principalmente a:', opts:['Não fermentadores','Enterobactérias','Cocos G+'], a:1 }
+  ],
+  'micro-atb': [
+    { q:'MIC significa:', opts:['Dose mínima eficaz','Menor concentração inibitória','Maior concentração tolerada'], a:1 },
+    { q:'Categoria "I" (EUCAST) indica:', opts:['Resistente','Sensível padrão','Sensibilidade aumentada por exposição'], a:2 }
+  ],
+  'caso-itu': [
+    { q:'Urocultura 10^5 UFC/mL E. coli em jato médio sugere:', opts:['Contaminação','Infecção provável','Colonização'], a:1 },
+    { q:'Para reduzir contaminação na coleta:', opts:['Jejum 8h','Higienizar genitália','Coletar pós-ATB'], a:1 }
+  ],
+  'caso-diabetes': [
+    { q:'HbA1c ≥ 6,5% indica:', opts:['Normal','Pré-diabetes','Diabetes'], a:2 },
+    { q:'Preparo correto para glicemia de jejum:', opts:['12h jejum + água liberada','6h sem água','Jejum opcional'], a:0 }
+  ],
+  'caso-hepatico': [
+    { q:'Predomínio TGO/TGP sugere padrão:', opts:['Colestático','Citolítico','Hemolítico'], a:1 },
+    { q:'FA/GGT altas + bilirrubina direta ↑ sugere:', opts:['Colestase','Hepatite fulminante','Anemia hemolítica'], a:0 }
+  ]
+};
+
+const CASES = {
+  'caso-itu': { title:'Caso: Infecção do Trato Urinário (ITU)', intro:'Feminina, 26a, disúria/polaciúria há 2 dias. Coleta jato médio adequada.', quizId:'caso-itu' },
+  'caso-diabetes': { title:'Caso: Suspeita de Diabetes', intro:'Masculino, 48a, poliúria/polidipsia. Glicemia casual 218 mg/dL.', quizId:'caso-diabetes' },
+  'caso-hepatico': { title:'Caso: Alteração Hepática', intro:'35a, icterícia leve, colúria. TGO/TGP elevadas; GGT/FA moderadas.', quizId:'caso-hepatico' }
+};
+
+/* ===== DIÁLOGO REUTILIZADO (#tutor-pop) ===== */
+function getDlg() {
+  const dlg = document.getElementById('tutor-pop');
+  const t = document.getElementById('tp-title');
+  const b = document.getElementById('tp-text');
+  return { dlg, t, b };
+}
+
+/* ===== RENDER QUIZ ===== */
+function openQuiz(targetId, titleOverride) {
+  const items = QUIZZES[targetId];
+  if (!items || !items.length) { alert('Quiz não encontrado.'); return; }
+
+  const { dlg, t, b } = getDlg();
+  t.textContent = titleOverride || 'Quiz';
+  let i = 0, score = 0;
+
+  function paint() {
+    const it = items[i];
+    b.innerHTML = `
+      <div class="badge" style="margin-bottom:8px">Pergunta ${i+1} de ${items.length}</div>
+      <p style="margin:6px 0">${it.q}</p>
+      <div id="opts" class="tables" style="margin:8px 0">
+        ${it.opts.map((o, idx) => `
+          <label class="card" style="cursor:pointer">
+            <input type="radio" name="opt" value="${idx}"/> ${o}
+          </label>`).join('')}
+      </div>
+      <div class="row end"><button id="answer" class="btn">Responder</button></div>
+      <div id="fb" class="feedback" style="min-height:24px"></div>
+    `;
+    b.querySelector('#answer').onclick = () => {
+      const sel = b.querySelector('input[name="opt"]:checked');
+      if (!sel) { b.querySelector('#fb').textContent='Selecione uma alternativa.'; return; }
+      const ok = Number(sel.value) === it.a;
+      b.querySelector('#fb').className = 'feedback ' + (ok ? 'ok' : 'bad');
+      b.querySelector('#fb').textContent = ok ? '✔ Correto!' : `✖ Errado. Correta: "${it.opts[it.a]}".`;
+      if (ok) score++;
+      i++;
+      if (i < items.length) setTimeout(paint, 450);
+      else setTimeout(() => {
+        b.innerHTML = `
+          <div class="badge">Pontuação</div>
+          <p style="margin:8px 0; font-weight:700">${score} / ${items.length}</p>
+          <div class="row end"><button class="btn" id="closeQuiz">Concluir</button></div>
+        `;
+        b.querySelector('#closeQuiz').onclick = () => dlg.close();
+      }, 450);
+    };
+  }
+
+  paint();
+  dlg.showModal();
+}
+
+/* ===== RENDER CASO ===== */
+function openCase(caseId) {
+  const data = CASES[caseId];
+  if (!data) { alert('Caso não encontrado.'); return; }
+  const { dlg, t, b } = getDlg();
+  t.textContent = data.title || 'Caso Clínico';
+  b.innerHTML = `
+    <p style="margin-bottom:8px">${data.intro || ''}</p>
+    <div class="row end" style="margin-top:12px">
+      <button id="startCaseQuiz" class="btn">Responder Quiz do Caso</button>
+    </div>
+  `;
+  b.querySelector('#startCaseQuiz').onclick = () => openQuiz(data.quizId, (data.title || '') + ' • Quiz');
+  dlg.showModal();
+}
+
+/* ===== LIGA OS BOTÕES (funciona em toda a página) ===== */
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-action]');
+  if (!btn) return;
+  const action = btn.dataset.action;
+  if (action === 'open-quiz') {
+    const id = btn.dataset.target;
+    if (id) openQuiz(id);
+  }
+  if (action === 'start-case') {
+    const id = btn.dataset.case;
+    if (id) openCase(id);
+  }
+});
+</script>
 </body>
 </html>
 
