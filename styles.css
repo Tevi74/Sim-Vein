@@ -158,7 +158,7 @@ h4{font-size:1.1rem; margin:6px 0;}
   display:flex; align-items:center; justify-content:space-between;
   padding:12px 14px; background:rgba(255,255,255,.04); margin-top:auto;
 }
-.app-footer .right{display:flex; gap:10px; align-items:center;}
+.app-footer .right{display:flex; gap:10px; alinhament o:center;}
 .app-footer .right img{height:22px; width:auto;}
 .app-footer small{font-size:12px; opacity:.8;}
 
@@ -269,4 +269,3 @@ dialog::backdrop{background:rgba(0,0,0,.7); backdrop-filter:blur(4px);}
 }
 /* Opcional: limitar altura em telas enormes */
 /* #tab-tutor .hero-tutor-img{ max-height: 480px; } */
-
