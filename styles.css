@@ -255,5 +255,17 @@ dialog::backdrop{background:rgba(0,0,0,.7); backdrop-filter:blur(4px);}
   border:1px solid rgba(255,255,255,.08);
   border-radius:12px; padding:12px;
 }
+/* Banner Tutor */
+#tab-tutor .hero-tutor-img{
+  width:100%;
+  height:auto;              /* mostra a imagem inteira */
+  display:block;
+  border-radius:12px;
+  background:#0e1c31;      /* fundo neutro caso a imagem tenha “faixas” */
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow: var(--shadow);
+}
+/* Se quiser limitar a altura máxima sem cortar, descomente: */
+/* #tab-tutor .hero-tutor-img{ max-height:360px; object-fit:contain; } */
 
   
