@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>PPA SimVein • Simulador de Coleta</title>
   <meta name="theme-color" content="#0d1b2a"/>
-  <link rel="manifest" href="/manifest.webmanifest?v=30"/>
-  <link rel="stylesheet" href="/styles.css?v=30"/>
+  <link rel="manifest" href="/manifest.webmanifest?v=36"/>
+  <link rel="stylesheet" href="/styles.css?v=36"/>
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
 </head>
 <body>
@@ -31,10 +31,11 @@
     </nav>
   </header>
 
-  <audio id="audio-ambiente" src="/public/audios/audio-ambiente.mp3?v=30" loop preload="auto"></audio>
+  <audio id="audio-ambiente" src="/public/audios/audio-ambiente.mp3?v=36" loop preload="auto"></audio>
 
   <main class="content" style="grid-template-columns: 1fr 340px; gap: 12px;">
     <div>
+      <!-- BOAS-VINDAS -->
       <section id="tab-welcome" class="tab active">
         <h2>Boas-vindas</h2>
         <div class="row" style="align-items:flex-start;gap:16px">
@@ -49,45 +50,33 @@
         </div>
       </section>
 
+      <!-- PACIENTE -->
       <section id="tab-paciente" class="tab">
         <h2>Ficha do Paciente</h2>
         <form id="form-paciente" class="form">
           <div class="grid-2">
-            <label>Nome
-              <input name="nome" required placeholder="Paciente Exemplo"/>
-            </label>
-            <label>Data de Nascimento
-              <input name="nasc" type="date" required/>
-            </label>
+            <label>Nome <input name="nome" required placeholder="Paciente Exemplo"/></label>
+            <label>Data de Nascimento <input name="nasc" type="date" required/></label>
             <label>Sexo
               <select name="sexo"><option>F</option><option>M</option><option>Outro</option></select>
             </label>
-            <label>Nome da mãe
-              <input name="mae" placeholder="Nome da mãe"/>
-            </label>
-            <label>Documento de identificação
-              <input name="doc" placeholder="RG/CPF/Outro"/>
-            </label>
-            <label>Unidade de saúde (origem)
-              <input name="unidade" placeholder="UBS/UPA/Hospital"/>
-            </label>
+            <label>Nome da mãe <input name="mae" placeholder="Nome da mãe"/></label>
+            <label>Documento de identificação <input name="doc" placeholder="RG/CPF/Outro"/></label>
+            <label>Unidade de saúde (origem) <input name="unidade" placeholder="UBS/UPA/Hospital"/></label>
           </div>
           <h3>Coleta</h3>
           <div class="grid-2">
             <label>Exames solicitados (descrição)
               <input name="exames-desc" placeholder="Ex.: Hemograma, Glicose, TSH"/>
             </label>
-            <label>Data e hora da coleta
-              <input name="datahora" type="datetime-local"/>
-            </label>
+            <label>Data e hora da coleta <input name="datahora" type="datetime-local"/></label>
             <label>Tipo de amostra
               <select name="amostra">
-                <option>Sangue venoso</option><option>Sangue capilar</option><option>Soro</option><option>Plasma</option><option>Outros</option>
+                <option>Sangue venoso</option><option>Sangue capilar</option><option>Soro</option>
+                <option>Plasma</option><option>Outros</option>
               </select>
             </label>
-            <label>Alergias
-              <input name="alergias" placeholder="Sem alergias"/>
-            </label>
+            <label>Alergias <input name="alergias" placeholder="Sem alergias"/></label>
           </div>
           <label>Braço preferencial
             <select name="braco"><option>Direito</option><option>Esquerdo</option></select>
@@ -101,6 +90,7 @@
         </form>
       </section>
 
+      <!-- SOLICITAÇÃO -->
       <section id="tab-solicitacao" class="tab">
         <h2>Solicitação Médica</h2>
         <div id="exames" class="chips">
@@ -116,6 +106,7 @@
         <div id="deduzidos" class="pill"></div>
       </section>
 
+      <!-- BIOSSEGURANÇA -->
       <section id="tab-biosseg" class="tab">
         <h2>Biossegurança (Pré / Durante / Pós)</h2>
         <div class="grid-3 checklist">
@@ -150,6 +141,7 @@
         </div>
       </section>
 
+      <!-- GASOMETRIA -->
       <section id="tab-gasometria" class="tab">
         <h2>Gasometria Arterial</h2>
         <div class="audio-controls" style="margin-bottom:12px">
@@ -170,6 +162,7 @@
         </div>
       </section>
 
+      <!-- HEMATO/IMUNO -->
       <section id="tab-hemato" class="tab">
         <h2>Hemato-Imune</h2>
         <div class="audio-controls" style="margin-bottom:12px">
@@ -191,18 +184,19 @@
         </div>
       </section>
 
+      <!-- SEQUÊNCIA -->
       <section id="tab-sequencia" class="tab">
         <h2>Sequência de Coleta</h2>
         <p>Arraste os tubos para a área em ordem correta e clique em Validar.</p>
         <div class="quiz">
           <div class="bank" id="tube-bank">
-            <img draggable="true" class="tube" data-id="1-hemocultura" src="/public/assets/tubes/hemocultura.png?v=30" alt="Hemocultura">
-            <img draggable="true" class="tube" data-id="2-citrato" src="/public/assets/tubes/citrato-azul.png?v=30" alt="Citrato (Azul)">
-            <img draggable="true" class="tube tube-vhs" data-id="3-vhs" src="/public/assets/tubes/vhs-preto.png?v=30" alt="VHS (Preto)" style="display:none">
-            <img draggable="true" class="tube" data-id="4-soro" src="/public/assets/tubes/soro-vermelho.png?v=30" alt="Soro (Vermelho/Amarelo)">
-            <img draggable="true" class="tube" data-id="5-heparina" src="/public/assets/tubes/heparina-verde.png?v=30" alt="Heparina (Verde)">
-            <img draggable="true" class="tube" data-id="6-edta" src="/public/assets/tubes/edta-roxo.png?v=30" alt="EDTA (Roxo)">
-            <img draggable="true" class="tube" data-id="7-fluoreto" src="/public/assets/tubes/fluoreto-cinza.png?v=30" alt="Fluoreto (Cinza)">
+            <img draggable="true" class="tube" data-id="1-hemocultura" src="/public/assets/tubes/hemocultura.png?v=36" alt="Hemocultura">
+            <img draggable="true" class="tube" data-id="2-citrato" src="/public/assets/tubes/citrato-azul.png?v=36" alt="Citrato (Azul)">
+            <img draggable="true" class="tube tube-vhs" data-id="3-vhs" src="/public/assets/tubes/vhs-preto.png?v=36" alt="VHS (Preto)" style="display:none">
+            <img draggable="true" class="tube" data-id="4-soro" src="/public/assets/tubes/soro-vermelho.png?v=36" alt="Soro (Vermelho/Amarelo)">
+            <img draggable="true" class="tube" data-id="5-heparina" src="/public/assets/tubes/heparina-verde.png?v=36" alt="Heparina (Verde)">
+            <img draggable="true" class="tube" data-id="6-edta" src="/public/assets/tubes/edta-roxo.png?v=36" alt="EDTA (Roxo)">
+            <img draggable="true" class="tube" data-id="7-fluoreto" src="/public/assets/tubes/fluoreto-cinza.png?v=36" alt="Fluoreto (Cinza)">
           </div>
           <div class="drop" id="tube-drop" aria-label="Área de Montagem"></div>
         </div>
@@ -214,6 +208,7 @@
         <p id="quiz-feedback" class="feedback"></p>
       </section>
 
+      <!-- APLICAÇÕES -->
       <section id="tab-aplicacoes" class="tab">
         <h2>Tubos & Aplicações</h2>
         <p>Associe cada tubo à sua finalidade/exemplos.</p>
@@ -242,6 +237,7 @@
         </div>
       </section>
 
+      <!-- ÍNDICES -->
       <section id="tab-indices" class="tab">
         <h2>Índices de Referência</h2>
         <div class="tables">
@@ -267,9 +263,7 @@
           </details>
           <details>
             <summary>Observação</summary>
-            <ul>
-              <li>Os valores podem variar conforme laboratório, kits e equipamentos utilizados.</li>
-            </ul>
+            <ul><li>Os valores podem variar conforme laboratório, kits e equipamentos utilizados.</li></ul>
           </details>
         </div>
       </section>
@@ -299,9 +293,9 @@
             <details>
               <summary>Hematologia</summary>
               <ul class="bullets">
-                <li><b>VCM:</b> volume corpuscular médio dos eritrócitos.</li>
-                <li><b>RDW:</b> amplitude de distribuição dos glóbulos vermelhos.</li>
-                <li><b>Leucocitose:</b> aumento de leucócitos circulantes.</li>
+                <li><b>VCM:</b> volume corpuscular médio.</li>
+                <li><b>RDW:</b> amplitude de distribuição dos eritrócitos.</li>
+                <li><b>Leucocitose:</b> aumento de leucócitos.</li>
               </ul>
             </details>
           </div>
@@ -309,9 +303,10 @@
       </section>
     </div>
 
+    <!-- ASIDE TUTOR -->
     <aside class="tab box" style="height: fit-content;">
       <div class="row" style="gap:10px; align-items:center;">
-        <img src="/public/assets/branding/avatar-tutor.png?v=30" alt="Tutor" style="width:56px;height:56px;border-radius:50%;object-fit:cover">
+        <img src="/public/assets/branding/avatar-tutor.png?v=36" alt="Tutor" style="width:56px;height:56px;border-radius:50%;object-fit:cover">
         <h3 style="margin:0">Tutor IA</h3>
       </div>
       <div id="tutor-feed" style="margin-top:8px;max-height:240px;overflow:auto;"></div>
@@ -322,228 +317,213 @@
       <button id="tutor-corrigir" class="btn ghost" style="margin-top:8px">Corrigir sequência</button>
     </aside>
   </main>
-  
-<!-- =========================
-     ABA TUTOR (TRILHA)
-     ========================= -->
-<section id="tab-tutor" class="tab" hidden>
-  <h2>Tutor • Trilhas</h2>
 
-  <!-- Banner visual do Tutor (imagem inteira + áudio) -->
-  <div class="hero-tutor" style="margin:10px 0 12px">
-    <img src="/public/assets/hero-tutor.png" alt="Tutor SimVein" class="hero-tutor-img"/>
-    <div class="row" style="margin-top:8px">
-      <button class="btn" data-audio="/public/audios/audio-tutor.mp3">▶ Áudio do Tutor</button>
+  <!-- ABA TUTOR / TRILHAS -->
+  <section id="tab-tutor" class="tab" hidden>
+    <h2>Tutor • Trilhas</h2>
+
+    <!-- Banner visual + áudio -->
+    <div class="hero-tutor" style="margin:10px 0 12px">
+      <img src="/public/assets/hero-tutor.png" alt="Tutor SimVein" class="hero-tutor-img"
+           style="width:100%;max-height:240px;object-fit:cover;border-radius:12px"/>
+      <div class="row" style="margin-top:8px">
+        <button class="btn" data-audio="/public/audios/audio-tutor.mp3">▶ Áudio do Tutor</button>
+      </div>
     </div>
-  </div>
 
-  <nav class="pill-nav" aria-label="Navegação da trilha">
-    <a href="#mod-imuno">Imunologia e Sorologia</a>
-    <a href="#mod-micro">Microbiologia Clínica</a>
-    <a href="#mod-casos">Casos Clínicos Integrados</a>
-  </nav>
+    <nav class="pill-nav" aria-label="Navegação da trilha">
+      <a href="#mod-imuno">Imunologia e Sorologia</a>
+      <a href="#mod-micro">Microbiologia Clínica</a>
+      <a href="#mod-casos">Casos Clínicos Integrados</a>
+    </nav>
 
-  <!-- IMUNO -->
-  <article id="mod-imuno" class="box module">
-    <header class="module-header">
-      <h3>Imunologia e Sorologia</h3>
-      <p class="module-sub">Base para interpretação de testes imunológicos no laboratório clínico.</p>
-    </header>
+    <!-- IMUNO -->
+    <article id="mod-imuno" class="box module">
+      <header class="module-header">
+        <h3>Imunologia e Sorologia</h3>
+        <p class="module-sub">Base para interpretação de testes imunológicos no laboratório clínico.</p>
+      </header>
 
-    <details class="topic" open>
-      <summary class="topic-title">Reações antígeno-anticorpo</summary>
-      <div class="topic-body">
-        <ul class="bullets">
-          <li>Conceitos-chave: epítopo, parátopo, afinidade vs. avidez, especificidade e sensibilidade.</li>
-          <li>Formatos: <b>precipitação</b>, <b>aglutinação</b>, <b>imunofluorescência</b>, <b>imunocromatografia</b>.</li>
-          <li>Pré-analítico: hemólise, lipemia, volume insuficiente, janela imunológica.</li>
-        </ul>
-        <div class="actions row wrap" style="margin-top:8px">
-          <button class="btn" data-action="open-quiz" data-target="imuno-reacoes">Abrir Quiz</button>
-          <a class="btn ghost" target="_blank" href="https://chatgpt.com/g/g-68d6e0109858819198be5119b77a5a30-tutor-de-estudos-para-enfermagem">Pergunte ao Tutor (IA)</a>
+      <details class="topic" open>
+        <summary class="topic-title">Reações antígeno-anticorpo</summary>
+        <div class="topic-body">
+          <ul class="bullets">
+            <li>Conceitos-chave: epítopo, parátopo, afinidade vs. avidez, especificidade e sensibilidade.</li>
+            <li>Formatos: <b>precipitação</b>, <b>aglutinação</b>, <b>imunofluorescência</b>, <b>imunocromatografia</b>.</li>
+            <li>Pré-analítico: hemólise, lipemia, volume insuficiente, janela imunológica.</li>
+          </ul>
+          <div class="actions row wrap" style="margin-top:8px">
+            <button class="btn" data-action="open-quiz" data-target="imuno-reacoes">Abrir Quiz</button>
+            <a class="btn ghost" target="_blank" href="https://chatgpt.com/g/g-68d6e0109858819198be5119b77a5a30-tutor-de-estudos-para-enfermagem">Pergunte ao Tutor (IA)</a>
+          </div>
         </div>
+      </details>
+
+      <details class="topic">
+        <summary class="topic-title">Testes rápidos (HIV, HBsAg, dengue etc.)</summary>
+        <div class="topic-body">
+          <ul class="bullets">
+            <li>Fluxo lateral: bandas de controle e teste; leitura no tempo correto.</li>
+            <li>HIV: testes combinados (Ag p24/Ac), conduta para indeterminado.</li>
+            <li>Dengue: NS1 (fase precoce) vs. IgM/IgG (fase tardia).</li>
+          </ul>
+          <div class="actions row wrap" style="margin-top:8px">
+            <button class="btn" data-action="open-quiz" data-target="imuno-rapidos">Abrir Quiz</button>
+            <a class="btn ghost" target="_blank" href="https://chatgpt.com/g/g-68d6e0109858819198be5119b77a5a30-tutor-de-estudos-para-enfermagem">Pergunte ao Tutor (IA)</a>
+          </div>
+        </div>
+      </details>
+
+      <details class="topic">
+        <summary class="topic-title">Ensaios por ELISA</summary>
+        <div class="topic-body">
+          <ul class="bullets">
+            <li>Tipos: <b>direto</b>, <b>indireto</b>, <b>sandwich</b>, <b>competitivo</b>.</li>
+            <li>Curva padrão, linearidade, LOD/LOQ, controles.</li>
+            <li>Erros: lavagem/tempo/temperatura; contaminação cruzada.</li>
+          </ul>
+          <div class="actions row wrap" style="margin-top:8px">
+            <button class="btn" data-action="open-quiz" data-target="imuno-elisa">Abrir Quiz</button>
+            <a class="btn ghost" target="_blank" href="https://chatgpt.com/g/g-68d6e0109858819198be5119b77a5a30-tutor-de-estudos-para-enfermagem">Pergunte ao Tutor (IA)</a>
+          </div>
+        </div>
+      </details>
+    </article>
+
+    <!-- MICRO -->
+    <article id="mod-micro" class="box module">
+      <header class="module-header">
+        <h3>Microbiologia Clínica</h3>
+        <p class="module-sub">Do preparo da amostra à interpretação de resultados culturais.</p>
+      </header>
+
+      <details class="topic" open>
+        <summary class="topic-title">Meios de cultura e coloração de Gram</summary>
+        <div class="topic-body">
+          <ul class="bullets">
+            <li>Meios: não seletivos (Ágar sangue), seletivos (MacConkey), diferenciais (TCBS, Mannitol Salt).</li>
+            <li>Gram: CV → lugol → álcool/acetona → safranina; atenção aos artefatos.</li>
+            <li>Qualidade da amostra: volume, transporte, swab vs. aspirado.</li>
+          </ul>
+          <div class="actions row wrap" style="margin-top:8px">
+            <button class="btn" data-action="open-quiz" data-target="micro-gram">Abrir Quiz</button>
+            <a class="btn ghost" target="_blank" href="https://chatgpt.com/g/g-68d6e0109858819198be5119b77a5a30-tutor-de-estudos-para-enfermagem">Pergunte ao Tutor (IA)</a>
+          </div>
+        </div>
+      </details>
+
+      <details class="topic">
+        <summary class="topic-title">Identificação de bactérias comuns</summary>
+        <div class="topic-body">
+          <ul class="bullets">
+            <li>Cocos G+: Staphylococcus (catalase +) vs. Streptococcus (catalase −).</li>
+            <li>Bacilos G−: Enterobactérias (fermentadores) vs. não fermentadores.</li>
+            <li>Testes: catalase, coagulase, oxidase, IMViC, urease, TSI/KIA.</li>
+          </ul>
+          <div class="actions row wrap" style="margin-top:8px">
+            <button class="btn" data-action="open-quiz" data-target="micro-id">Abrir Quiz</button>
+            <a class="btn ghost" target="_blank" href="https://chatgpt.com/g/g-68d6e0109858819198be5119b77a5a30-tutor-de-estudos-para-enfermagem">Pergunte ao Tutor (IA)</a>
+          </div>
+        </div>
+      </details>
+
+      <details class="topic">
+        <summary class="topic-title">Resistência bacteriana e antibiograma</summary>
+        <div class="topic-body">
+          <ul class="bullets">
+            <li>Kirby-Bauer (disco-difusão) vs. MIC (microdiluição).</li>
+            <li>Breakpoints (CLSI/EUCAST) e S/I/R.</li>
+            <li>Mecanismos: β-lactamases, carbapenemases, alterações de alvo, efluxo.</li>
+          </ul>
+          <div class="actions row wrap" style="margin-top:8px">
+            <button class="btn" data-action="open-quiz" data-target="micro-atb">Abrir Quiz</button>
+            <a class="btn ghost" target="_blank" href="https://chatgpt.com/g/g-68d6e0109858819198be5119b77a5a30-tutor-de-estudos-para-enfermagem">Pergunte ao Tutor (IA)</a>
+          </div>
+        </div>
+      </details>
+    </article>
+
+    <!-- CASOS -->
+    <article id="mod-casos" class="box module">
+      <header class="module-header">
+        <h3>Casos Clínicos Integrados</h3>
+        <p class="module-sub">Cenários práticos que conectam coleta, processamento e interpretação.</p>
+      </header>
+
+      <div class="case-grid">
+        <section class="case-card">
+          <h4>Infecção do Trato Urinário (ITU)</h4>
+          <ul class="bullets">
+            <li><b>Objetivo:</b> coleta correta (jato médio) e interpretação de EAS + urocultura.</li>
+            <li><b>Pontos-chave:</b> contaminação, UFC/mL, Gram de urina positiva.</li>
+            <li><b>Desfecho:</b> decisão baseada no antibiograma.</li>
+          </ul>
+          <div class="actions row wrap">
+            <button class="btn" data-action="start-case" data-case="caso-itu">Iniciar Caso</button>
+            <button class="btn ghost" data-action="open-quiz" data-target="caso-itu">Quiz do Caso</button>
+          </div>
+        </section>
+
+        <section class="case-card">
+          <h4>Suspeita de Diabetes</h4>
+          <ul class="bullets">
+            <li><b>Objetivo:</b> interpretar glicemia, HbA1c e exames complementares.</li>
+            <li><b>Pontos-chave:</b> jejum, variáveis pré-analíticas, correlação clínica.</li>
+            <li><b>Desfecho:</b> relatório integrado com recomendações laboratoriais.</li>
+          </ul>
+          <div class="actions row wrap">
+            <button class="btn" data-action="start-case" data-case="caso-diabetes">Iniciar Caso</button>
+            <button class="btn ghost" data-action="open-quiz" data-target="caso-diabetes">Quiz do Caso</button>
+          </div>
+        </section>
+
+        <section class="case-card">
+          <h4>Alteração Hepática</h4>
+          <ul class="bullets">
+            <li><b>Objetivo:</b> correlacionar TGO/TGP, GGT, FA, bilirrubinas e sorologias.</li>
+            <li><b>Pontos-chave:</b> padrão citolítico vs. colestático, interferentes, confirmação.</li>
+            <li><b>Desfecho:</b> hipóteses e próximos passos laboratoriais.</li>
+          </ul>
+          <div class="actions row wrap">
+            <button class="btn" data-action="start-case" data-case="caso-hepatico">Iniciar Caso</button>
+            <button class="btn ghost" data-action="open-quiz" data-target="caso-hepatico">Quiz do Caso</button>
+          </div>
+        </section>
       </div>
-    </details>
+    </article>
 
-    <details class="topic">
-      <summary class="topic-title">Testes rápidos (HIV, HBsAg, dengue etc.)</summary>
-      <div class="topic-body">
-        <ul class="bullets">
-          <li>Fluxo lateral: bandas controle e teste; leitura em tempo correto.</li>
-          <li>HIV: testes combinados (Ag p24/Ac), confirmar resultados indeterminados.</li>
-          <li>Dengue: NS1 (fase precoce) vs. IgM/IgG (fase tardia).</li>
-        </ul>
-        <div class="actions row wrap" style="margin-top:8px">
-          <button class="btn" data-action="open-quiz" data-target="imuno-rapidos">Abrir Quiz</button>
-          <a class="btn ghost" target="_blank" href="https://chatgpt.com/g/g-68d6e0109858819198be5119b77a5a30-tutor-de-estudos-para-enfermagem">Pergunte ao Tutor (IA)</a>
-        </div>
-      </div>
-    </details>
-
-    <details class="topic">
-      <summary class="topic-title">Ensaios por ELISA</summary>
-      <div class="topic-body">
-        <ul class="bullets">
-          <li>Tipos: <b>direto</b>, <b>indireto</b>, <b>sandwich</b>, <b>competitivo</b>.</li>
-          <li>Curva padrão, linearidade, LOD/LOQ, controles.</li>
-          <li>Erros: lavagem insuficiente, tempos/temperatura, contaminação cruzada.</li>
-        </ul>
-        <div class="actions row wrap" style="margin-top:8px">
-          <button class="btn" data-action="open-quiz" data-target="imuno-elisa">Abrir Quiz</button>
-          <a class="btn ghost" target="_blank" href="https://chatgpt.com/g/g-68d6e0109858819198be5119b77a5a30-tutor-de-estudos-para-enfermagem">Pergunte ao Tutor (IA)</a>
-        </div>
-      </div>
-    </details>
-  </article>
-
-  <!-- MICRO -->
-  <article id="mod-micro" class="box module">
-    <header class="module-header">
-      <h3>Microbiologia Clínica</h3>
-      <p class="module-sub">Do preparo da amostra à interpretação de resultados culturais.</p>
-    </header>
-
-    <details class="topic" open>
-      <summary class="topic-title">Meios de cultura e coloração de Gram</summary>
-      <div class="topic-body">
-        <ul class="bullets">
-          <li>Meios: não seletivos (Ágar sangue), seletivos (MacConkey), diferenciais (TCBS, Mannitol Salt).</li>
-          <li>Gram: cristal violeta → lugol → álcool/acetona → safranina; atenção aos artefatos.</li>
-          <li>Qualidade da amostra: volume, tempo de transporte, swab vs. aspirado.</li>
-        </ul>
-        <div class="actions row wrap" style="margin-top:8px">
-          <button class="btn" data-action="open-quiz" data-target="micro-gram">Abrir Quiz</button>
-          <a class="btn ghost" target="_blank" href="https://chatgpt.com/g/g-68d6e0109858819198be5119b77a5a30-tutor-de-estudos-para-enfermagem">Pergunte ao Tutor (IA)</a>
-        </div>
-      </div>
-    </details>
-
-    <details class="topic">
-      <summary class="topic-title">Identificação de bactérias comuns</summary>
-      <div class="topic-body">
-        <ul class="bullets">
-          <li>Cocos G+: Staphylococcus (catalase +) vs. Streptococcus (catalase −).</li>
-          <li>Bacilos G−: Enterobactérias (fermentadores) vs. não fermentadores.</li>
-          <li>Testes: catalase, coagulase, oxidase, IMViC, urease, TSI/KIA.</li>
-        </ul>
-        <div class="actions row wrap" style="margin-top:8px">
-          <button class="btn" data-action="open-quiz" data-target="micro-id">Abrir Quiz</button>
-          <a class="btn ghost" target="_blank" href="https://chatgpt.com/g/g-68d6e0109858819198be5119b77a5a30-tutor-de-estudos-para-enfermagem">Pergunte ao Tutor (IA)</a>
-        </div>
-      </div>
-    </details>
-
-    <details class="topic">
-      <summary class="topic-title">Resistência bacteriana e antibiograma</summary>
-      <div class="topic-body">
-        <ul class="bullets">
-          <li>Disco-difusão (Kirby-Bauer) vs. MIC (microdiluição).</li>
-          <li>Breakpoints (CLSI/EUCAST) e S/I/R.</li>
-          <li>Mecanismos: β-lactamases (ESBL, carbapenemases), alteração de alvo, efluxo.</li>
-        </ul>
-        <div class="actions row wrap" style="margin-top:8px">
-          <button class="btn" data-action="open-quiz" data-target="micro-atb">Abrir Quiz</button>
-          <a class="btn ghost" target="_blank" href="https://chatgpt.com/g/g-68d6e0109858819198be5119b77a5a30-tutor-de-estudos-para-enfermagem">Pergunte ao Tutor (IA)</a>
-        </div>
-      </div>
-    </details>
-  </article>
-
-  <!-- CASOS -->
-  <article id="mod-casos" class="box module">
-    <header class="module-header">
-      <h3>Casos Clínicos Integrados</h3>
-      <p class="module-sub">Cenários práticos que conectam coleta, processamento e interpretação.</p>
-    </header>
-
-    <div class="case-grid">
-      <section class="case-card">
-        <h4>Infecção do Trato Urinário (ITU)</h4>
-        <ul class="bullets">
-          <li><b>Objetivo:</b> coleta correta (jato médio) e interpretação de EAS + urocultura.</li>
-          <li><b>Pontos-chave:</b> contaminação, UFC/mL, Gram de urina positiva.</li>
-          <li><b>Desfecho:</b> decisão baseada no antibiograma.</li>
-        </ul>
-        <div class="actions row wrap">
-          <button class="btn" data-action="start-case" data-case="caso-itu">Iniciar Caso</button>
-          <button class="btn ghost" data-action="open-quiz" data-target="caso-itu">Quiz do Caso</button>
-        </div>
-      </section>
-
-      <section class="case-card">
-        <h4>Suspeita de Diabetes</h4>
-        <ul class="bullets">
-          <li><b>Objetivo:</b> interpretar glicemia, HbA1c e exames complementares.</li>
-          <li><b>Pontos-chave:</b> jejum, variáveis pré-analíticas, correlação clínica.</li>
-          <li><b>Desfecho:</b> relatório integrado com recomendações laboratoriais.</li>
-        </ul>
-        <div class="actions row wrap">
-          <button class="btn" data-action="start-case" data-case="caso-diabetes">Iniciar Caso</button>
-          <button class="btn ghost" data-action="open-quiz" data-target="caso-diabetes">Quiz do Caso</button>
-        </div>
-      </section>
-
-      <section class="case-card">
-        <h4>Alteração Hepática</h4>
-        <ul class="bullets">
-          <li><b>Objetivo:</b> correlacionar TGO/TGP, GGT, FA, bilirrubinas e sorologias.</li>
-          <li><b>Pontos-chave:</b> padrão citolítico vs. colestático, interferentes, confirmação.</li>
-          <li><b>Desfecho:</b> hipóteses e próximos passos laboratoriais.</li>
-        </ul>
-        <div class="actions row wrap">
-          <button class="btn" data-action="start-case" data-case="caso-hepatico">Iniciar Caso</button>
-          <button class="btn ghost" data-action="open-quiz" data-target="caso-hepatico">Quiz do Caso</button>
-        </div>
-      </section>
+    <!-- Suporte IA -->
+    <div class="box" style="margin-top:14px">
+      <b>Suporte IA (Tutor):</b>
+      <a href="https://chatgpt.com/g/g-68d6e0109858819198be5119b77a5a30-tutor-de-estudos-para-enfermagem" target="_blank" rel="noopener">
+        Abrir Tutor de Estudos para Enfermagem
+      </a>
     </div>
-  </article>
+  </section>
 
-  <!-- Suporte IA (mantido) -->
-  <div class="box" style="margin-top:14px">
-    <b>Suporte IA (Tutor):</b>
-    <a href="https://chatgpt.com/g/g-68d6e0109858819198be5119b77a5a30-tutor-de-estudos-para-enfermagem" target="_blank" rel="noopener">
-      Abrir Tutor de Estudos para Enfermagem
-    </a>
-  </div>
-</section>
+  <!-- ESTILOS LOCAIS ABA TUTOR -->
+  <style>
+    #tab-tutor .pill-nav{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 14px;}
+    #tab-tutor .pill-nav a{padding:6px 10px;border:1px solid rgba(255,255,255,.12);border-radius:999px;text-decoration:none;color:var(--ink);background:rgba(255,255,255,.05);}
+    #tab-tutor .module-header{margin-bottom:10px;}
+    #tab-tutor .module-sub{color:var(--muted);margin-top:-4px;}
+    #tab-tutor details.topic{border:1px solid rgba(255,255,255,.10);border-radius:12px;margin:10px 0;overflow:hidden;background:rgba(255,255,255,.03);}
+    #tab-tutor summary.topic-title{list-style:none;cursor:pointer;padding:10px 12px;font-weight:600;}
+    #tab-tutor .topic-body{padding:10px 12px 12px;border-top:1px solid rgba(255,255,255,.08);}
+    #tab-tutor .bullets{margin:0;padding-left:18px;}
+    #tab-tutor .bullets li{margin:6px 0;}
+    #tab-tutor .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+    #tab-tutor .case-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-top:6px;}
+    #tab-tutor .case-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:12px;}
+  </style>
 
-<!-- ====== ESTILOS LOCAIS DA ABA TUTOR ====== -->
-<style>
-  /* Escopo na seção Tutor */
-  #tab-tutor .pill-nav{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 14px;}
-  #tab-tutor .pill-nav a{padding:6px 10px;border:1px solid rgba(255,255,255,.12);border-radius:999px;text-decoration:none;color:var(--ink);background:rgba(255,255,255,.05);}
-  #tab-tutor .module-header{margin-bottom:10px;}
-  #tab-tutor .module-sub{color:var(--muted);margin-top:-4px;}
-  #tab-tutor details.topic{border:1px solid rgba(255,255,255,.10);border-radius:12px;margin:10px 0;overflow:hidden;background:rgba(255,255,255,.03);}
-  #tab-tutor summary.topic-title{list-style:none;cursor:pointer;padding:10px 12px;font-weight:600;}
-  #tab-tutor .topic-body{padding:10px 12px 12px;border-top:1px solid rgba(255,255,255,.08);}
-  #tab-tutor .bullets{margin:0;padding-left:18px;}
-  #tab-tutor .bullets li{margin:6px 0;}
-  #tab-tutor .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
-  #tab-tutor .case-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-top:6px;}
-  #tab-tutor .case-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:12px;}
-  /* Banner tutor imagem inteira */
-  #tab-tutor .hero-tutor-img{
-    width:100%;
-    height:auto;
-    display:block;
-    border-radius:12px;
-    background:#0e1c31;
-    border:1px solid rgba(255,255,255,.08);
-    box-shadow: var(--shadow);
-  }
-  /* Destaque certo/errado nas alternativas (funciona no modal) */
-  .quiz-opt { transition: background .15s ease, border-color .15s ease; }
-  .quiz-opt.opt-correct { border:1px solid rgba(18,184,134,.6); background:rgba(18,184,134,.12); }
-  .quiz-opt.opt-wrong   { border:1px solid rgba(224,49,49,.6);  background:rgba(224,49,49,.10); }
-</style>
-
+  <!-- DIÁLOGOS & FOOTER -->
   <footer class="app-footer">
     <div class="left">
       <small>© 2025 • Material educacional. Não substitui treinamento supervisionado.</small>
     </div>
     <div class="right">
-      <img src="/public/assets/branding/logo-haras.png?v=30" alt="HarasTech"/>
+      <img src="/public/assets/branding/logo-haras.png?v=36" alt="HarasTech"/>
       <small>Desenvolvido por HarasTech • <a href="mailto:harastech@outlook.com">harastech@outlook.com</a></small>
     </div>
   </footer>
@@ -574,139 +554,150 @@
     </div>
   </dialog>
 
-  <!-- Seu JS global permanece -->
-  <script src="/scripts.js?v=30" defer></script>
-
-  <!-- ====== BLOCO QUE CONECTA AO BANCO (JSON) E MOSTRA A CORRETA QUANDO ERRAR ====== -->
+  <!-- =========================================================
+       BLOCO DE QUIZZES/CASOS (usa /public/data/quizzes.json)
+       Mostra resposta correta quando erra
+       ========================================================= -->
   <script>
-  /* Carrega banco externo (evita cache do SW com ?v=34) */
-  let QBANK = null;
-  async function loadQuestionBank() {
-    if (QBANK) return QBANK;
-    const res = await fetch('/public/data/quizzes.json?v=34', { cache: 'no-store' });
-    if (!res.ok) throw new Error('Falha ao carregar quizzes.json');
-    QBANK = await res.json();
-    return QBANK;
-  }
+  (function () {
+    const BANK_URL = '/public/data/quizzes.json?v=36'; // troque versão para forçar atualização
+    let BANK = null;
 
-  /* Utilidades do diálogo */
-  function getDlg(){
-    return {
-      dlg: document.getElementById('tutor-pop'),
-      t: document.getElementById('tp-title'),
-      b: document.getElementById('tp-text'),
-      closeBtn: document.getElementById('tp-close')
-    };
-  }
-
-  /* Abre quiz (mostra a correta ao errar) */
-  async function openQuiz(targetId, titleOverride){
-    const bank = await loadQuestionBank();
-    const items = bank.topics?.[targetId];
-    if (!items || !items.length) { alert('Quiz não encontrado.'); return; }
-
-    const { dlg, t, b, closeBtn } = getDlg();
-    t.textContent = titleOverride || 'Quiz';
-    let i=0, score=0, phase='answer';
-
-    function paint(){
-      const it = items[i];
-      b.innerHTML = `
-        <div class="badge" style="margin-bottom:8px">Pergunta ${i+1} de ${items.length}</div>
-        <p style="margin:6px 0">${it.q}</p>
-        <div id="opts" class="tables" style="margin:8px 0">
-          ${it.opts.map((o, idx) => `
-            <label class="card quiz-opt" data-idx="\${idx}" style="cursor:pointer">
-              <input type="radio" name="opt" value="\${idx}"/> \${o}
-            </label>`).join('')}
-        </div>
-        <div class="row end"><button id="primaryBtn" class="btn">Responder</button></div>
-        <div id="fb" class="feedback" style="min-height:24px"></div>
-      `;
-
-      const btn = b.querySelector('#primaryBtn');
-      const fb  = b.querySelector('#fb');
-      const optsWrap = b.querySelector('#opts');
-
-      function lockOptions(correctIdx, chosenIdx){
-        optsWrap.querySelectorAll('input[name="opt"]').forEach(inp => inp.disabled = true);
-        optsWrap.querySelectorAll('.quiz-opt').forEach(lbl => {
-          const idx = Number(lbl.dataset.idx);
-          if (idx === correctIdx) lbl.classList.add('opt-correct');
-          if (chosenIdx != null && idx === chosenIdx && chosenIdx !== correctIdx) {
-            lbl.classList.add('opt-wrong');
-          }
-        });
-      }
-
-      btn.onclick = () => {
-        if (phase === 'answer') {
-          const sel = b.querySelector('input[name="opt"]:checked');
-          if (!sel) { fb.textContent = 'Selecione uma alternativa.'; return; }
-
-          const chosen  = Number(sel.value);
-          const correct = it.a;
-
-          if (chosen === correct) {
-            score++;
-            fb.className = 'feedback ok';
-            fb.textContent = '✔ Correto!';
-          } else {
-            fb.className = 'feedback bad';
-            fb.textContent = `✖ Errado. Correta: "${it.opts[correct]}".`;
-          }
-
-          lockOptions(correct, chosen);
-          btn.textContent = (i < items.length - 1) ? 'Próxima' : 'Concluir';
-          phase = 'next';
-        } else {
-          i++;
-          if (i < items.length) {
-            phase = 'answer';
-            paint();
-          } else {
-            b.innerHTML = `
-              <div class="badge">Pontuação</div>
-              <p style="margin:8px 0;font-weight:700">\${score} / ${items.length}</p>
-              <div class="row end"><button class="btn" id="closeQuiz">Fechar</button></div>
-            `;
-            b.querySelector('#closeQuiz').onclick = () => dlg.close();
-          }
-        }
+    function dlgRefs() {
+      return {
+        dlg: document.getElementById('tutor-pop'),
+        title: document.getElementById('tp-title'),
+        body: document.getElementById('tp-text')
       };
     }
 
-    paint();
-    dlg.showModal();
-    if (closeBtn) closeBtn.onclick = () => dlg.close();
-  }
+    async function loadBank() {
+      if (BANK) return BANK;
+      try {
+        const resp = await fetch(BANK_URL, { cache: 'no-store' });
+        if (!resp.ok) throw new Error('fetch fail');
+        BANK = await resp.json();
+      } catch (e) {
+        BANK = {
+          topics: { "imuno-reacoes": [
+            { q: "Fallback: método de migração capilar?", opts: ["ELISA","Imunocromatografia","Imunofluorescência"], a: 1 }
+          ]},
+          cases: { "caso-itu": { title:"Caso (fallback)", intro:"Intro...", quizId:"caso-itu" }},
+          topics_cases: { "caso-itu": [
+            { q: "Fallback: urocultura 10^5 sugere?", opts:["Contaminação","Infecção provável","Colonização"], a: 1 }
+          ]}
+        };
+        console.warn('Usando fallback local para quizzes.', e);
+      }
+      return BANK;
+    }
 
-  /* Abre caso (usa banco.cases) */
-  async function openCase(caseId){
-    const bank = await loadQuestionBank();
-    const data = bank.cases?.[caseId];
-    if (!data) { alert('Caso não encontrado.'); return; }
+    async function openQuiz(topicId, titleOverride) {
+      const bank = await loadBank();
+      const items = (bank.topics && bank.topics[topicId]) || (bank.topics_cases && bank.topics_cases[topicId]);
+      if (!items || !items.length) { alert('Quiz não encontrado: ' + topicId); return; }
 
-    const { dlg, t, b, closeBtn } = getDlg();
-    t.textContent = data.title || 'Caso Clínico';
-    b.innerHTML = `
-      <p style="margin-bottom:8px">${data.intro || ''}</p>
-      <div class="row end" style="margin-top:12px">
-        <button id="startCaseQuiz" class="btn">Responder Quiz do Caso</button>
-      </div>
-    `;
-    b.querySelector('#startCaseQuiz').onclick = () => openQuiz(data.quizId, (data.title || '') + ' • Quiz');
-    dlg.showModal();
-    if (closeBtn) closeBtn.onclick = () => dlg.close();
-  }
+      const { dlg, title, body } = dlgRefs();
+      const group = 'opt-' + Date.now();
+      let i = 0, score = 0;
 
-  /* Liga botões existentes (toda a página) */
-  document.addEventListener('click', (e) => {
-    const btn = e.target.closest('[data-action]');
-    if (!btn) return;
-    if (btn.dataset.action === 'open-quiz') openQuiz(btn.dataset.target);
-    if (btn.dataset.action === 'start-case') openCase(btn.dataset.case);
-  });
+      title.textContent = titleOverride || 'Quiz';
+
+      function paint() {
+        const it = items[i];
+        body.innerHTML = `
+          <div class="badge" style="margin-bottom:8px">Pergunta ${i+1} de ${items.length}</div>
+          <p style="margin:6px 0">${it.q}</p>
+          <div id="opts" class="tables" style="margin:8px 0">
+            ${it.opts.map((opt, idx) => `
+              <label class="card" style="cursor:pointer">
+                <input type="radio" name="${group}" value="${idx}"/> ${opt}
+              </label>
+            `).join('')}
+          </div>
+          <div class="row end"><button id="answer" class="btn">Responder</button></div>
+          <div id="fb" class="feedback" style="min-height:24px"></div>
+        `;
+
+        body.querySelector('#answer').onclick = () => {
+          const sel = body.querySelector(\`input[name="${group}"]:checked\`);
+          const fb = body.querySelector('#fb');
+          if (!sel) { fb.textContent = 'Selecione uma alternativa.'; return; }
+
+          const ok = Number(sel.value) === it.a;
+          fb.className = 'feedback ' + (ok ? 'ok' : 'bad');
+          fb.textContent = ok ? '✔ Correto!' : \`✖ Incorreto. Correta: "\${it.opts[it.a]}".\`;
+          if (ok) score++;
+
+          i++;
+          if (i < items.length) {
+            setTimeout(paint, 450);
+          } else {
+            setTimeout(() => {
+              body.innerHTML = `
+                <div class="badge">Pontuação</div>
+                <p style="margin:8px 0; font-weight:700">${score} / ${items.length}</p>
+                <div class="row end"><button class="btn" id="closeQuiz">Concluir</button></div>
+              `;
+              body.querySelector('#closeQuiz').onclick = () => dlg.close();
+            }, 450);
+          }
+        };
+      }
+
+      paint();
+      dlg.showModal();
+    }
+
+    async function openCase(caseId) {
+      const bank = await loadBank();
+      const data = bank.cases && bank.cases[caseId];
+      if (!data) { alert('Caso não encontrado: ' + caseId); return; }
+
+      const { dlg, title, body } = dlgRefs();
+      title.textContent = data.title || 'Caso Clínico';
+      body.innerHTML = `
+        <p style="margin-bottom:8px">${data.intro || ''}</p>
+        <div class="row end" style="margin-top:12px">
+          <button id="startCaseQuiz" class="btn">Responder Quiz do Caso</button>
+        </div>
+      `;
+      body.querySelector('#startCaseQuiz').onclick = () =>
+        openQuiz(data.quizId, (data.title || '') + ' • Quiz');
+      dlg.showModal();
+    }
+
+    document.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-action]');
+      if (!btn) return;
+      const action = btn.dataset.action;
+      if (action === 'open-quiz') {
+        const id = btn.dataset.target; if (id) openQuiz(id);
+      } else if (action === 'start-case') {
+        const id = btn.dataset.case; if (id) openCase(id);
+      }
+    });
+
+    // Navegação suave dentro da aba Tutor
+    const tutorSection = document.getElementById('tab-tutor');
+    if (tutorSection) {
+      tutorSection.querySelectorAll('.pill-nav a[href^="#"]').forEach(a => {
+        a.addEventListener('click', (e) => {
+          const id = a.getAttribute('href');
+          const el = tutorSection.querySelector(id);
+          if (el) {
+            e.preventDefault();
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            const firstDetails = el.querySelector('details.topic');
+            if (firstDetails && !firstDetails.open) firstDetails.open = true;
+          }
+        });
+      });
+    }
+  })();
   </script>
+
+  <!-- SEU SCRIPT GERAL -->
+  <script src="/scripts.js?v=36" defer></script>
 </body>
 </html>
